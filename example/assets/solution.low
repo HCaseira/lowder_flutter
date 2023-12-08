@@ -1,0 +1,130 @@
+{
+  "id": "9b2587aa-7ede-4231-8a05-4230ae46f904",
+  "name": "Demo Solution",
+  "filePath": "assets/solution.low",
+  "type": "flutter",
+  "screens": [
+    {
+      "_id": "91551691-8491-4759-8d47-73e337db1771",
+      "_type": "Screen",
+      "name": "Counter Screen",
+      "_folder": "Select a folder for the new screen",
+      "widgets": {
+        "body": {
+          "_id": "fe620136-8192-4c3c-859b-3c72251715c0",
+          "_type": "scaffold",
+          "widgets": {
+            "appBar": {
+              "_id": "1a53aa90-0c79-434e-808e-ad754174065f",
+              "_type": "appBar",
+              "properties": {
+                "title": "Counter"
+              }
+            },
+            "body": {
+              "_id": "b4c51870-6377-4f9a-bdf4-1ea1799b75d9",
+              "_type": "center",
+              "widgets": {
+                "child": {
+                  "_id": "8000a3b1-a771-4def-9a74-8ddae6879157",
+                  "_type": "text",
+                  "properties": {
+                    "style": {
+                      "fontSize": "36"
+                    },
+                    "alias": "counter",
+                    "value": "0"
+                  }
+                }
+              }
+            },
+            "floatingActionButton": {
+              "_id": "da01d48f-a26e-4836-91fd-09db2a8e6c88",
+              "_type": "row",
+              "properties": {
+                "mainAxisSize": "min"
+              },
+              "widgets": {
+                "children": [
+                  {
+                    "_id": "a6f3133d-a100-419b-845b-d98322dbe9e7",
+                    "_type": "floatingActionButton",
+                    "name": "Subtract",
+                    "properties": {
+                      "iconCode": "0xe516"
+                    },
+                    "actions": {
+                      "onPressed": {
+                        "_id": "0f8d99ca-4219-409f-a24c-8c18cb4a4863",
+                        "_type": "Math",
+                        "properties": {
+                          "input": "${state.counter}",
+                          "operation": "subtract",
+                          "value": "1",
+                          "returnName": "counter"
+                        },
+                        "actions": {
+                          "nextAction": {
+                            "_id": "f022f5c1-c976-421c-8a98-ec6b84926d06",
+                            "_type": "KActionSetState"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "_id": "5bb6e394-89b6-437a-895e-51ca4f948700",
+                    "_type": "sizedBox",
+                    "properties": {
+                      "width": "20"
+                    }
+                  },
+                  {
+                    "_id": "6fb8acb6-cc76-4f4e-a6c9-9cb2cfe97da7",
+                    "_type": "floatingActionButton",
+                    "name": "Add",
+                    "properties": {
+                      "iconCode": "0xe047"
+                    },
+                    "actions": {
+                      "onPressed": {
+                        "_id": "68ae9c95-53d1-4a22-9d4f-fe8f2fbc68a2",
+                        "_type": "Math",
+                        "properties": {
+                          "input": "${state.counter}",
+                          "operation": "add",
+                          "value": "1",
+                          "returnName": "counter"
+                        },
+                        "actions": {
+                          "nextAction": {
+                            "_id": "70ba1a4c-b76b-479f-94d0-d4c33d416fb3",
+                            "_type": "KActionSetState"
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "isRootNode": true
+    }
+  ],
+  "environmentData": {
+    "environments": [
+      "Dev",
+      "QA",
+      "Prod"
+    ]
+  },
+  "stringResources": {
+    "languages": [
+      "en",
+      "pt"
+    ]
+  }
+}
