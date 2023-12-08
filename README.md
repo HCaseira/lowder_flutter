@@ -137,6 +137,6 @@ Have fun and let me know your thoughts and suggestions.
 
 ## Additional notes
 
-Using Flutter Lowder doesn't mean you won't code, far from it. It's intended to be a starting point for your project, where you will add your own Widgets and Actions as needed, to add to the Lowder's preset of Widgets and Actions.
+Using `Flutter Lowder` doesn't mean you won't code, far from it. It's intended to be a starting point for your project, where you will add your own Widgets and Actions as needed, to add to the Lowder's preset of Widgets and Actions.
 It will make it easier and faster to implement screens, navigation and business logic, or simply fix a label or a typo.
 It doesn't intend to dictate what you should use, so it comes with the fewest dependencies possible, and avoid dependency resolving issues. So if you want to (and you will) use other packages, simply extend Lowder and make new Widgets and Actions available.
