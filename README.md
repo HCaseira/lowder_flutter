@@ -10,7 +10,7 @@ Using the `Lowder Editor`, build your app's `model`, which this plugin will inte
 Lowder is composed of an `editor` and an `interpreter`, and both work with a `model` file.
 The `editor` is a visual interface where you can create your app's UI and logic.
 The `model` is a json object containing the objects created in the `editor`.
-The `interpreter` (this package) is a set of classes to load and execute the `model` in runtime.
+The `interpreter` (this package) is a set of classes to load and execute the `model`.
 
 ## Why
 
@@ -62,8 +62,7 @@ flutter:
   #   - images/a_dot_ham.jpeg
 ```
 
-Now open the `main.dart` file from the `lib` folder with your favorite editor.
-Replace the whole content with:
+Now open the `main.dart` file from the `lib` folder with your favorite editor and replace the whole content with:
 
 ```dart
 import 'package:flutter/widgets.dart';
@@ -128,15 +127,16 @@ Now, select the `Text` Widget and on the `property panel` type "Hello Lowder" on
 Let's increase the font size by expanding the `Style` property and set the `FontSize` to 20.
 ![](https://github.com/HCaseira/lowder_flutter/raw/main/repo_files/images/editor_8.png)
 
-Don't forget to `save`.
-
 And that's it for now.
-Explore the `Editor`, create other screens, play around with properties, and check out [examples](https://github.com/HCaseira/lowder_flutter/blob/main/example) to learn more about `Flutter Lowder`.
+Explore the `Editor`, create other screens, play around with properties and don't forget to `save`.
+Build and run your project as you would on any other flutter project.
+
+Check out [examples](https://github.com/HCaseira/lowder_flutter/blob/main/example) to learn more about `Flutter Lowder`.
 Have fun and let me know your thoughts and suggestions.
 
 
-## Additional information
+## Additional notes
 
-Flutter Lowder is intended to be a starting point for your project, where you will add your own Widgets and Actions as needed, to add to the Lowder's preset of Widgets and Actions.
-It isn't a platform, so you'll still have to do work, like setup, test, build and release, etc, but it will make it easier and faster to implement screens, navigation and business logic.
-Lowder doesn't intend to dictate what you should use, so it comes with the fewest dependencies possible, and avoid dependency resolving issues. So if you want to (and you will) use other packages, simply extend Lowder and make new widgets and actions available.
+Using Flutter Lowder doesn't mean you won't code, far from it. It's intended to be a starting point for your project, where you will add your own Widgets and Actions as needed, to add to the Lowder's preset of Widgets and Actions.
+It will make it easier and faster to implement screens, navigation and business logic, or simply fix a label or a typo.
+It doesn't intend to dictate what you should use, so it comes with the fewest dependencies possible, and avoid dependency resolving issues. So if you want to (and you will) use other packages, simply extend Lowder and make new Widgets and Actions available.
