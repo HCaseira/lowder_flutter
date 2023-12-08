@@ -101,37 +101,37 @@ Open Editor at http://localhost:8787/editor.html
 ```
 When ready, open a browser and go to `http://localhost:8787/editor.html`.
 
-![](https://github.com/HCaseira/lowder_flutter/raw/master/repo_files/images/editor_0.png)
+![](https://github.com/HCaseira/lowder_flutter/raw/main/repo_files/images/editor_0.png)
 
 So that is the `Lowder Editor`. Here you'll create screens for your app.
 
 Let's start by creating a new Screen.
-![](https://github.com/HCaseira/lowder_flutter/raw/master/repo_files/images/editor_1.png)
+![](https://github.com/HCaseira/lowder_flutter/raw/main/repo_files/images/editor_1.png)
 Name it `Hello Screen` and click `Ok`.
-![](https://github.com/HCaseira/lowder_flutter/raw/master/repo_files/images/editor_2.png)
+![](https://github.com/HCaseira/lowder_flutter/raw/main/repo_files/images/editor_2.png)
 
 Next, select the root Widget for the new Screen. Let's pick `Material`.
-![](https://github.com/HCaseira/lowder_flutter/raw/master/repo_files/images/editor_3.png)
+![](https://github.com/HCaseira/lowder_flutter/raw/main/repo_files/images/editor_3.png)
 
 Now click on the `+` to add a child to `Material` Widget.
-![](https://github.com/HCaseira/lowder_flutter/raw/master/repo_files/images/editor_4.png)
+![](https://github.com/HCaseira/lowder_flutter/raw/main/repo_files/images/editor_4.png)
 
 Let's pick a `Center` Widget.
-![](https://github.com/HCaseira/lowder_flutter/raw/master/repo_files/images/editor_5.png)
+![](https://github.com/HCaseira/lowder_flutter/raw/main/repo_files/images/editor_5.png)
 
 And add `Text` Widget to our `Center` Widget.
-![](https://github.com/HCaseira/lowder_flutter/raw/master/repo_files/images/editor_6.png)
+![](https://github.com/HCaseira/lowder_flutter/raw/main/repo_files/images/editor_6.png)
 
 Now, select the `Text` Widget and on the `property panel` type "Hello Lowder" on the `value` property.
-![](https://github.com/HCaseira/lowder_flutter/raw/master/repo_files/images/editor_7.png)
+![](https://github.com/HCaseira/lowder_flutter/raw/main/repo_files/images/editor_7.png)
 
 Let's increase the font size by expanding the `Style` property and set the `FontSize` to 20.
-![](https://github.com/HCaseira/lowder_flutter/raw/master/repo_files/images/editor_8.png)
+![](https://github.com/HCaseira/lowder_flutter/raw/main/repo_files/images/editor_8.png)
 
 Don't forget to `save`.
 
 And that's it for now.
-Explore the `Editor`, create other screens, play around with properties, and check out [examples](https://github.com/HCaseira/lowder_flutter/blob/master/example) to learn more about `Flutter Lowder`.
+Explore the `Editor`, create other screens, play around with properties, and check out [examples](https://github.com/HCaseira/lowder_flutter/blob/main/example) to learn more about `Flutter Lowder`.
 Have fun and let me know your thoughts and suggestions.
 
 
