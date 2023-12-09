@@ -36,7 +36,8 @@ class HttpServer {
     }
     if (!(await Directory(flutterWebPath).exists())) {
       logError("Path to Flutter Web build not found!");
-      logError("Probably there are error in your code. Fix them and try again.");
+      logError(
+          "Probably there are error in your code. Fix them and try again.");
       return;
     }
 
@@ -45,20 +46,26 @@ class HttpServer {
     final editorJs = editorFiles["editor.js"];
 
     final cascade = Cascade()
-        .add(shelf_static.createStaticHandler(flutterWebPath, serveFilesOutsidePath: true, defaultDocument: 'index.html'))
+        .add(shelf_static.createStaticHandler(flutterWebPath,
+            serveFilesOutsidePath: true, defaultDocument: 'index.html'))
         .add((shelf_router.Router()
               ..get(
                   '/editor.html',
                   (r) => Response.ok(editorHtml,
-                      headers: _getDefaultHeaders()..addAll({'content-type': 'text/html; charset=utf-8'})))
+                      headers: _getDefaultHeaders()
+                        ..addAll({'content-type': 'text/html; charset=utf-8'})))
               ..get(
                   '/editor.css',
                   (r) => Response.ok(editorCss,
-                      headers: _getDefaultHeaders()..addAll({'content-type': 'text/css; charset=utf-8'})))
+                      headers: _getDefaultHeaders()
+                        ..addAll({'content-type': 'text/css; charset=utf-8'})))
               ..get(
                   '/editor.js',
                   (r) => Response.ok(editorJs,
-                      headers: _getDefaultHeaders()..addAll({'content-type': 'text/javascript; charset=utf-8'})))
+                      headers: _getDefaultHeaders()
+                        ..addAll({
+                          'content-type': 'text/javascript; charset=utf-8'
+                        })))
               // ..get('/schema', _getSchema)
               ..get('/editor', _editorPoll)
               ..post('/editor', _editorPost)
@@ -66,7 +73,8 @@ class HttpServer {
               ..post('/client', _clientPost)
               ..get(
                   '/environment',
-                  (req) => Response.ok(jsonEncode(Platform.environment), headers: {
+                  (req) =>
+                      Response.ok(jsonEncode(Platform.environment), headers: {
                         'content-type': 'application/json; charset=utf-8',
                       }))
               ..post('/loadSolutions', (req) => _loadSolutions(req))

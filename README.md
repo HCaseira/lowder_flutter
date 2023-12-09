@@ -14,17 +14,13 @@ The `interpreter` (this package) is a set of classes to load and execute the `mo
 
 ## Why
 
-* Gui
-Visually build your app with ease. 
+* Gui: visually build your app with ease. 
 
-* Speed
-Quickly create a new screen, update a form or simply fix a typo.
+* Speed: quickly create a new screen, update a form or simply fix a typo.
 
-* Less coding
-Code your custom widgets and business logic when needed and use the `editor` to do the rest.
+* Less coding: code your custom widgets and business logic when needed and use the `editor` to do the rest.
 
-* Updates over-the-air
-As the `model` is a file, you can modify it and deploy it somewhere, where the app can download and load it.
+* Updates over-the-air: as the `model` is a file, you can modify it and deploy it somewhere, where the app can download and load it.
 
 ## Usage
 
