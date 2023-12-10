@@ -1,3 +1,4 @@
+/// A structure for exchanging messages with the Editor.
 class EditorMessage {
   final String dataType;
   final dynamic data;

@@ -5,6 +5,7 @@ import '../bloc/editor_bloc.dart';
 import '../bloc/editor_event.dart';
 import '../bloc/editor_state.dart';
 
+/// An utility Widget used when in `Lowder.editorMode`.
 class EditWidget extends StatefulWidget {
   final String id;
   final Widget widget;

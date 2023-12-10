@@ -11,7 +11,7 @@ import '../bloc/base_event.dart';
 import '../bloc/base_state.dart';
 import '../model/action_context.dart';
 import '../model/editor_node.dart';
-import '../model/k_node.dart';
+import '../model/node_spec.dart';
 import '../model/solution.dart';
 import '../schema.dart';
 import '../util/extensions.dart';
@@ -21,6 +21,7 @@ import '../widget/lowder.dart';
 typedef ExecutorFunction<R extends ActionResult> = FutureOr<R> Function(NodeSpec action, ActionContext context);
 typedef PageLoadFunction<E extends LoadPageActionEvent, R extends PageLoadedState> = FutureOr<R> Function(E event);
 
+/// An interface for registering a Solution's Actions.
 mixin IActions {
   final Map<String, dynamic> _actionExecutors = {};
   final Map<String, PageLoadFunction> _pageLoadExecutors = {};
@@ -111,27 +112,6 @@ mixin IActions {
   }
 
   @nonVirtual
-  void registerGlobalAction(
-    String name,
-    ExecutorFunction<GlobalActionResult> executor, {
-    bool abstract = false,
-    String? baseType = EditorAction.action,
-    Map<String, EditorPropertyType>? properties,
-    Map<String, EditorActionType>? actions,
-  }) {
-    _registerAction(
-      name,
-      executor,
-      EditorAction(
-        abstract: abstract,
-        baseType: baseType,
-        properties: properties,
-        actions: actions,
-      ),
-    );
-  }
-
-  @nonVirtual
   void registerLoadPageAction(
     String name,
     PageLoadFunction<LoadPageActionEvent, PageLoadedState> executor, {
@@ -150,6 +130,7 @@ mixin IActions {
   }
 }
 
+/// An empty implementation of [IActions] to be used when there are no Actions to declare.
 class NoActions with IActions {
   @override
   void registerActions() {
@@ -157,6 +138,7 @@ class NoActions with IActions {
   }
 }
 
+/// The Lowder's Action preset.
 class BaseActions with IActions {
   @override
   void registerActions() {

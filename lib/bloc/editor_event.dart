@@ -1,3 +1,4 @@
+/// Bloc event used by EditorBloc
 abstract class BaseEditorEvent {}
 
 class AppStartedEvent extends BaseEditorEvent {

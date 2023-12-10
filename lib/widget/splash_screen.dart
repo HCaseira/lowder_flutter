@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+/// A demo splash screen used as the first Widget the app renders.
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 

@@ -15,11 +15,14 @@ import '../factory/properties.dart';
 import '../factory/property_factory.dart';
 import '../factory/widget_factory.dart';
 import '../factory/widgets.dart';
-import '../model/editor_node.dart';
 import '../util/extensions.dart';
 import '../schema.dart';
 import 'splash_screen.dart';
 
+/// The main class for a Lowder project.
+/// It's the starting and central point of the app
+/// with singleton references to the [WidgetFactory], [ActionFactory], [PropertyFactory],
+/// [globalVariables] and [navigatorKey].
 abstract class Lowder extends StatefulWidget {
   static const String _envEnvironment = String.fromEnvironment("LOWDER_ENV", defaultValue: "Prod");
   static const bool _envEditor = bool.fromEnvironment("LOWDER_EDITOR", defaultValue: false);
@@ -34,9 +37,6 @@ abstract class Lowder extends StatefulWidget {
   static final Map globalVariables = {};
   static final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   static final List<SolutionSpec> _solutions = <SolutionSpec>[];
-  static final Map<String, EditorWidget> widgetSchema = <String, EditorWidget>{};
-  static final Map<String, EditorWidget> actionSchema = <String, EditorWidget>{};
-  static final Map<String, EditorWidget> propertySchema = <String, EditorWidget>{};
 
   static bool get editorMode => _editorMode;
   static String get editorServer => _editorServer;
@@ -69,7 +69,7 @@ abstract class Lowder extends StatefulWidget {
 
   /// Implement this method to register your solution.
   /// A solution has a name, a schema file (<my solution>.low),
-  /// and optional WidgetFactory, ActionFactory and PropertyFactory.
+  /// and optional [IWidgets], [IActions] and [IProperties].
   List<SolutionSpec> get solutions;
 
   static List<Map> getSchema() {
@@ -86,7 +86,7 @@ abstract class Lowder extends StatefulWidget {
     return schema;
   }
 
-  /// Upon 'InitialScreen' (typically a SplashScreen) completion,
+  /// Upon 'InitialScreen' completion,
   /// a series of async methods will run in order: init, loadSolution and postInit
   /// After those methods complete, the Solution's landing screen will be built.
   Future<void> init() async {

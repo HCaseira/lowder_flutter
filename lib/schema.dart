@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart';
-import 'model/k_node.dart';
+import 'model/node_spec.dart';
 import 'model/solution.dart';
 import 'util/extensions.dart';
 

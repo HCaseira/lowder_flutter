@@ -1,8 +1,9 @@
 import 'package:flutter/foundation.dart';
 
 import '../util/strings.dart';
-import 'k_node.dart';
+import 'node_spec.dart';
 
+/// Class representing a Model's Solution and its Nodes.
 class Solution {
   final String name;
   final String type;

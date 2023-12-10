@@ -11,7 +11,7 @@ import '../bloc/base_state.dart';
 import '../bloc/editor_bloc.dart';
 import '../factory/widget_factory.dart';
 import '../model/action_context.dart';
-import '../model/k_node.dart';
+import '../model/node_spec.dart';
 import '../model/solution.dart';
 import '../model/solution_exception.dart';
 import '../util/extensions.dart';
@@ -24,6 +24,7 @@ import 'property_factory.dart';
 typedef ActionFunction = void Function();
 typedef ActionValueFunction<T> = void Function(T value);
 
+/// Class that handles Action related operations.
 class ActionFactory {
   final Map<String, dynamic> _actionExecutors = {};
   final Map<String, PageLoadFunction> _pageLoadExecutors = {};
@@ -34,23 +35,26 @@ class ActionFactory {
   NavigatorState get appNavigator => Navigator.of(appContext, rootNavigator: true);
 
   LocalBloc createLocalBloc() => LocalBloc(InitialState());
-
   ListBloc createListBloc() => ListBloc(InitialState());
 
+  /// Schema loading
   @nonVirtual
   void loadActions(IActions actions) {
     _actionExecutors.addAll(actions.executors);
     _pageLoadExecutors.addAll(actions.pageLoadExecutors);
   }
 
+  /// Returns a [Function] for a give Action [type].
   Function? getResolver(String type) {
     return _actionExecutors[type];
   }
 
+  /// Returns a [PageLoadFunction] for a give PageAction [type].
   PageLoadFunction? getPageLoadResolver(String type) {
     return _pageLoadExecutors[type];
   }
 
+  /// Returns a [ActionFunction] that executes an Action based on it's [actionSpec].
   ActionFunction? getFunction(BuildContext context, dynamic actionSpec, Map state, Map? evaluatorContext) {
     if (actionSpec == null) return null;
     if (EditorBloc.editMode) return () {};
@@ -63,6 +67,7 @@ class ActionFactory {
     };
   }
 
+  /// Returns a [ActionValueFunction<T>] that executes an Action based on it's [actionSpec].
   ActionValueFunction<T>? getValueFunction<T>(BuildContext context, dynamic actionSpec, Map state, Map? evaluatorContext) {
     if (actionSpec == null) return null;
     if (EditorBloc.editMode) return (v) {};
@@ -77,6 +82,7 @@ class ActionFactory {
     };
   }
 
+  /// Executes a [PageLoadFunction]
   void executePageLoadAction(BuildContext buildContext, ListBloc bloc, int page, int pageSize, List fullData,
       Map? actionSpec, Map state, Map? actionContext,
       {dynamic value}) {
@@ -98,6 +104,7 @@ class ActionFactory {
     bloc.add(event);
   }
 
+  /// Starts the execution of an [action]
   @nonVirtual
   Future<void> run(BuildContext buildContext, NodeSpec action, Map state, Object? eventValue, Map? actionContext) async {
     if (!await preRun(buildContext, action.props)) {
@@ -128,6 +135,8 @@ class ActionFactory {
     onExecuted();
   }
 
+  /// An initial run of validations upon starting a [run].
+  /// E.g.: form validation.
   @protected
   Future<bool> preRun(BuildContext context, Map actionProps) async {
     try {
@@ -142,6 +151,8 @@ class ActionFactory {
     return true;
   }
 
+  /// An initial run of validations before executing an Action.
+  /// E.g.: a confirmation message like "Are you sure you want to delete this record?".
   @protected
   Future<bool> preExecute(NodeSpec action, ActionContext context) async {
     final props = action.props;
@@ -164,6 +175,7 @@ class ActionFactory {
     return true;
   }
 
+  /// The [action]'s actual execution.
   @nonVirtual
   Future<ActionResult> execute(NodeSpec action, ActionContext context) async {
     if (!context.buildContext.mounted) {
@@ -197,6 +209,7 @@ class ActionFactory {
     return result;
   }
 
+  /// Handles the [ActionResult] of an executed [action] and determines the next Action to be executed if any.
   @protected
   Future<NodeSpec?> postExecute(NodeSpec action, ActionResult result, ActionContext context) async {
     if (result.returnData != null || action.props["returnName"] != null) {
@@ -221,6 +234,8 @@ class ActionFactory {
     return nextActionSpec != null ? NodeSpec.fromMap(nextActionSpec) : null;
   }
 
+  /// Returns a Map with the evaluation context used when sanitizing properties of a [NodeSpec].
+  /// Used to resolve properties that use placeholders as values, like "${state.firstName}" or "${env.api_uri}".
   Map getEvaluatorContext(Object? value, Map state, Map? specContext) {
     final mediaQueryData = MediaQueryData.fromView(WidgetsBinding.instance.platformDispatcher.views.single);
 
@@ -252,6 +267,7 @@ class ActionFactory {
     return map;
   }
 
+  /// Exception handling when executing an [action]
   Future<RetryAction> handleException(NodeSpec action, ActionContext context, Object e) async {
     if (kDebugMode) print("Error executing action ${action.type}: $e");
     if (e is SolutionException) {
@@ -269,6 +285,8 @@ class ActionFactory {
     return RetryAction(false);
   }
 
+  /// Method used to make Http calls.
+  /// Conveniently placed in this class to facilitate overrides.
   Future<http.Response> httpCall(Uri uri, String method,
       {Object? body, Map<String, String>? headers, Encoding? encoding}) async {
     switch (method) {
@@ -285,6 +303,8 @@ class ActionFactory {
     }
   }
 
+  /// Method used to handle Http errors.
+  /// Conveniently placed in this class to facilitate overrides.
   Future<RetryAction> onHttpError(http.Response response, NodeSpec action, ActionContext context) async {
     if (response.statusCode == 401) {
       showErrorMessage("invalid_session_message");
@@ -294,6 +314,8 @@ class ActionFactory {
     return RetryAction(false);
   }
 
+  /// Method used to handle a successful Http call.
+  /// Conveniently placed in this class to facilitate overrides.
   HttpActionResult onHttpSuccess(http.Response response, NodeSpec action, ActionContext context) {
     final data = (response.headers[HttpHeaders.contentTypeHeader] ?? "").contains("application/json")
         ? json.decodeWithReviver(response.body)
@@ -302,6 +324,8 @@ class ActionFactory {
     return HttpActionResult(true, returnData: data);
   }
 
+  /// Method used to make Http calls.
+  /// Conveniently placed in this class to facilitate overrides.
   Map<String, String> getHttpDefaultHeaders({String? contentType, Map<String, String>? otherHeaders}) {
     final headers = <String, String>{};
 
@@ -321,10 +345,19 @@ class ActionFactory {
     return headers;
   }
 
+  /// Method executed immediately before executing an Action.
+  /// Launches an activity indicator.
   void onExecuting() => widgets.showActivityIndicator();
+
+  /// Method executed after executing an Action.
+  /// Removes an activity indicator.
   void onExecuted() => widgets.hideActivityIndicator();
+
+  /// Convenience method to display an error method to the user.
   void showErrorMessage(String message) => widgets.showMessage(type: "error", message: message);
 
+  /// Convenience method to log an error.
+  /// When in [Lowder.editorMode], the [message] will be displayed to the user.
   logError(String message, {Object? error, StackTrace? stackTrace, Type? originClass}) {
     log("[${originClass ?? runtimeType}] Error: $message", error: error, stackTrace: stackTrace);
     if (kDebugMode || Lowder.editorMode) {

@@ -1,11 +1,12 @@
 import 'dart:convert';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+/// [http] extension with a [isSuccess] getter.
 extension HttpExtensions on http.Response {
   bool get isSuccess => (statusCode ~/ 100) == 2;
 }
 
+/// [Map] extension implementing a [clone] method.
 extension MapExtensions on Map {
   Map clone() {
     var newMap = {};
@@ -22,6 +23,7 @@ extension MapExtensions on Map {
   }
 }
 
+/// [List] extension implementing a [clone] method.
 extension ArrayExtensions on List<Map> {
   List clone() {
     var newList = <Map>[];
@@ -32,14 +34,14 @@ extension ArrayExtensions on List<Map> {
   }
 }
 
+/// [Uri] extension implementing a [buildUri] method to facilitate the creation of an [Uri]
 extension UriExtensions on Uri {
   static Uri buildUri(String hostAddress, {String? path, Map? queryArgs}) {
     var uri = hostAddress;
     if (path != null && path.isNotEmpty) {
       if (hostAddress.endsWith("/") && path.startsWith("/")) {
         path = path.substring(1);
-      }
-      else if (!hostAddress.endsWith("/") && !path.startsWith("/")) {
+      } else if (!hostAddress.endsWith("/") && !path.startsWith("/")) {
         uri += "/";
       }
       uri += path;
@@ -58,7 +60,9 @@ extension UriExtensions on Uri {
   }
 }
 
+/// [JsonCodec] extensions.
 extension JsonCodecExtensions on JsonCodec {
+  /// [decode] method with a [reviver] to instantiate the correct objects from `model`
   dynamic decodeWithReviver(String source) {
     return decode(source, reviver: (key, value) {
       if (value is List && value.isNotEmpty) {
@@ -72,6 +76,7 @@ extension JsonCodecExtensions on JsonCodec {
     });
   }
 
+  /// [encode] method with [toEncodable] to correctly encode a DateTime object.
   String safeEncode(Object obj) {
     return json.encode(obj, toEncodable: (value) {
       if (value is DateTime) return value.toIso8601String();
@@ -80,16 +85,8 @@ extension JsonCodecExtensions on JsonCodec {
   }
 }
 
+/// [String] extension implementing formatting methods.
 extension StringCasingExtension on String {
-  String toCapitalized() => length > 0 ?'${this[0].toUpperCase()}${substring(1)}':'';
+  String toCapitalized() => length > 0 ? '${this[0].toUpperCase()}${substring(1)}' : '';
   String toTitleCase() => replaceAll(RegExp(' +'), ' ').split(' ').map((str) => str.toCapitalized()).join(' ');
-}
-
-extension HexColor on Color {
-  /// Prefixes a hash sign if [leadingHashSign] is set to `true` (default is `true`).
-  String toHex({bool leadingHashSign = true, bool includeAlpha = true}) => '${leadingHashSign ? '#' : ''}'
-      '${includeAlpha ? alpha.toRadixString(16).padLeft(2, '0') : ''}'
-      '${red.toRadixString(16).padLeft(2, '0')}'
-      '${green.toRadixString(16).padLeft(2, '0')}'
-      '${blue.toRadixString(16).padLeft(2, '0')}';
 }

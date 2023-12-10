@@ -13,6 +13,8 @@ import 'base_state.dart';
 import 'editor_event.dart';
 import 'editor_state.dart';
 
+/// Class to handle communications between the Lowder App and the Lowder Editor.
+/// Available when in [Lowder.editorMode].
 class EditorBloc extends Bloc<BaseEditorEvent, BaseState> {
   static bool editMode = false;
   static String clientId = const Uuid().v1();

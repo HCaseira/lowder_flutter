@@ -14,6 +14,7 @@ typedef ValueBuildFunction = dynamic Function(String? value);
 typedef SpecBuildFunction = dynamic Function(Map? spec);
 typedef ValueSpecBuildFunction = dynamic Function(dynamic value, Map? spec);
 
+/// An interface for registering a Solution's Properties.
 mixin IProperties {
   final Map<String, Function> _propertyBuilders = {};
   final Map<String, EditorNodeBase> _schema = {};
@@ -73,6 +74,7 @@ mixin IProperties {
   }
 }
 
+/// An empty implementation of [IProperties] to be used when there are no Properties to declare.
 class NoProperties with IProperties {
   @override
   void registerProperties() {
@@ -80,6 +82,7 @@ class NoProperties with IProperties {
   }
 }
 
+/// The Lowder's Property preset.
 class BaseProperties with IProperties {
   static final _instance = BaseProperties._();
   BaseProperties._();

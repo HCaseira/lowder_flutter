@@ -11,7 +11,7 @@ import '../bloc/base_bloc.dart';
 import '../bloc/base_state.dart';
 import '../bloc/editor_bloc.dart';
 import '../model/editor_node.dart';
-import '../model/k_node.dart';
+import '../model/node_spec.dart';
 import '../schema.dart';
 import '../util/parser.dart';
 import '../util/extensions.dart';
@@ -26,6 +26,7 @@ import 'widget_factory.dart';
 
 typedef WidgetBuilderFunc = Widget Function(BuildParameters params);
 
+/// An interface for registering a Solution's Widgets.
 mixin IWidgets {
   final Map<String, WidgetBuilderFunc> _widgetBuilders = {};
   final Map<String, EditorWidget> _schema = {};
@@ -68,6 +69,7 @@ mixin IWidgets {
   }
 }
 
+/// An empty implementation of [IWidgets] to be used when there are no Widgets to declare.
 class NoWidgets with IWidgets {
   @override
   void registerWidgets() {
@@ -75,6 +77,7 @@ class NoWidgets with IWidgets {
   }
 }
 
+/// The Lowder's Widget preset.
 class BaseWidgets with IWidgets {
   @override
   void registerWidgets() {

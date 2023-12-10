@@ -4,13 +4,14 @@ import '../bloc/base_bloc.dart';
 import '../bloc/base_state.dart';
 import '../bloc/editor_bloc.dart';
 import '../bloc/editor_state.dart';
-import '../model/k_node.dart';
+import '../model/node_spec.dart';
 import 'lowder.dart';
 
 typedef BlocListenerFunction = void Function(BuildContext context, BaseState state);
 typedef BlocBuilderFunction = Widget Function(BuildContext context, BaseState state);
 typedef EditorBuildFunction = Widget Function(BuildContext context);
 
+/// Base Bloc consumer class for handling states
 class LowderBlocConsumer<B extends BaseBloc> extends StatefulWidget {
   final Map<String, BlocListenerFunction> _listeners = <String, BlocListenerFunction>{};
   final Map<String, BlocBuilderFunction> _builders = <String, BlocBuilderFunction>{};
@@ -85,6 +86,7 @@ class LocalBlocConsumer<B extends LocalBloc> extends LowderBlocConsumer<B> {
   }
 }
 
+/// Global Bloc consumer for handling global states
 class GlobalBlocConsumer<B extends GlobalBloc> extends LowderBlocConsumer<B> {
   final WidgetNodeSpec? node;
 
@@ -93,6 +95,7 @@ class GlobalBlocConsumer<B extends GlobalBloc> extends LowderBlocConsumer<B> {
   }
 }
 
+/// Local Bloc consumer for handling local states
 class LocalBlocWidget extends StatelessWidget {
   final String screenId;
   final BlocBuilderFunction builder;
@@ -112,6 +115,7 @@ class LocalBlocWidget extends StatelessWidget {
   }
 }
 
+/// Editor Bloc consumer for handling Editor messages
 class EditorBlocConsumer extends StatelessWidget {
   final String screenId;
   final EditorBuildFunction buildFunc;

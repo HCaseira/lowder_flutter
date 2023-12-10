@@ -3,11 +3,14 @@ import 'package:flutter/material.dart';
 import '../util/parser.dart';
 import '../widget/lowder.dart';
 
-// Schema
+/// A series of structures and classes used to define the Schema
+/// of Node and Property Types for the Editor to know.
+
 abstract class EditorNodeBase {
   dynamic toJson();
 }
 
+/// Base class for informing the Editor of a Node Type's schema.
 abstract class EditorNode extends EditorNodeBase {
   final bool abstract;
   final String? baseType;
@@ -36,6 +39,7 @@ abstract class EditorNode extends EditorNodeBase {
   }
 }
 
+/// Class for creating an Action's schema.
 class EditorAction extends EditorNode {
   static const String terminationAction = "KAction";
   static const String action = "KStackAction";
@@ -64,6 +68,7 @@ class EditorAction extends EditorNode {
   }
 }
 
+/// Class for creating a Widget's schema.
 class EditorWidget extends EditorNode {
   static const String rootWidget = "RootWidget";
   static const String preferredSizeWidget = "PreferredSizeWidget";
@@ -101,11 +106,14 @@ class EditorWidget extends EditorNode {
   }
 }
 
+/// Class for creating an Property's schema.
 class EditorSpecProperty extends EditorNode {
   EditorSpecProperty(Map<String, EditorPropertyType>? properties, {super.baseType, super.abstract = false})
       : super(properties: properties);
 }
 
+/// Class for registering a Property Type as a list of possible values.
+/// e.g.:  registerListType(Types.textAlign.type, getTextAlign, ["left", "right", "center", "justify"]);
 class EditorValueListProperty extends EditorNodeBase {
   final List<String> values;
   EditorValueListProperty(this.values) : super();
@@ -114,6 +122,7 @@ class EditorValueListProperty extends EditorNodeBase {
   List<String> toJson() => values;
 }
 
+/// Base class for informing the Editor of a Type's schema.
 abstract class EditorType {
   final String type;
   final bool isArray;
@@ -124,6 +133,7 @@ abstract class EditorType {
   }
 }
 
+/// Class to define a Node's Action properties
 class EditorActionType extends EditorType {
   EditorActionType(super.type, {super.isArray});
 
@@ -131,6 +141,7 @@ class EditorActionType extends EditorType {
   factory EditorActionType.listAction() => EditorActionType(EditorAction.listAction);
 }
 
+/// Class to define a Node's Widget properties
 class EditorWidgetType extends EditorType {
   EditorWidgetType(super.type, {super.isArray});
 
@@ -140,6 +151,7 @@ class EditorWidgetType extends EditorType {
   factory EditorWidgetType.widget({bool isArray = false}) => EditorWidgetType(EditorWidget.widget, isArray: isArray);
 }
 
+/// Class to define a Node's Property properties.
 class EditorPropertyType extends EditorType {
   const EditorPropertyType(super.type, {super.isArray});
 
@@ -148,6 +160,7 @@ class EditorPropertyType extends EditorType {
   }
 }
 
+// String type Property.
 class EditorPropertyString extends EditorPropertyType {
   const EditorPropertyString({super.isArray}) : super("String");
 
@@ -157,6 +170,7 @@ class EditorPropertyString extends EditorPropertyType {
   }
 }
 
+/// Int type Property.
 class EditorPropertyInt extends EditorPropertyType {
   const EditorPropertyInt({super.isArray}) : super("Int");
 
@@ -166,6 +180,7 @@ class EditorPropertyInt extends EditorPropertyType {
   }
 }
 
+/// Double type Property.
 class EditorPropertyDouble extends EditorPropertyType {
   const EditorPropertyDouble({super.isArray}) : super("Double");
 
@@ -175,6 +190,7 @@ class EditorPropertyDouble extends EditorPropertyType {
   }
 }
 
+/// Bool type Property.
 class EditorPropertyBool extends EditorPropertyType {
   const EditorPropertyBool({super.isArray}) : super("Bool");
 
@@ -184,6 +200,7 @@ class EditorPropertyBool extends EditorPropertyType {
   }
 }
 
+/// Color type Property.
 class EditorPropertyColor extends EditorPropertyType {
   const EditorPropertyColor({super.isArray}) : super("Color");
 
@@ -193,6 +210,7 @@ class EditorPropertyColor extends EditorPropertyType {
   }
 }
 
+/// Json type Property.
 class EditorPropertyJson extends EditorPropertyType {
   const EditorPropertyJson({super.isArray}) : super("Json");
 
@@ -202,6 +220,8 @@ class EditorPropertyJson extends EditorPropertyType {
   }
 }
 
+/// Class for creating a Node's Property as a list of possible values
+/// e.g.: "crossAxisAlignment": const EditorPropertyListType(["start", "center", "end"]),
 class EditorPropertyListType extends EditorPropertyType {
   final List<String> values;
   const EditorPropertyListType(this.values) : super("", isArray: false);
@@ -212,6 +232,7 @@ class EditorPropertyListType extends EditorPropertyType {
   }
 }
 
+/// A series of known [EditorPropertyType]s.
 abstract class Types {
   static const string = EditorPropertyString();
   static const stringArray = EditorPropertyString(isArray: true);

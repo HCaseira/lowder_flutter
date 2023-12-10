@@ -3,12 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/base_bloc.dart';
 import '../bloc/base_state.dart';
 import '../bloc/editor_bloc.dart';
-import '../model/k_node.dart';
+import '../model/node_spec.dart';
 import '../util/extensions.dart';
 import '../util/parser.dart';
 import '../util/strings.dart';
 import 'lowder.dart';
 
+/// A ListView Widget using a `ListBloc` to handle page loads.
 class BlocList extends BlocListBase {
   BlocList(super.spec, super.state, super.evaluatorContext, {super.key});
 
@@ -60,6 +61,7 @@ class BlocList extends BlocListBase {
   }
 }
 
+/// A Grid Widget using a `ListBloc` to handle page loads.
 class BlocGrid extends BlocListBase {
   BlocGrid(super.spec, super.state, super.evaluatorContext, {super.key});
 
@@ -106,6 +108,7 @@ class BlocGrid extends BlocListBase {
   }
 }
 
+/// A PageView Widget using a `ListBloc` to handle page loads.
 class BlocPageView extends BlocListBase {
   BlocPageView(super.spec, super.state, super.evaluatorContext, {super.key});
 
@@ -161,6 +164,7 @@ class BlocPageView extends BlocListBase {
   }
 }
 
+/// A Table Widget using a `ListBloc` to handle page loads.
 class BlocTable extends BlocListBase {
   BlocTable(super.spec, super.state, super.evaluatorContext, {super.key});
 
@@ -211,6 +215,7 @@ class BlocTable extends BlocListBase {
   }
 }
 
+/// A DataTable Widget using a `ListBloc` to handle page loads.
 class BlocDataTable extends BlocListBase {
   final sortState = {};
 
@@ -362,6 +367,7 @@ class BlocDataTable extends BlocListBase {
   }
 }
 
+/// The base class for using `ListBloc` to handle page loads.
 abstract class BlocListBase extends StatefulWidget {
   final Map state;
   final Map? evaluatorContext;

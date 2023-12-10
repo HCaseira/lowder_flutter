@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../bloc/editor_bloc.dart';
 import '../model/editor_node.dart';
-import '../model/k_node.dart';
+import '../model/node_spec.dart';
 import '../schema.dart';
 import '../util/extensions.dart';
 import '../util/parser.dart';
@@ -16,6 +16,7 @@ import 'action_factory.dart';
 import 'property_factory.dart';
 import 'widgets.dart';
 
+/// Class that handles Widget related operations.
 class WidgetFactory {
   static DialogRoute? activityIndicatorRoute;
   final Map<String, EditorWidget> _schema = {};
@@ -25,12 +26,14 @@ class WidgetFactory {
   BuildContext get appContext => Lowder.navigatorKey.currentContext!;
   NavigatorState get appNavigator => Navigator.of(appContext, rootNavigator: true);
 
+  /// Schema loading
   @nonVirtual
   void loadWidgets(IWidgets widgets) {
     _schema.addAll(widgets.schema);
     _widgetBuilders.addAll(widgets.builders);
   }
 
+  /// Returns a Widget's propery schema.
   Map<String, EditorPropertyType> getPropertySchema(String type) {
     final schema = _schema[type]!;
     final props = <String, EditorPropertyType>{}..addAll(schema.properties ?? {});
@@ -47,6 +50,7 @@ class WidgetFactory {
     return props;
   }
 
+  /// Creates a [MaterialPageRoute] for a given Screen [spec].
   MaterialPageRoute buildRoute(WidgetNodeSpec spec, {Map? state}) {
     return MaterialPageRoute(
       settings: RouteSettings(name: spec.name, arguments: spec),
@@ -54,11 +58,13 @@ class WidgetFactory {
     );
   }
 
+  /// Builds a [LowderScreen] based on it's [spec].
   Widget buildScreen(BuildContext context, WidgetNodeSpec spec, {Map? state}) {
     state ??= {};
     return internalBuildScreen(context, spec, state);
   }
 
+  /// Tries to execute a [Widget] build from a [spec].
   Widget? tryBuildWidget(BuildContext context, dynamic spec, Map state, Map? parentContext) {
     if (spec == null) {
       return null;
@@ -70,25 +76,24 @@ class WidgetFactory {
     return buildWidget(context, spec, state, parentContext);
   }
 
+  /// Transforms a Map spec to a WidgetNodeSpec spec and executes [buildWidgetFromSpec].
   Widget buildWidget(BuildContext context, Map spec, Map state, Map? parentContext) {
     return buildWidgetFromSpec(context, WidgetNodeSpec.fromMap(spec), state, parentContext);
   }
 
+  /// Executes a [Widget] build from a [spec].
   Widget buildWidgetFromSpec(BuildContext context, WidgetNodeSpec spec, Map state, Map? parentContext) {
-    return internalBuildWidget(context, spec, state, parentContext);
+    var widget = createWidget(context, spec, state, parentContext);
+    return postBuild(context, widget, spec);
   }
 
+  /// Builds a [LowderScreen] based on it's [spec].
   @protected
   Widget internalBuildScreen(BuildContext context, WidgetNodeSpec spec, Map screenState) {
     return LowderScreen(spec, screenState);
   }
 
-  @protected
-  Widget internalBuildWidget(BuildContext context, WidgetNodeSpec spec, Map state, Map? parentContext) {
-    var widget = createWidget(context, spec, state, parentContext);
-    return postBuild(context, widget, spec);
-  }
-
+  /// Creates a [Widget] based on it's [spec].
   @protected
   Widget createWidget(BuildContext context, WidgetNodeSpec spec, Map state, Map? parentContext) {
     final evaluatorContext = actions.getEvaluatorContext(null, state, parentContext);
@@ -106,6 +111,8 @@ class WidgetFactory {
     return _widgetBuilders.containsKey(spec.type) ? _widgetBuilders[spec.type]!(buildParameters) : const SizedBox();
   }
 
+  /// Handles generic convenience properties from a [spec],
+  /// like decoration, margin or visibility.
   @protected
   Widget postBuild(BuildContext context, Widget widget, WidgetNodeSpec spec) {
     widget = handleHero(context, widget, spec);
@@ -120,6 +127,7 @@ class WidgetFactory {
     return widget;
   }
 
+  /// Handles convenience 'hero' property.
   @protected
   Widget handleHero(BuildContext context, Widget widget, WidgetNodeSpec spec) {
     if (spec.props["heroTag"] != null) {
@@ -136,6 +144,7 @@ class WidgetFactory {
     return widget;
   }
 
+  /// Handles convenience 'decoration' property.
   @protected
   Widget handleDecorator(BuildContext context, Widget widget, WidgetNodeSpec spec) {
     if (spec.props["decorator"] != null && spec.props["decorator"].length > 0) {
@@ -155,6 +164,7 @@ class WidgetFactory {
     return widget;
   }
 
+  /// Handles convenience 'wrapExpanded' property.
   @protected
   Widget handleExpanded(BuildContext context, Widget widget, WidgetNodeSpec spec) {
     if (parseBool(spec.props["wrapExpanded"])) {
@@ -163,6 +173,7 @@ class WidgetFactory {
     return widget;
   }
 
+  /// Handles convenience 'margin' property.
   @protected
   Widget handleMargin(BuildContext context, Widget widget, WidgetNodeSpec spec) {
     final insets = properties.getInsets(spec.props["wrapPadding"] ?? spec.props["margin"]);
@@ -172,6 +183,7 @@ class WidgetFactory {
     return widget;
   }
 
+  /// Handles convenience 'safeArea' property.
   @protected
   Widget handleSafeArea(BuildContext context, Widget widget, WidgetNodeSpec spec) {
     final prop = spec.props["wrapSafeArea"] ?? spec.props["safeArea"];
@@ -190,6 +202,7 @@ class WidgetFactory {
     return widget;
   }
 
+  /// Handles convenience 'visible' property.
   @protected
   Widget handleVisibility(BuildContext context, Widget widget, WidgetNodeSpec spec) {
     if (!parseBool(spec.props["visible"], defaultValue: true)) {
@@ -198,21 +211,15 @@ class WidgetFactory {
     return widget;
   }
 
+  /// Convenience method to instantiate a [LocalBlocConsumer] and facilitate overriding.
   Widget getLocalBlocConsumer(BlocBuilderFunction builder, {BlocListenerFunction? listener}) =>
       LocalBlocConsumer(builder, defaultListener: listener);
 
+  /// Convenience method to instantiate a [GlobalBlocConsumer] and facilitate overriding.
   Widget getGlobalBlocConsumer(BlocBuilderFunction builder, {BlocListenerFunction? listener, WidgetNodeSpec? node}) =>
       GlobalBlocConsumer(builder, defaultListener: listener, node: node);
 
-  Widget buildActivityIndicator(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.1),
-      ),
-      child: const Center(child: CircularProgressIndicator()),
-    );
-  }
-
+  /// Builds a dialog displaying [message].
   Future<void> showMessage({String type = "info", String? message, Map? props, BuildContext? context}) async {
     if (message == null || message.isEmpty) {
       return;
@@ -265,6 +272,7 @@ class WidgetFactory {
     );
   }
 
+  /// Builds a confirmation dialog with a given [title] and [message].
   Future<bool> showConfirmation({String? title, String? message, Map? props, BuildContext? context}) async {
     if (title == null && message == null) {
       return true;
@@ -291,6 +299,7 @@ class WidgetFactory {
     return result ?? false;
   }
 
+  /// Shows the activity indicator.
   void showActivityIndicator({BuildContext? context, Map? props}) {
     if (activityIndicatorRoute != null) {
       return;
@@ -306,6 +315,7 @@ class WidgetFactory {
     appNavigator.push(activityIndicatorRoute!);
   }
 
+  /// Hides the activity indicator.
   void hideActivityIndicator() {
     if (activityIndicatorRoute != null) {
       if (activityIndicatorRoute!.canPop) {
@@ -315,6 +325,18 @@ class WidgetFactory {
     }
   }
 
+  /// Builds the generic activity indicator used throughout the app.
+  Widget buildActivityIndicator(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.black.withOpacity(0.1),
+      ),
+      child: const Center(child: CircularProgressIndicator()),
+    );
+  }
+
+  /// Sanitizes the properties of a [spec] using [template] and string evaluation.
+  /// E.g.: a property valued "${state.firstName}" will have its value replaced with the [state]'s "firstName" key value.
   @protected
   void mergeTemplateAndState(WidgetNodeSpec spec, Map template, Map state, Map parentContext) {
     properties.evaluateMap(spec.props, parentContext);
@@ -356,6 +378,7 @@ class WidgetFactory {
     }
   }
 
+  /// Utility method to merge two Maps.
   void mergeMaps(Map map1, Map map2) {
     for (var key in map2.keys) {
       var map1Value = map1[key];
@@ -373,6 +396,7 @@ class WidgetFactory {
     }
   }
 
+  /// Returns the Template node with the given [id] from the Model.
   Map getTemplate(String? id) {
     if (id == null) {
       return {};
@@ -391,6 +415,7 @@ class WidgetFactory {
     return finalTemplate;
   }
 
+  /// Convenience method returning a generic validator for string input Widgets.
   StringValueValidationFunction getStringValidator(Map spec) {
     var required = parseBool(spec["required"]);
     final minLength = parseInt(spec["minLength"]);
@@ -435,6 +460,7 @@ class WidgetFactory {
     };
   }
 
+  /// Convenience method returning a generic validator for bool input Widgets.
   CheckboxValidationFunction getCheckboxValidator(Map spec) {
     var required = parseBool(spec["required"]);
     var requiredText = Lowder.properties.getText(spec["requiredMessage"] ?? "required_field_message", "errorMessage");
@@ -451,6 +477,7 @@ class WidgetFactory {
 typedef StringValueValidationFunction = String? Function(String? value);
 typedef CheckboxValidationFunction = String? Function(bool? value);
 
+/// A structure containing contextual objects for a Widget's build.
 class BuildParameters {
   final BuildContext context;
   final WidgetNodeSpec spec;

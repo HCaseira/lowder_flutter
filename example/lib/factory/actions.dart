@@ -2,7 +2,7 @@ import 'package:lowder/factory/actions.dart';
 import 'package:lowder/factory/action_factory.dart';
 import 'package:lowder/model/action_context.dart';
 import 'package:lowder/model/editor_node.dart';
-import 'package:lowder/model/k_node.dart';
+import 'package:lowder/model/node_spec.dart';
 import 'package:lowder/util/parser.dart';
 
 class SolutionActions extends ActionFactory with IActions {

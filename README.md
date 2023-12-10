@@ -9,7 +9,7 @@ Using the `Lowder Editor`, build your app's `model`, which this plugin will inte
 
 Lowder is composed of an `editor` and an `interpreter`, and both work with a `model` file.
 The `editor` is a visual interface where you can create your app's UI and logic.
-The `model` is a json object containing the objects created in the `editor`.
+The `model` is a json file containing the objects created in the `editor`.
 The `interpreter` (this package) is a set of classes to load and execute the `model`.
 
 ## Why

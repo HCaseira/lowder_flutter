@@ -2,6 +2,7 @@ import 'dart:developer';
 import '../util/extensions.dart';
 import '../widget/lowder.dart';
 
+/// Class representing a Model's Node.
 class NodeSpec {
   final String type;
   final Map props;
@@ -25,6 +26,7 @@ class NodeSpec {
   }
 }
 
+/// Class representing a Model's RootNode like a Screen, Template, Component, etc.
 class RootNodeSpec extends NodeSpec {
   @override
   final String id;
@@ -48,6 +50,7 @@ class RootNodeSpec extends NodeSpec {
   }
 }
 
+/// Class representing a Model's Widget Node.
 class WidgetNodeSpec extends RootNodeSpec {
   final String? template;
   final Map widgets;
@@ -95,6 +98,7 @@ class WidgetNodeSpec extends RootNodeSpec {
   }
 }
 
+/// Class representing a Model's Action Node.
 class ActionNodeSpec extends RootNodeSpec {
   ActionNodeSpec(super.id, super.name, super.type, super.props, Map actions) : super(actions: actions);
 

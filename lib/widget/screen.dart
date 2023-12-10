@@ -2,11 +2,12 @@ import 'dart:developer';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../bloc/base_state.dart';
-import '../model/k_node.dart';
+import '../model/node_spec.dart';
 import '../schema.dart';
 import 'lowder.dart';
 import 'bloc_handler.dart';
 
+/// A Widget used render a `Screen` object from `model`.
 class LowderScreen extends StatefulWidget {
   final formKey = GlobalKey<FormState>();
   final WidgetNodeSpec spec;

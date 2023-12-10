@@ -4,6 +4,7 @@ import '../widget/lowder.dart';
 import 'base_event.dart';
 import 'base_state.dart';
 
+/// Lowder's implementation of [Bloc] to support Lowder's Widgets and Actions.
 abstract class BaseBloc extends Bloc<BaseEvent, BaseState> {
   BaseBloc(super.initialState) {
     on<EmitState>((evt, emit) => emit(evt.state));
@@ -24,6 +25,7 @@ abstract class BaseBloc extends Bloc<BaseEvent, BaseState> {
   }
 }
 
+/// A singleton [BaseBloc] to emit states to the whole app
 class GlobalBloc extends BaseBloc {
   /// This is a singleton class
   GlobalBloc._() : super(InitialState());
@@ -33,10 +35,12 @@ class GlobalBloc extends BaseBloc {
   static emitState(BaseState state) => GlobalBloc().add(EmitState(state));
 }
 
+/// A [BaseBloc] used by Widgets wanting to handle private events.
 class LocalBloc extends BaseBloc {
   LocalBloc(super.initialState);
 }
 
+/// A [BaseBloc] used by Widgets displaying paged data.
 class ListBloc extends BaseBloc {
   ListBloc(super.initialState);
 }

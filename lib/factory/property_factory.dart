@@ -4,15 +4,17 @@ import '../util/parser.dart';
 import '../util/strings.dart';
 import 'properties.dart';
 
+/// Class that handles Property related operations.
 class PropertyFactory {
   final Map<String, Function> _builders = {};
 
+  /// Schema loading
   @nonVirtual
   void loadProperties(IProperties properties) {
-    // _schema.addAll(properties.schema);
     _builders.addAll(properties.builders);
   }
 
+  /// Returns a result from a Property's [type] and [propValue].
   dynamic build(String type, dynamic propValue, {dynamic argument}) {
     if (!_builders.containsKey(type) || _builders[type] == null) {
       return propValue;
@@ -25,6 +27,7 @@ class PropertyFactory {
     }
   }
 
+  /// Utility method to return a [Key] based on a Property's value.
   Key? getKey(dynamic key) {
     if (key is Key) {
       return key;
@@ -35,6 +38,7 @@ class PropertyFactory {
     return Key(key);
   }
 
+  /// Utility method to build an [EdgeInsets] based on a Property's [value].
   EdgeInsets? getInsets(dynamic value) {
     if (value == null) return null;
     if (value is num) return EdgeInsets.all(parseDouble(value));
@@ -49,6 +53,9 @@ class PropertyFactory {
     }
   }
 
+  /// Utility method to return a translated string from a [value].
+  /// A [context] value will define it's transformation.
+  /// E.g.: a [context] 'button' will return a title cased translated string.
   String getText(String value, String context, {Map<String, dynamic>? attributes}) {
     switch (context) {
       case "dialogTitle":
@@ -72,6 +79,7 @@ class PropertyFactory {
     }
   }
 
+  /// Updates the content of a [Map] by evaluating it's values using [otherMap] as context.
   void evaluateMap(Map map, Map? otherMap) {
     if (otherMap == null) {
       return;
@@ -81,12 +89,14 @@ class PropertyFactory {
     }
   }
 
+  /// Updates the content of a [List] by evaluating it's values using [map] as context.
   void evaluateList(List list, Map map) {
     for (var i = 0; i < list.length; i++) {
       list[i] = evaluateValue(list[i], map);
     }
   }
 
+  /// Returns the evaluated value of a given [value] using [map] as context.
   dynamic evaluateValue(dynamic value, Map map) {
     if (value is String) {
       return evaluateString(value, map);
@@ -98,6 +108,9 @@ class PropertyFactory {
     return value;
   }
 
+  /// Evaluates a string using [evaluatorContext].
+  /// A string containing ${<some var>} will be evaluated.
+  /// E.g.: a string "${state.name}" will be replaced with the (evaluatorContext["state"] as Map)["name"].
   dynamic evaluateString(String? value, Map evaluatorContext) {
     if (value == null || value.isEmpty) {
       return null;
@@ -111,7 +124,7 @@ class PropertyFactory {
       }
 
       var valueToResolve = value.substring(startIdx + 2, endIdx);
-      var resolvedPart = evaluateStringPart(valueToResolve, evaluatorContext);
+      var resolvedPart = _evaluateStringPart(valueToResolve, evaluatorContext);
       if (value.length == endIdx - startIdx + 1) {
         return resolvedPart;
       } else {
@@ -122,7 +135,7 @@ class PropertyFactory {
     return value;
   }
 
-  dynamic evaluateStringPart(String value, Map evaluatorContext) {
+  dynamic _evaluateStringPart(String value, Map evaluatorContext) {
     final parts = value.split(".");
     var evaluatedValue = evaluatorContext[parts.removeAt(0)];
     if (evaluatedValue == null || parts.isEmpty) {
@@ -150,6 +163,7 @@ class PropertyFactory {
     return evaluatedValue;
   }
 
+  /// Evaluates the result of a given [leftStatement], an [operator] and a [rightStatement].
   bool evaluateOperator(dynamic leftStatement, String operator, dynamic rightStatement) {
     dynamic left;
     dynamic right;
@@ -200,6 +214,7 @@ class PropertyFactory {
     }
   }
 
+  /// Evaluates an "OperatorCondition" Property.
   bool evaluateCondition(Map spec) {
     if (spec["_type"] != "OperatorCondition") {
       return true;
@@ -209,7 +224,7 @@ class PropertyFactory {
       result = evaluateCondition(spec["and"]);
     }
     if (!result && spec["or"] != null) {
-      result = evaluateCondition(spec["and"]);
+      result = evaluateCondition(spec["or"]);
     }
     return result;
   }

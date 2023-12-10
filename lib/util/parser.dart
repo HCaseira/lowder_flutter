@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-bool parseBool(var value, { bool defaultValue = false }) {
+/// [bool] parser utility methods
+bool parseBool(var value, {bool defaultValue = false}) {
   return _parseBool(value, defaultValue) as bool;
 }
 
@@ -21,7 +22,8 @@ bool? _parseBool(var value, bool? defaultValue) {
   return defaultValue;
 }
 
-int parseInt(var value, { int defaultValue = 0 }) {
+/// [int] parser utility methods
+int parseInt(var value, {int defaultValue = 0}) {
   return _parseInt(value, defaultValue) as int;
 }
 
@@ -35,15 +37,15 @@ int? _parseInt(var value, int? defaultValue) {
       return value.toInt();
     } else if (value is String) {
       return num.tryParse(value)?.toInt() ?? defaultValue;
-    }
-    else if (value is bool) {
+    } else if (value is bool) {
       return value ? 1 : 0;
     }
   }
   return defaultValue;
 }
 
-double parseDouble(var value, { double defaultValue = 0.0 }) {
+/// [double] parser utility methods
+double parseDouble(var value, {double defaultValue = 0.0}) {
   return _parseDouble(value, defaultValue) as double;
 }
 
@@ -62,7 +64,8 @@ double? _parseDouble(var value, double? defaultValue) {
   return defaultValue;
 }
 
-DateTime parseDateTime(var value, { DateTime? defaultValue }) {
+/// [DateTime] parser utility methods
+DateTime parseDateTime(var value, {DateTime? defaultValue}) {
   defaultValue ??= DateTime.fromMillisecondsSinceEpoch(0);
   return _parseDateTime(value, defaultValue) as DateTime;
 }
@@ -85,7 +88,8 @@ DateTime? _parseDateTime(var value, DateTime? defaultValue) {
   return defaultValue;
 }
 
-Color parseColor(String? value, { Color defaultColor = Colors.black }) {
+/// [Color] parser utility methods
+Color parseColor(String? value, {Color defaultColor = Colors.black}) {
   return _parseColor(value, defaultColor) as Color;
 }
 
