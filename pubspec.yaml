@@ -1,8 +1,8 @@
 name: lowder
 description: A lightweight low-code development tool for Flutter to build your app with ease.
-version: 0.1.1
+version: 0.1.2
 homepage: https://github.com/HCaseira/lowder_flutter
-documentation: https://github.com/HCaseira/lowder_flutter/wiki
+documentation: https://pub.dev/documentation/lowder
 repository: https://github.com/HCaseira/lowder_flutter
 issue_tracker: https://github.com/HCaseira/lowder_flutter/issues
 

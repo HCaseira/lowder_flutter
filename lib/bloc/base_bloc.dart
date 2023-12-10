@@ -12,11 +12,14 @@ abstract class BaseBloc extends Bloc<BaseEvent, BaseState> {
   }
 
   @protected
-  void onLoadPageAction(LoadPageActionEvent event, Emitter<BaseState> emit) async {
+  void onLoadPageAction(
+      LoadPageActionEvent event, Emitter<BaseState> emit) async {
     PageLoadedState state;
     final func = Lowder.actions.getPageLoadResolver(event.action.type);
     if (func == null) {
-      Lowder.actions.logError("Unknown LoadPageAction type: ${event.action.type}", originClass: runtimeType);
+      Lowder.actions.logError(
+          "Unknown LoadPageAction type: ${event.action.type}",
+          originClass: runtimeType);
       state = PageLoadedState(event.page, event.fullData, false);
     } else {
       state = await func(event);

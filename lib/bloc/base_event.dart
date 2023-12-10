@@ -20,5 +20,6 @@ class LoadPageActionEvent extends BaseEvent {
   final int pageSize;
   final List<dynamic> fullData;
   final ActionContext context;
-  LoadPageActionEvent(this.action, this.context, this.page, this.pageSize, this.fullData);
+  LoadPageActionEvent(
+      this.action, this.context, this.page, this.pageSize, this.fullData);
 }

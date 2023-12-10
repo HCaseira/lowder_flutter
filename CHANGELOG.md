@@ -1,3 +1,7 @@
+## 0.1.2
+
+* File formatting to respect pub.dev standards.
+
 ## 0.1.1
 
 * pub.dev related updates.
