@@ -8,21 +8,27 @@ class SplashScreen extends StatefulWidget {
   @override
   SplashScreenState createState() => SplashScreenState();
 
-  Color getColor1(BuildContext context) => Theme.of(context).colorScheme.primary;
-  Color getColor2(BuildContext context) => Theme.of(context).colorScheme.background;
+  Color getColor1(BuildContext context) =>
+      Theme.of(context).colorScheme.primary;
+  Color getColor2(BuildContext context) =>
+      Theme.of(context).colorScheme.background;
 
-  Widget getLogo(BuildContext context, Color foregroundColor, Color backgroundColor, int stage) {
+  Widget getLogo(BuildContext context, Color foregroundColor,
+      Color backgroundColor, int stage) {
     return Column(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.end,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Directionality(textDirection: TextDirection.ltr, child: Icon(Icons.flutter_dash, color: foregroundColor, size: 128))
+        Directionality(
+            textDirection: TextDirection.ltr,
+            child: Icon(Icons.flutter_dash, color: foregroundColor, size: 128))
       ],
     );
   }
 
-  Widget getActivityIndicator(BuildContext context, Color foregroundColor, Color backgroundColor) {
+  Widget getActivityIndicator(
+      BuildContext context, Color foregroundColor, Color backgroundColor) {
     return Center(child: CircularProgressIndicator(color: foregroundColor));
   }
 
@@ -32,7 +38,8 @@ class SplashScreen extends StatefulWidget {
   @nonVirtual
   Future<void> onFinished(BuildContext context) async {
     await doWork();
-    WidgetsBinding.instance.addPostFrameCallback((_) => Navigator.of(context).maybePop());
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => Navigator.of(context).maybePop());
   }
 }
 
@@ -57,14 +64,18 @@ class SplashScreenState extends State<SplashScreen> {
       case 0:
         backgroundColor = color1;
         foregroundColor = color2;
-        Future.delayed(const Duration(milliseconds: 600), () => setState(() => stage++));
+        Future.delayed(
+            const Duration(milliseconds: 600), () => setState(() => stage++));
         break;
       case 1:
-        Future.delayed(const Duration(milliseconds: 1500), () => setState(() => stage++));
+        Future.delayed(
+            const Duration(milliseconds: 1500), () => setState(() => stage++));
         break;
       case 2:
-        loader = widget.getActivityIndicator(context, foregroundColor, backgroundColor);
-        Future.delayed(const Duration(milliseconds: 400), () async => await widget.onFinished(context));
+        loader = widget.getActivityIndicator(
+            context, foregroundColor, backgroundColor);
+        Future.delayed(const Duration(milliseconds: 400),
+            () async => await widget.onFinished(context));
     }
 
     return AnimatedContainer(
@@ -79,7 +90,8 @@ class SplashScreenState extends State<SplashScreen> {
                   tag: "splash_logo",
                   child: Material(
                       type: MaterialType.transparency,
-                      child: widget.getLogo(context, foregroundColor, backgroundColor, stage)))),
+                      child: widget.getLogo(
+                          context, foregroundColor, backgroundColor, stage)))),
           Expanded(child: loader),
         ],
       ),

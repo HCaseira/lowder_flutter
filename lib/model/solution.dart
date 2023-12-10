@@ -26,8 +26,8 @@ class Solution {
   static final StringResources stringResources = StringResources({});
   static String _language = "en";
 
-  Solution._(
-      this.name, this.type, this.landingScreen, this.screens, this.templates, this.components, this.actions, this.requests);
+  Solution._(this.name, this.type, this.landingScreen, this.screens,
+      this.templates, this.components, this.actions, this.requests);
 
   void upsertScreen(Map spec) {
     final node = WidgetNodeSpec.fromMap(spec);
@@ -108,11 +108,14 @@ class Solution {
   static String get language => _language;
   static List<String> get languages => stringResources.languages;
 
-  static Solution fromMap(Map solutionData, String environment, {String language = "en"}) {
-    environmentData.merge(EnvironmentData.fromMap(solutionData["environmentData"]));
+  static Solution fromMap(Map solutionData, String environment,
+      {String language = "en"}) {
+    environmentData
+        .merge(EnvironmentData.fromMap(solutionData["environmentData"]));
     setEnvironment(environment);
 
-    stringResources.merge(StringResources.fromMap(solutionData["stringResources"]));
+    stringResources
+        .merge(StringResources.fromMap(solutionData["stringResources"]));
     setLanguage(language);
 
     final screens = (solutionData["screens"] ?? <Map>[]) as List<Map>;
@@ -150,7 +153,8 @@ class Solution {
     return Solution._(
       solutionData["name"] ?? "",
       solutionData["type"] ?? "",
-      solutionData["landingScreen"] ?? (screens.isNotEmpty ? screens[0]["_id"] : ""),
+      solutionData["landingScreen"] ??
+          (screens.isNotEmpty ? screens[0]["_id"] : ""),
       screenMap,
       templateMap,
       componentMap,
@@ -159,7 +163,8 @@ class Solution {
     );
   }
 
-  static Solution empty(String name, String environment, {String landingScreen = "", String language = "en"}) {
+  static Solution empty(String name, String environment,
+      {String landingScreen = "", String language = "en"}) {
     return Solution._(name, "", landingScreen, {}, {}, {}, {}, {});
   }
 
@@ -203,8 +208,12 @@ class EnvironmentData {
     Map<String, Map<String, String>> map = {};
     if (environmentData != null) {
       var environments = environmentData["environments"] as List;
-      var keys = environmentData["keys"] != null ? environmentData["keys"] as List : [];
-      var values = environmentData["values"] != null ? environmentData["values"] as List<List> : [];
+      var keys = environmentData["keys"] != null
+          ? environmentData["keys"] as List
+          : [];
+      var values = environmentData["values"] != null
+          ? environmentData["values"] as List<List>
+          : [];
 
       for (var i = 0; i < environments.length; i++) {
         Map<String, String> environmentMap = {};
@@ -250,8 +259,12 @@ class StringResources {
     Map<String, Map<String, String>> map = {};
     if (stringResourcesData != null) {
       var environments = stringResourcesData["languages"] as List;
-      var keys = stringResourcesData["keys"] != null ? stringResourcesData["keys"] as List : [];
-      var values = stringResourcesData["values"] != null ? stringResourcesData["values"] as List<List> : [];
+      var keys = stringResourcesData["keys"] != null
+          ? stringResourcesData["keys"] as List
+          : [];
+      var values = stringResourcesData["values"] != null
+          ? stringResourcesData["values"] as List<List>
+          : [];
 
       for (var i = 0; i < environments.length; i++) {
         Map<String, String> environmentMap = {};

@@ -10,12 +10,14 @@ class SolutionActions extends ActionFactory with IActions {
   void registerActions() {
     registerSilentAction("Math", onMath, properties: {
       "input": Types.double,
-      "operation": const EditorPropertyListType(["add", "subtract", "multiply", "divide"]),
+      "operation": const EditorPropertyListType(
+          ["add", "subtract", "multiply", "divide"]),
       "value": Types.double
     });
   }
 
-  Future<SilentActionResult> onMath(NodeSpec action, ActionContext context) async {
+  Future<SilentActionResult> onMath(
+      NodeSpec action, ActionContext context) async {
     final input = parseDouble(action.props["input"]);
     final value = parseDouble(action.props["value"]);
     late double result;

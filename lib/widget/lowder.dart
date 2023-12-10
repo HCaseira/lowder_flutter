@@ -24,9 +24,12 @@ import 'splash_screen.dart';
 /// with singleton references to the [WidgetFactory], [ActionFactory], [PropertyFactory],
 /// [globalVariables] and [navigatorKey].
 abstract class Lowder extends StatefulWidget {
-  static const String _envEnvironment = String.fromEnvironment("LOWDER_ENV", defaultValue: "Prod");
-  static const bool _envEditor = bool.fromEnvironment("LOWDER_EDITOR", defaultValue: false);
-  static const String _envServer = String.fromEnvironment("LOWDER_SERVER", defaultValue: "http://localhost:8787/");
+  static const String _envEnvironment =
+      String.fromEnvironment("LOWDER_ENV", defaultValue: "Prod");
+  static const bool _envEditor =
+      bool.fromEnvironment("LOWDER_EDITOR", defaultValue: false);
+  static const String _envServer = String.fromEnvironment("LOWDER_SERVER",
+      defaultValue: "http://localhost:8787/");
 
   static late bool _editorMode;
   static late String _editorServer;
@@ -35,7 +38,8 @@ abstract class Lowder extends StatefulWidget {
   static late ActionFactory _actions;
   static late PropertyFactory _properties;
   static final Map globalVariables = {};
-  static final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+  static final GlobalKey<NavigatorState> navigatorKey =
+      GlobalKey<NavigatorState>();
   static final List<SolutionSpec> _solutions = <SolutionSpec>[];
 
   static bool get editorMode => _editorMode;
@@ -44,7 +48,8 @@ abstract class Lowder extends StatefulWidget {
   static WidgetFactory get widgets => _widgets;
   static ActionFactory get actions => _actions;
   static PropertyFactory get properties => _properties;
-  static Lowder? of(BuildContext context) => context.findAncestorWidgetOfExactType<Lowder>();
+  static Lowder? of(BuildContext context) =>
+      context.findAncestorWidgetOfExactType<Lowder>();
 
   final String title;
 
@@ -90,7 +95,10 @@ abstract class Lowder extends StatefulWidget {
   /// a series of async methods will run in order: init, loadSolution and postInit
   /// After those methods complete, the Solution's landing screen will be built.
   Future<void> init() async {
-    _solutions.add(SolutionSpec("Lowder", widgets: BaseWidgets(), actions: BaseActions(), properties: BaseProperties()));
+    _solutions.add(SolutionSpec("Lowder",
+        widgets: BaseWidgets(),
+        actions: BaseActions(),
+        properties: BaseProperties()));
     _solutions.addAll(solutions);
 
     for (var sol in _solutions) {
@@ -188,9 +196,12 @@ class AppState extends State<Lowder> {
   @nonVirtual
   @override
   Widget build(BuildContext context) {
-    final providers = <BlocProvider>[BlocProvider<GlobalBloc>(create: (c) => widget.createBloc(), lazy: false)];
+    final providers = <BlocProvider>[
+      BlocProvider<GlobalBloc>(create: (c) => widget.createBloc(), lazy: false)
+    ];
     if (Lowder.editorMode) {
-      providers.add(BlocProvider<EditorBloc>(create: (c) => EditorBloc(Lowder.editorServer), lazy: false));
+      providers.add(BlocProvider<EditorBloc>(
+          create: (c) => EditorBloc(Lowder.editorServer), lazy: false));
     }
 
     var goHome = false;
@@ -212,13 +223,17 @@ class AppState extends State<Lowder> {
 
     return MultiBlocProvider(
       providers: providers,
-      child: Builder(builder: (context) => widget.buildApp(Lowder.navigatorKey, rootWidget)),
+      child: Builder(
+          builder: (context) =>
+              widget.buildApp(Lowder.navigatorKey, rootWidget)),
     );
   }
 
   @nonVirtual
   Widget buildBody(BuildContext context) {
-    final bodyChild = Lowder.editorMode ? buildEditorHandler(context) : buildScreen(context, Schema.getLandingScreen());
+    final bodyChild = Lowder.editorMode
+        ? buildEditorHandler(context)
+        : buildScreen(context, Schema.getLandingScreen());
 
     return BlocListener<GlobalBloc, BaseState>(
       listenWhen: widget.globalListenWhen,
@@ -237,11 +252,14 @@ class AppState extends State<Lowder> {
 
   @nonVirtual
   Widget buildEditorHandler(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) => BlocProvider.of<EditorBloc>(context).add(AppStartedEvent()));
+    WidgetsBinding.instance.addPostFrameCallback(
+        (_) => BlocProvider.of<EditorBloc>(context).add(AppStartedEvent()));
 
     return BlocBuilder<EditorBloc, BaseState>(
       buildWhen: (prevState, currState) {
-        return currState is LoadScreenState || currState is LoadComponentState || currState is ComponentUpdatedState;
+        return currState is LoadScreenState ||
+            currState is LoadComponentState ||
+            currState is ComponentUpdatedState;
       },
       builder: (context, state) {
         if (state is LoadScreenState) {
@@ -281,7 +299,8 @@ class SolutionSpec {
   final IActions? actions;
   final IProperties? properties;
 
-  SolutionSpec(this.name, {this.filePath, this.widgets, this.actions, this.properties}) {
+  SolutionSpec(this.name,
+      {this.filePath, this.widgets, this.actions, this.properties}) {
     widgets?.registerWidgets();
     actions?.registerActions();
     properties?.registerProperties();

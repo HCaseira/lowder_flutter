@@ -32,7 +32,8 @@ class ActionFactory {
   WidgetFactory get widgets => Lowder.widgets;
   PropertyFactory get properties => Lowder.properties;
   BuildContext get appContext => Lowder.navigatorKey.currentContext!;
-  NavigatorState get appNavigator => Navigator.of(appContext, rootNavigator: true);
+  NavigatorState get appNavigator =>
+      Navigator.of(appContext, rootNavigator: true);
 
   LocalBloc createLocalBloc() => LocalBloc(InitialState());
   ListBloc createListBloc() => ListBloc(InitialState());
@@ -55,12 +56,14 @@ class ActionFactory {
   }
 
   /// Returns a [ActionFunction] that executes an Action based on it's [actionSpec].
-  ActionFunction? getFunction(BuildContext context, dynamic actionSpec, Map state, Map? evaluatorContext) {
+  ActionFunction? getFunction(BuildContext context, dynamic actionSpec,
+      Map state, Map? evaluatorContext) {
     if (actionSpec == null) return null;
     if (EditorBloc.editMode) return () {};
     if (actionSpec is ActionFunction) return actionSpec;
 
-    final nodeSpec = actionSpec is NodeSpec ? actionSpec : NodeSpec.fromMap(actionSpec);
+    final nodeSpec =
+        actionSpec is NodeSpec ? actionSpec : NodeSpec.fromMap(actionSpec);
 
     return () {
       run(context, nodeSpec, state, null, evaluatorContext);
@@ -68,12 +71,14 @@ class ActionFactory {
   }
 
   /// Returns a [ActionValueFunction<T>] that executes an Action based on it's [actionSpec].
-  ActionValueFunction<T>? getValueFunction<T>(BuildContext context, dynamic actionSpec, Map state, Map? evaluatorContext) {
+  ActionValueFunction<T>? getValueFunction<T>(BuildContext context,
+      dynamic actionSpec, Map state, Map? evaluatorContext) {
     if (actionSpec == null) return null;
     if (EditorBloc.editMode) return (v) {};
     if (actionSpec is ActionValueFunction<Object?>) return actionSpec;
 
-    final nodeSpec = actionSpec is NodeSpec ? actionSpec : NodeSpec.fromMap(actionSpec);
+    final nodeSpec =
+        actionSpec is NodeSpec ? actionSpec : NodeSpec.fromMap(actionSpec);
 
     return (val) {
       if (actionSpec != null) {
@@ -83,8 +88,15 @@ class ActionFactory {
   }
 
   /// Executes a [PageLoadFunction]
-  void executePageLoadAction(BuildContext buildContext, ListBloc bloc, int page, int pageSize, List fullData,
-      Map? actionSpec, Map state, Map? actionContext,
+  void executePageLoadAction(
+      BuildContext buildContext,
+      ListBloc bloc,
+      int page,
+      int pageSize,
+      List fullData,
+      Map? actionSpec,
+      Map state,
+      Map? actionContext,
       {dynamic value}) {
     if (actionSpec == null) {
       return;
@@ -95,23 +107,28 @@ class ActionFactory {
     final evaluatorContext = getEvaluatorContext(value, state, actionContext);
     properties.evaluateMap(props, evaluatorContext);
 
-    if (props["executeCondition"] != null && !properties.evaluateCondition(props["executeCondition"])) {
+    if (props["executeCondition"] != null &&
+        !properties.evaluateCondition(props["executeCondition"])) {
       return;
     }
 
-    final context = ActionContext(state, actionContext ?? {}, value, buildContext);
-    final event = LoadPageActionEvent(action, context, page, pageSize, fullData);
+    final context =
+        ActionContext(state, actionContext ?? {}, value, buildContext);
+    final event =
+        LoadPageActionEvent(action, context, page, pageSize, fullData);
     bloc.add(event);
   }
 
   /// Starts the execution of an [action]
   @nonVirtual
-  Future<void> run(BuildContext buildContext, NodeSpec action, Map state, Object? eventValue, Map? actionContext) async {
+  Future<void> run(BuildContext buildContext, NodeSpec action, Map state,
+      Object? eventValue, Map? actionContext) async {
     if (!await preRun(buildContext, action.props)) {
       return;
     }
     if (!buildContext.mounted) {
-      logError("[$runtimeType] Error: BuildContext is not mounted after preRun.");
+      logError(
+          "[$runtimeType] Error: BuildContext is not mounted after preRun.");
       return;
     }
 
@@ -119,11 +136,13 @@ class ActionFactory {
     NodeSpec? currentAction = action;
     while (currentAction != null) {
       if (!buildContext.mounted) {
-        logError("[$runtimeType] Error: BuildContext is not mounted while trying to execute Action ${currentAction.id}");
+        logError(
+            "[$runtimeType] Error: BuildContext is not mounted while trying to execute Action ${currentAction.id}");
         return;
       }
 
-      final context = ActionContext(state, actionContext ?? {}, currentValue, buildContext);
+      final context =
+          ActionContext(state, actionContext ?? {}, currentValue, buildContext);
       if (!await preExecute(currentAction, context)) {
         break;
       }
@@ -140,7 +159,8 @@ class ActionFactory {
   @protected
   Future<bool> preRun(BuildContext context, Map actionProps) async {
     try {
-      final form = LowderScreen.of(context)?.formKey.currentState ?? Form.of(context);
+      final form =
+          LowderScreen.of(context)?.formKey.currentState ?? Form.of(context);
       form.save();
       if (parseBool(actionProps["validateForm"]) && !form.validate()) {
         return false;
@@ -156,10 +176,12 @@ class ActionFactory {
   @protected
   Future<bool> preExecute(NodeSpec action, ActionContext context) async {
     final props = action.props;
-    final evaluatorContext = getEvaluatorContext(context.actionValue, context.state, context.actionContext);
+    final evaluatorContext = getEvaluatorContext(
+        context.actionValue, context.state, context.actionContext);
     properties.evaluateMap(props, evaluatorContext);
 
-    if (props["executeCondition"] != null && !properties.evaluateCondition(props["executeCondition"])) {
+    if (props["executeCondition"] != null &&
+        !properties.evaluateCondition(props["executeCondition"])) {
       return false;
     }
 
@@ -179,13 +201,15 @@ class ActionFactory {
   @nonVirtual
   Future<ActionResult> execute(NodeSpec action, ActionContext context) async {
     if (!context.buildContext.mounted) {
-      logError("[$runtimeType] Error: BuildContext is not mounted (${action.type})");
+      logError(
+          "[$runtimeType] Error: BuildContext is not mounted (${action.type})");
       return ActionResult(false);
     }
 
     final resolver = getResolver(action.type);
     if (resolver == null) {
-      logError("[$runtimeType] Error: Action resolver for '${action.type}' not found");
+      logError(
+          "[$runtimeType] Error: Action resolver for '${action.type}' not found");
       return ActionResult(false);
     }
 
@@ -199,7 +223,8 @@ class ActionFactory {
     try {
       result = await resolver(action, context);
     } catch (e, stack) {
-      logError("[$runtimeType] Error executing action '${action.type}'", stackTrace: stack, error: e);
+      logError("[$runtimeType] Error executing action '${action.type}'",
+          stackTrace: stack, error: e);
       if ((await handleException(action, context, e)).retry) {
         return execute(action, context);
       }
@@ -211,7 +236,8 @@ class ActionFactory {
 
   /// Handles the [ActionResult] of an executed [action] and determines the next Action to be executed if any.
   @protected
-  Future<NodeSpec?> postExecute(NodeSpec action, ActionResult result, ActionContext context) async {
+  Future<NodeSpec?> postExecute(
+      NodeSpec action, ActionResult result, ActionContext context) async {
     if (result.returnData != null || action.props["returnName"] != null) {
       final key = action.props["returnName"] ?? "value";
       context.state[key] = result.returnData;
@@ -237,7 +263,8 @@ class ActionFactory {
   /// Returns a Map with the evaluation context used when sanitizing properties of a [NodeSpec].
   /// Used to resolve properties that use placeholders as values, like "${state.firstName}" or "${env.api_uri}".
   Map getEvaluatorContext(Object? value, Map state, Map? specContext) {
-    final mediaQueryData = MediaQueryData.fromView(WidgetsBinding.instance.platformDispatcher.views.single);
+    final mediaQueryData = MediaQueryData.fromView(
+        WidgetsBinding.instance.platformDispatcher.views.single);
 
     final map = {};
     if (specContext != null) map.addAll(specContext);
@@ -268,13 +295,18 @@ class ActionFactory {
   }
 
   /// Exception handling when executing an [action]
-  Future<RetryAction> handleException(NodeSpec action, ActionContext context, Object e) async {
+  Future<RetryAction> handleException(
+      NodeSpec action, ActionContext context, Object e) async {
     if (kDebugMode) print("Error executing action ${action.type}: $e");
     if (e is SolutionException) {
       showErrorMessage(e.message);
-    } else if (e is http.ClientException || e is SocketException || e is WebSocketException) {
-      final title = Lowder.editorMode ? e.toString() : "communication_error_message";
-      if (await widgets.showConfirmation(title: title, message: "try_again_question")) {
+    } else if (e is http.ClientException ||
+        e is SocketException ||
+        e is WebSocketException) {
+      final title =
+          Lowder.editorMode ? e.toString() : "communication_error_message";
+      if (await widgets.showConfirmation(
+          title: title, message: "try_again_question")) {
         return RetryAction(true);
       }
     } else if (Lowder.editorMode) {
@@ -291,13 +323,17 @@ class ActionFactory {
       {Object? body, Map<String, String>? headers, Encoding? encoding}) async {
     switch (method) {
       case "post":
-        return await http.post(uri, body: body, headers: headers, encoding: encoding);
+        return await http.post(uri,
+            body: body, headers: headers, encoding: encoding);
       case "put":
-        return await http.put(uri, body: body, headers: headers, encoding: encoding);
+        return await http.put(uri,
+            body: body, headers: headers, encoding: encoding);
       case "patch":
-        return await http.patch(uri, body: body, headers: headers, encoding: encoding);
+        return await http.patch(uri,
+            body: body, headers: headers, encoding: encoding);
       case "delete":
-        return await http.delete(uri, body: body, headers: headers, encoding: encoding);
+        return await http.delete(uri,
+            body: body, headers: headers, encoding: encoding);
       default:
         return await http.get(uri, headers: headers);
     }
@@ -305,7 +341,8 @@ class ActionFactory {
 
   /// Method used to handle Http errors.
   /// Conveniently placed in this class to facilitate overrides.
-  Future<RetryAction> onHttpError(http.Response response, NodeSpec action, ActionContext context) async {
+  Future<RetryAction> onHttpError(
+      http.Response response, NodeSpec action, ActionContext context) async {
     if (response.statusCode == 401) {
       showErrorMessage("invalid_session_message");
     } else {
@@ -316,8 +353,10 @@ class ActionFactory {
 
   /// Method used to handle a successful Http call.
   /// Conveniently placed in this class to facilitate overrides.
-  HttpActionResult onHttpSuccess(http.Response response, NodeSpec action, ActionContext context) {
-    final data = (response.headers[HttpHeaders.contentTypeHeader] ?? "").contains("application/json")
+  HttpActionResult onHttpSuccess(
+      http.Response response, NodeSpec action, ActionContext context) {
+    final data = (response.headers[HttpHeaders.contentTypeHeader] ?? "")
+            .contains("application/json")
         ? json.decodeWithReviver(response.body)
         : response.body;
 
@@ -326,7 +365,8 @@ class ActionFactory {
 
   /// Method used to make Http calls.
   /// Conveniently placed in this class to facilitate overrides.
-  Map<String, String> getHttpDefaultHeaders({String? contentType, Map<String, String>? otherHeaders}) {
+  Map<String, String> getHttpDefaultHeaders(
+      {String? contentType, Map<String, String>? otherHeaders}) {
     final headers = <String, String>{};
 
     if (contentType != null && contentType.isNotEmpty) {
@@ -354,12 +394,15 @@ class ActionFactory {
   void onExecuted() => widgets.hideActivityIndicator();
 
   /// Convenience method to display an error method to the user.
-  void showErrorMessage(String message) => widgets.showMessage(type: "error", message: message);
+  void showErrorMessage(String message) =>
+      widgets.showMessage(type: "error", message: message);
 
   /// Convenience method to log an error.
   /// When in [Lowder.editorMode], the [message] will be displayed to the user.
-  logError(String message, {Object? error, StackTrace? stackTrace, Type? originClass}) {
-    log("[${originClass ?? runtimeType}] Error: $message", error: error, stackTrace: stackTrace);
+  logError(String message,
+      {Object? error, StackTrace? stackTrace, Type? originClass}) {
+    log("[${originClass ?? runtimeType}] Error: $message",
+        error: error, stackTrace: stackTrace);
     if (kDebugMode || Lowder.editorMode) {
       showErrorMessage(message);
     }

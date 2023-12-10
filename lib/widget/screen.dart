@@ -18,14 +18,16 @@ class LowderScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => LowderScreenState();
 
-  LocalBlocWidget getBlocWidget(String screenId, BlocBuilderFunction buildFunc, {BlocListenerFunction? listenFunc}) {
+  LocalBlocWidget getBlocWidget(String screenId, BlocBuilderFunction buildFunc,
+      {BlocListenerFunction? listenFunc}) {
     return LocalBlocWidget(screenId, buildFunc, listener: listenFunc);
   }
 
   @protected
   Future<void> initState(BuildContext context) async {
     if (actions["onEnter"] != null) {
-      var func = Lowder.actions.getFunction(context, actions["onEnter"], state, null);
+      var func =
+          Lowder.actions.getFunction(context, actions["onEnter"], state, null);
       if (func != null) {
         func();
       }
@@ -52,9 +54,11 @@ class LowderScreenState extends State<LowderScreen> {
   Map get bodySpec => widget.bodySpec;
   bool _initialized = false;
 
-  EditorBlocConsumer getEditorHandler(String screenId, EditorBuildFunction buildFunc) =>
+  EditorBlocConsumer getEditorHandler(
+          String screenId, EditorBuildFunction buildFunc) =>
       EditorBlocConsumer(screenId, buildFunc);
-  updateSpec() => widget.spec.widgets["body"] = Schema.getScreen(id)?.widgets["body"];
+  updateSpec() =>
+      widget.spec.widgets["body"] = Schema.getScreen(id)?.widgets["body"];
 
   void listener(BuildContext context, BaseState currentState) {}
 
@@ -72,7 +76,8 @@ class LowderScreenState extends State<LowderScreen> {
 
   @nonVirtual
   Widget internalBuild(BuildContext context) {
-    return _KScreenScope(widget, child: widget.getBlocWidget(widget.id, builder, listenFunc: listener));
+    return _KScreenScope(widget,
+        child: widget.getBlocWidget(widget.id, builder, listenFunc: listener));
   }
 
   Widget builder(BuildContext context, BaseState currentState) {
@@ -103,7 +108,8 @@ class LowderScreenState extends State<LowderScreen> {
       final body = Lowder.widgets.buildWidget(context, bodySpec, state, null);
       return body;
     } catch (e, stack) {
-      log("Error building '$name' body from spec.", error: e, stackTrace: stack);
+      log("Error building '$name' body from spec.",
+          error: e, stackTrace: stack);
       return Container();
     }
   }

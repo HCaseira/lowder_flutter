@@ -13,7 +13,8 @@ void main() async {
 }
 
 class DemoApp extends Lowder {
-  DemoApp({super.environment, super.editorMode, super.editorServer, super.key}) : super("Demo Solution");
+  DemoApp({super.environment, super.editorMode, super.editorServer, super.key})
+      : super("Demo Solution");
 
   @override
   AppState createState() => _DemoAppState();

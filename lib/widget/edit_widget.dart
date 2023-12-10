@@ -41,7 +41,8 @@ class _EditWidget extends State<EditWidget> {
           );
         }
         return GestureDetector(
-          onTap: () => BlocProvider.of<EditorBloc>(context).add(SelectEvent(widget.id)),
+          onTap: () =>
+              BlocProvider.of<EditorBloc>(context).add(SelectEvent(widget.id)),
           child: child,
         );
       },

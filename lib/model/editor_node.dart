@@ -108,7 +108,8 @@ class EditorWidget extends EditorNode {
 
 /// Class for creating an Property's schema.
 class EditorSpecProperty extends EditorNode {
-  EditorSpecProperty(Map<String, EditorPropertyType>? properties, {super.baseType, super.abstract = false})
+  EditorSpecProperty(Map<String, EditorPropertyType>? properties,
+      {super.baseType, super.abstract = false})
       : super(properties: properties);
 }
 
@@ -137,18 +138,22 @@ abstract class EditorType {
 class EditorActionType extends EditorType {
   EditorActionType(super.type, {super.isArray});
 
-  factory EditorActionType.action() => EditorActionType(EditorAction.terminationAction);
-  factory EditorActionType.listAction() => EditorActionType(EditorAction.listAction);
+  factory EditorActionType.action() =>
+      EditorActionType(EditorAction.terminationAction);
+  factory EditorActionType.listAction() =>
+      EditorActionType(EditorAction.listAction);
 }
 
 /// Class to define a Node's Widget properties
 class EditorWidgetType extends EditorType {
   EditorWidgetType(super.type, {super.isArray});
 
-  factory EditorWidgetType.rootWidget({bool isArray = false}) => EditorWidgetType(EditorWidget.rootWidget, isArray: isArray);
+  factory EditorWidgetType.rootWidget({bool isArray = false}) =>
+      EditorWidgetType(EditorWidget.rootWidget, isArray: isArray);
   factory EditorWidgetType.preferredSizeWidget({bool isArray = false}) =>
       EditorWidgetType(EditorWidget.preferredSizeWidget, isArray: isArray);
-  factory EditorWidgetType.widget({bool isArray = false}) => EditorWidgetType(EditorWidget.widget, isArray: isArray);
+  factory EditorWidgetType.widget({bool isArray = false}) =>
+      EditorWidgetType(EditorWidget.widget, isArray: isArray);
 }
 
 /// Class to define a Node's Property properties.
@@ -256,8 +261,10 @@ abstract class Types {
   static const textDecoration = EditorPropertyType("TextDecoration");
   static const boxShape = EditorPropertyType("BoxShape");
   static const borderType = EditorPropertyType("BorderType");
-  static const navigationRailLabelType = EditorPropertyType("NavigationRailLabelType");
-  static const floatingLabelBehavior = EditorPropertyType("FloatingLabelBehavior");
+  static const navigationRailLabelType =
+      EditorPropertyType("NavigationRailLabelType");
+  static const floatingLabelBehavior =
+      EditorPropertyType("FloatingLabelBehavior");
   static const materialType = EditorPropertyType("MaterialType");
   static const gradient = EditorPropertyType("Gradient");
   static const tableBorder = EditorPropertyType("TableBorder");
@@ -265,7 +272,8 @@ abstract class Types {
   static const borderSide = EditorPropertyType("BorderSide");
   static const shapeBorder = EditorPropertyType("ShapeBorder");
   static const tabController = EditorPropertyType("TabController");
-  static const floatingActionButtonLocation = EditorPropertyType("FloatingActionButtonLocation");
+  static const floatingActionButtonLocation =
+      EditorPropertyType("FloatingActionButtonLocation");
   static const axis = EditorPropertyType("Axis");
   static const appBarLeadingIcon = EditorPropertyType("AppBarLeadingIcon");
   static const collapseMode = EditorPropertyType("CollapseMode");
@@ -274,7 +282,8 @@ abstract class Types {
   static const boxConstraints = EditorPropertyType("BoxConstraints");
   static const notchedShape = EditorPropertyType("NotchedShape");
   static const alignment = EditorPropertyType("Alignment");
-  static const tableVerticalAlignment = EditorPropertyType("TableVerticalAlignment");
+  static const tableVerticalAlignment =
+      EditorPropertyType("TableVerticalAlignment");
   static const verticalDirection = EditorPropertyType("VerticalDirection");
   static const crossAxisAlignment = EditorPropertyType("CrossAxisAlignment");
   static const mainAxisAlignment = EditorPropertyType("MainAxisAlignment");
@@ -297,7 +306,8 @@ abstract class Types {
   static const boxFit = EditorPropertyType("BoxFit");
   static const imageProvider = EditorPropertyType("ImageProvider");
   static const iconThemeData = EditorPropertyType("IconThemeData");
-  static const routeTransitionBuilder = EditorPropertyType("RouteTransitionBuilder");
+  static const routeTransitionBuilder =
+      EditorPropertyType("RouteTransitionBuilder");
   static const size = EditorPropertyType("Size");
   static const shadow = EditorPropertyType("Shadow");
   static const boxShadow = EditorPropertyType("BoxShadow");

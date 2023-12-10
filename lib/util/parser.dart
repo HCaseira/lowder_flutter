@@ -105,13 +105,16 @@ Color? _parseColor(String? value, Color? defaultColor) {
     while (parts.length < 4) {
       parts.insert(0, "255");
     }
-    return Color.fromARGB(parseInt(parts[0]), parseInt(parts[1]), parseInt(parts[2]), parseInt(parts[3]));
+    return Color.fromARGB(parseInt(parts[0]), parseInt(parts[1]),
+        parseInt(parts[2]), parseInt(parts[3]));
   } else {
     value = value.replaceAll("#", "");
     if (value.length == 3) {
-      value = "FF${value[0]}${value[0]}${value[1]}${value[1]}${value[2]}${value[2]}";
+      value =
+          "FF${value[0]}${value[0]}${value[1]}${value[1]}${value[2]}${value[2]}";
     } else if (value.length == 4) {
-      value = "${value[0]}${value[0]}${value[1]}${value[1]}${value[2]}${value[2]}${value[3]}${value[3]}";
+      value =
+          "${value[0]}${value[0]}${value[1]}${value[1]}${value[2]}${value[2]}${value[3]}${value[3]}";
     } else if (value.length == 6) {
       value = "FF$value";
     }

@@ -29,14 +29,20 @@ class EditorBloc extends Bloc<BaseEditorEvent, BaseState> {
     }
     instance = this;
     on<AppStartedEvent>((event, emit) => onAppStartedEvent());
-    on<LoadScreenEvent>((event, emit) => emit(LoadScreenState(event.screenId, event.state)));
-    on<LoadComponentEvent>((event, emit) => emit(LoadComponentState(event.componentId)));
-    on<ScreenUpdatedEvent>((event, emit) => emit(ScreenUpdatedState(event.screenId)));
-    on<ComponentUpdatedEvent>((event, emit) => emit(ComponentUpdatedState(event.componentId)));
+    on<LoadScreenEvent>(
+        (event, emit) => emit(LoadScreenState(event.screenId, event.state)));
+    on<LoadComponentEvent>(
+        (event, emit) => emit(LoadComponentState(event.componentId)));
+    on<ScreenUpdatedEvent>(
+        (event, emit) => emit(ScreenUpdatedState(event.screenId)));
+    on<ComponentUpdatedEvent>(
+        (event, emit) => emit(ComponentUpdatedState(event.componentId)));
     on<TemplateUpdatedEvent>((event, emit) => emit(TemplateUpdatedState()));
-    on<RequestUpdatedEvent>((event, emit) => emit(RequestUpdatedState(event.requestId)));
+    on<RequestUpdatedEvent>(
+        (event, emit) => emit(RequestUpdatedState(event.requestId)));
     on<SelectEvent>((event, emit) => _selectEvent(event));
-    on<ClientSelectWidgetEvent>((event, emit) => emit(SelectWidgetState(event.id)));
+    on<ClientSelectWidgetEvent>(
+        (event, emit) => emit(SelectWidgetState(event.id)));
   }
 
   String getServerUrl() {
@@ -55,7 +61,8 @@ class EditorBloc extends Bloc<BaseEditorEvent, BaseState> {
     }
     serverUrl += "client?id=$clientId";
     try {
-      await http.post(Uri.parse(serverUrl), body: jsonEncode(EditorMessage("clientSelectWidget", event.id)));
+      await http.post(Uri.parse(serverUrl),
+          body: jsonEncode(EditorMessage("clientSelectWidget", event.id)));
     } on Exception catch (e) {
       log("Error calling Lowder Server: $e");
     }
@@ -69,10 +76,12 @@ class EditorBloc extends Bloc<BaseEditorEvent, BaseState> {
   Future<void> sendSchema() async {
     try {
       final serverUrl = getServerUrl();
-      final body = jsonEncode(EditorMessage("clientSchema", Lowder.getSchema()));
+      final body =
+          jsonEncode(EditorMessage("clientSchema", Lowder.getSchema()));
       await http.post(Uri.parse(serverUrl), body: body);
     } catch (e, stack) {
-      log("Error sending schema to Lowder Server: $e", error: e, stackTrace: stack);
+      log("Error sending schema to Lowder Server: $e",
+          error: e, stackTrace: stack);
     }
   }
 
@@ -91,14 +100,17 @@ class EditorBloc extends Bloc<BaseEditorEvent, BaseState> {
               await sendSchema();
               break;
             case "solution":
-              Schema.loadSolutionsFromMaps(message.data["solutions"], message.data["environment"] ?? "Dev",
+              Schema.loadSolutionsFromMaps(message.data["solutions"],
+                  message.data["environment"] ?? "Dev",
                   language: message.data["language"] ?? "en");
               editMode = parseBool(message.data["editMode"]);
               var selectedNode = message.data["selectedNode"];
               if (selectedNode != null) {
                 var node = Schema.getScreen(selectedNode);
                 if (node != null) {
-                  final screenState = message.data["state"] != null ? json.decodeWithReviver(message.data["state"]) : null;
+                  final screenState = message.data["state"] != null
+                      ? json.decodeWithReviver(message.data["state"])
+                      : null;
                   add(LoadScreenEvent(selectedNode, screenState));
                 } else {
                   node = Schema.getComponent(selectedNode);
@@ -127,7 +139,9 @@ class EditorBloc extends Bloc<BaseEditorEvent, BaseState> {
               add(RequestUpdatedEvent(message.data["_id"]));
               break;
             case "loadScreen":
-              final screenState = message.data["state"] != null ? json.decodeWithReviver(message.data["state"]) : null;
+              final screenState = message.data["state"] != null
+                  ? json.decodeWithReviver(message.data["state"])
+                  : null;
               add(LoadScreenEvent(message.data["id"], screenState));
               break;
             case "loadComponent":

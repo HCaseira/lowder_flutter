@@ -34,42 +34,51 @@ mixin IProperties {
   void registerProperties();
 
   @nonVirtual
-  void registerListType(String name, ValueBuildFunction func, List<String> values) {
+  void registerListType(
+      String name, ValueBuildFunction func, List<String> values) {
     _propertyBuilders[name] = func;
     _schema[name] = EditorValueListProperty(values);
   }
 
   @nonVirtual
-  void registerAbstractType(String name, Map<String, EditorPropertyType> properties) {
+  void registerAbstractType(
+      String name, Map<String, EditorPropertyType> properties) {
     _schema[name] = EditorSpecProperty(properties, abstract: true);
   }
 
   @nonVirtual
-  void registerSpecType(String name, SpecBuildFunction func, Map<String, EditorPropertyType> properties,
+  void registerSpecType(String name, SpecBuildFunction func,
+      Map<String, EditorPropertyType> properties,
       {Map<String, Map<String, EditorPropertyType>>? subTypes}) {
     _propertyBuilders[name] = func;
-    _schema[name] = EditorSpecProperty(properties, abstract: subTypes != null && subTypes.isNotEmpty);
+    _schema[name] = EditorSpecProperty(properties,
+        abstract: subTypes != null && subTypes.isNotEmpty);
     if (subTypes != null) {
       for (var subType in subTypes.keys) {
-        _schema[subType] = EditorSpecProperty(subTypes[subType], baseType: name);
+        _schema[subType] =
+            EditorSpecProperty(subTypes[subType], baseType: name);
       }
     }
   }
 
   @nonVirtual
-  void registerValueSpecType(String name, ValueSpecBuildFunction func, Map<String, EditorPropertyType> properties,
+  void registerValueSpecType(String name, ValueSpecBuildFunction func,
+      Map<String, EditorPropertyType> properties,
       {Map<String, Map<String, EditorPropertyType>>? subTypes}) {
     _propertyBuilders[name] = func;
-    _schema[name] = EditorSpecProperty(properties, abstract: subTypes != null && subTypes.isNotEmpty);
+    _schema[name] = EditorSpecProperty(properties,
+        abstract: subTypes != null && subTypes.isNotEmpty);
     if (subTypes != null) {
       for (var subType in subTypes.keys) {
-        _schema[subType] = EditorSpecProperty(subTypes[subType], baseType: name);
+        _schema[subType] =
+            EditorSpecProperty(subTypes[subType], baseType: name);
       }
     }
   }
 
   @nonVirtual
-  void registerSubType(String baseType, String name, Map<String, EditorPropertyType> properties) {
+  void registerSubType(String baseType, String name,
+      Map<String, EditorPropertyType> properties) {
     _schema[name] = EditorSpecProperty(properties, baseType: baseType);
   }
 }
@@ -94,7 +103,8 @@ class BaseProperties with IProperties {
     registerAbstractType("KRequest", {
       "url": Types.string,
       "path": Types.string,
-      "method": const EditorPropertyListType(["get", "post", "put", "delete", "patch"]),
+      "method": const EditorPropertyListType(
+          ["get", "post", "put", "delete", "patch"]),
       "pathParameters": const EditorPropertyType("KModel"),
       "queryArgs": const EditorPropertyType("KModel"),
       "body": const EditorPropertyType("KModel"),
@@ -121,9 +131,12 @@ class BaseProperties with IProperties {
       "minimum": Types.intArray,
     });
 
-    registerListType(Types.kOperator.type, (v) => v, ["==", "!=", ">", ">=", "<", "<=", "contain", "not contain"]);
-    registerListType(Types.materialType.type, getMaterialType, ["canvas", "card", "circle", "button", "transparency"]);
-    registerListType(Types.appBarLeadingIcon.type, getAppBarLeadingWidget, ["back", "close"]);
+    registerListType(Types.kOperator.type, (v) => v,
+        ["==", "!=", ">", ">=", "<", "<=", "contain", "not contain"]);
+    registerListType(Types.materialType.type, getMaterialType,
+        ["canvas", "card", "circle", "button", "transparency"]);
+    registerListType(Types.appBarLeadingIcon.type, getAppBarLeadingWidget,
+        ["back", "close"]);
     registerListType(Types.alignment.type, getAlignment, [
       "topLeft",
       "topCenter",
@@ -136,25 +149,62 @@ class BaseProperties with IProperties {
       "centerRight"
     ]);
     registerListType(
-        Types.tableVerticalAlignment.type, getTableCellVerticalAlignment, ["top", "middle", "bottom", "baseline", "fill"]);
-    registerListType(Types.verticalDirection.type, getVerticalDirection, ["up", "down"]);
+        Types.tableVerticalAlignment.type,
+        getTableCellVerticalAlignment,
+        ["top", "middle", "bottom", "baseline", "fill"]);
     registerListType(
-        Types.crossAxisAlignment.type, getCrossAxisAlignment, ["center", "start", "end", "stretch", "baseline"]);
-    registerListType(Types.mainAxisAlignment.type, getMainAxisAlignment,
-        ["center", "start", "end", "spaceEvenly", "spaceAround", "spaceBetween"]);
+        Types.verticalDirection.type, getVerticalDirection, ["up", "down"]);
+    registerListType(Types.crossAxisAlignment.type, getCrossAxisAlignment,
+        ["center", "start", "end", "stretch", "baseline"]);
+    registerListType(Types.mainAxisAlignment.type, getMainAxisAlignment, [
+      "center",
+      "start",
+      "end",
+      "spaceEvenly",
+      "spaceAround",
+      "spaceBetween"
+    ]);
     registerListType(Types.mainAxisSize.type, getMainAxisSize, ["min", "max"]);
-    registerListType(Types.fontWeight.type, getFontWeight,
-        ["normal", "bold", "100", "200", "300", "400", "500", "600", "700", "800", "900"]);
+    registerListType(Types.fontWeight.type, getFontWeight, [
+      "normal",
+      "bold",
+      "100",
+      "200",
+      "300",
+      "400",
+      "500",
+      "600",
+      "700",
+      "800",
+      "900"
+    ]);
     registerListType(Types.fontStyle.type, getFontStyle, ["normal", "italic"]);
-    registerListType(Types.textAlign.type, getTextAlign, ["left", "right", "center", "justify"]);
-    registerListType(Types.textAlignVertical.type, getTextAlignVertical, ["top", "center", "bottom"]);
-    registerListType(Types.textOverflow.type, getTextOverflow, ["clip", "ellipsis", "fade", "visible"]);
-    registerListType(Types.textInputType.type, getTextInputType,
-        ["datetime", "email", "multiline", "name", "number", "int", "decimal", "phone", "url", "password"]);
-    registerListType(Types.textCapitalization.type, getTextCapitalization, ["words", "sentences", "characters", "none"]);
-    registerListType(Types.textDecoration.type, getTextDecoration, ["overline", "underline", "lineThrough"]);
-    registerListType(Types.floatingLabelBehavior.type, getFloatingLabelBehavior, ["auto", "always", "never"]);
-    registerListType(Types.floatingActionButtonLocation.type, getFloatingActionButtonLocation, [
+    registerListType(Types.textAlign.type, getTextAlign,
+        ["left", "right", "center", "justify"]);
+    registerListType(Types.textAlignVertical.type, getTextAlignVertical,
+        ["top", "center", "bottom"]);
+    registerListType(Types.textOverflow.type, getTextOverflow,
+        ["clip", "ellipsis", "fade", "visible"]);
+    registerListType(Types.textInputType.type, getTextInputType, [
+      "datetime",
+      "email",
+      "multiline",
+      "name",
+      "number",
+      "int",
+      "decimal",
+      "phone",
+      "url",
+      "password"
+    ]);
+    registerListType(Types.textCapitalization.type, getTextCapitalization,
+        ["words", "sentences", "characters", "none"]);
+    registerListType(Types.textDecoration.type, getTextDecoration,
+        ["overline", "underline", "lineThrough"]);
+    registerListType(Types.floatingLabelBehavior.type, getFloatingLabelBehavior,
+        ["auto", "always", "never"]);
+    registerListType(Types.floatingActionButtonLocation.type,
+        getFloatingActionButtonLocation, [
       "centerTop",
       "centerFloat",
       "centerDocked",
@@ -166,31 +216,57 @@ class BaseProperties with IProperties {
       "endDocked"
     ]);
     registerListType(Types.boxShape.type, getBoxShape, ["rectangle", "circle"]);
-    registerListType(Types.borderType.type, (v) => v, ["all", "vertical", "horizontal", "left", "top", "right", "bottom"]);
+    registerListType(Types.borderType.type, (v) => v,
+        ["all", "vertical", "horizontal", "left", "top", "right", "bottom"]);
     registerListType(Types.axis.type, getAxis, ["vertical", "horizontal"]);
+    registerListType(Types.boxFit.type, getBoxFit, [
+      "none",
+      "fill",
+      "contain",
+      "cover",
+      "fitWidth",
+      "fitHeight",
+      "scaleDown"
+    ]);
+    registerListType(Types.tabBarIndicatorSize.type, getTabBarIndicatorSize,
+        ["tab", "label"]);
     registerListType(
-        Types.boxFit.type, getBoxFit, ["none", "fill", "contain", "cover", "fitWidth", "fitHeight", "scaleDown"]);
-    registerListType(Types.tabBarIndicatorSize.type, getTabBarIndicatorSize, ["tab", "label"]);
-    registerListType(Types.collapseMode.type, getCollapseMode, ["pin", "parallax", "none"]);
-    registerListType(Types.stretchMode.type, getStretchMode, ["fadeTitle", "blurBackground", "zoomBackground"]);
-    registerListType(Types.navigationRailLabelType.type, getNavigationRailLabelType, ["none", "selected", "all"]);
-    registerListType(Types.routeTransitionBuilder.type, getRouteTransitionsBuilder,
-        ["slideLeft", "slideRight", "slideUp", "size", "scale", "fade", "none"]);
+        Types.collapseMode.type, getCollapseMode, ["pin", "parallax", "none"]);
+    registerListType(Types.stretchMode.type, getStretchMode,
+        ["fadeTitle", "blurBackground", "zoomBackground"]);
+    registerListType(Types.navigationRailLabelType.type,
+        getNavigationRailLabelType, ["none", "selected", "all"]);
+    registerListType(
+        Types.routeTransitionBuilder.type, getRouteTransitionsBuilder, [
+      "slideLeft",
+      "slideRight",
+      "slideUp",
+      "size",
+      "scale",
+      "fade",
+      "none"
+    ]);
 
-    registerSpecType(Types.kCondition.type, (spec) => spec != null ? Lowder.properties.evaluateCondition(spec) : false, {
-      "and": Types.kCondition,
-      "or": Types.kCondition,
-    }, subTypes: {
-      "OperatorCondition": {
-        "left": Types.string,
-        "operator": Types.kOperator,
-        "right": Types.string,
-      }
-    });
+    registerSpecType(
+        Types.kCondition.type,
+        (spec) =>
+            spec != null ? Lowder.properties.evaluateCondition(spec) : false,
+        {
+          "and": Types.kCondition,
+          "or": Types.kCondition,
+        },
+        subTypes: {
+          "OperatorCondition": {
+            "left": Types.string,
+            "operator": Types.kOperator,
+            "right": Types.string,
+          }
+        });
 
     registerValueSpecType(Types.kFormatter.type, formatValue, {}, subTypes: {
       "KFormatterTranslate": {
-        "transform": const EditorPropertyListType(["upper", "lower", "capitalize", "title", "none"]),
+        "transform": const EditorPropertyListType(
+            ["upper", "lower", "capitalize", "title", "none"]),
         "attributes": Types.json,
       },
       "KFormatterDate": {
@@ -227,7 +303,8 @@ class BaseProperties with IProperties {
       "maxHeight": Types.int,
     });
 
-    registerSpecType(Types.size.type, getSize, {"width": Types.double, "height": Types.double});
+    registerSpecType(Types.size.type, getSize,
+        {"width": Types.double, "height": Types.double});
 
     registerSpecType(Types.tableBorder.type, getTableBorder, {
       "left": Types.borderSide,
@@ -247,7 +324,12 @@ class BaseProperties with IProperties {
       "width": Types.int,
     });
     registerSpecType(Types.shapeBorder.type, getShapeBorder, {
-      "type": const EditorPropertyListType(["circle", "roundedRectangle", "beveledRectangle", "continuousRectangle"]),
+      "type": const EditorPropertyListType([
+        "circle",
+        "roundedRectangle",
+        "beveledRectangle",
+        "continuousRectangle"
+      ]),
       "borderRadius": Types.intArray,
       "color": Types.color,
       "width": Types.double,
@@ -383,20 +465,21 @@ class BaseProperties with IProperties {
       }
     });
 
-    registerValueSpecType(Types.imageProvider.type, getImageProvider, {}, subTypes: {
-      "AssetImage": {
-        "package": Types.string,
-      },
-      "NetworkImage": {
-        "scale": Types.double,
-      },
-      "MemoryImage": {
-        "scale": Types.double,
-      },
-      "FileImage": {
-        "scale": Types.double,
-      },
-    });
+    registerValueSpecType(Types.imageProvider.type, getImageProvider, {},
+        subTypes: {
+          "AssetImage": {
+            "package": Types.string,
+          },
+          "NetworkImage": {
+            "scale": Types.double,
+          },
+          "MemoryImage": {
+            "scale": Types.double,
+          },
+          "FileImage": {
+            "scale": Types.double,
+          },
+        });
 
     registerSpecType(Types.iconThemeData.type, getIconThemeData, {
       "color": Types.color,
@@ -535,17 +618,20 @@ class BaseProperties with IProperties {
           return SizeTransition(sizeFactor: animation, child: child);
         case "slideUp":
           return SlideTransition(
-            position: animation.drive(Tween(begin: const Offset(0.0, 1.0), end: Offset.zero)),
+            position: animation
+                .drive(Tween(begin: const Offset(0.0, 1.0), end: Offset.zero)),
             child: child,
           );
         case "slideLeft":
           return SlideTransition(
-            position: animation.drive(Tween(begin: const Offset(1.0, 0.0), end: Offset.zero)),
+            position: animation
+                .drive(Tween(begin: const Offset(1.0, 0.0), end: Offset.zero)),
             child: child,
           );
         case "slideRight":
           return SlideTransition(
-            position: animation.drive(Tween(begin: const Offset(-1.0, 0.0), end: Offset.zero)),
+            position: animation
+                .drive(Tween(begin: const Offset(-1.0, 0.0), end: Offset.zero)),
             child: child,
           );
         default:
@@ -568,9 +654,11 @@ class BaseProperties with IProperties {
       case "number":
         return TextInputType.number;
       case "int":
-        return const TextInputType.numberWithOptions(signed: false, decimal: false);
+        return const TextInputType.numberWithOptions(
+            signed: false, decimal: false);
       case "decimal":
-        return const TextInputType.numberWithOptions(signed: false, decimal: true);
+        return const TextInputType.numberWithOptions(
+            signed: false, decimal: true);
       case "phone":
         return TextInputType.phone;
       case "url":
@@ -650,25 +738,31 @@ class BaseProperties with IProperties {
     }
 
     return (context, editableTextState) {
-      final List<ContextMenuButtonItem> buttonItems = editableTextState.contextMenuButtonItems;
+      final List<ContextMenuButtonItem> buttonItems =
+          editableTextState.contextMenuButtonItems;
       if (!parseBool(spec["copy"], defaultValue: true)) {
-        buttonItems.removeWhere((ContextMenuButtonItem buttonItem) => buttonItem.type == ContextMenuButtonType.copy);
+        buttonItems.removeWhere((ContextMenuButtonItem buttonItem) =>
+            buttonItem.type == ContextMenuButtonType.copy);
       }
       if (!parseBool(spec["cut"], defaultValue: true)) {
-        buttonItems.removeWhere((ContextMenuButtonItem buttonItem) => buttonItem.type == ContextMenuButtonType.cut);
+        buttonItems.removeWhere((ContextMenuButtonItem buttonItem) =>
+            buttonItem.type == ContextMenuButtonType.cut);
       }
       if (!parseBool(spec["paste"], defaultValue: true)) {
-        buttonItems.removeWhere((ContextMenuButtonItem buttonItem) => buttonItem.type == ContextMenuButtonType.paste);
+        buttonItems.removeWhere((ContextMenuButtonItem buttonItem) =>
+            buttonItem.type == ContextMenuButtonType.paste);
       }
       if (!parseBool(spec["delete"], defaultValue: true)) {
-        buttonItems.removeWhere((ContextMenuButtonItem buttonItem) => buttonItem.type == ContextMenuButtonType.delete);
+        buttonItems.removeWhere((ContextMenuButtonItem buttonItem) =>
+            buttonItem.type == ContextMenuButtonType.delete);
       }
       if (!parseBool(spec["selectAll"], defaultValue: true)) {
-        buttonItems.removeWhere((ContextMenuButtonItem buttonItem) => buttonItem.type == ContextMenuButtonType.selectAll);
+        buttonItems.removeWhere((ContextMenuButtonItem buttonItem) =>
+            buttonItem.type == ContextMenuButtonType.selectAll);
       }
       if (!parseBool(spec["liveTextInput"], defaultValue: true)) {
-        buttonItems
-            .removeWhere((ContextMenuButtonItem buttonItem) => buttonItem.type == ContextMenuButtonType.liveTextInput);
+        buttonItems.removeWhere((ContextMenuButtonItem buttonItem) =>
+            buttonItem.type == ContextMenuButtonType.liveTextInput);
       }
 
       return AdaptiveTextSelectionToolbar.buttonItems(
@@ -733,7 +827,8 @@ class BaseProperties with IProperties {
     }
   }
 
-  MainAxisSize getMainAxisSize(String? value) => value == "min" ? MainAxisSize.min : MainAxisSize.max;
+  MainAxisSize getMainAxisSize(String? value) =>
+      value == "min" ? MainAxisSize.min : MainAxisSize.max;
 
   TableCellVerticalAlignment? getTableCellVerticalAlignment(String? value) {
     if (value == null) {
@@ -758,7 +853,10 @@ class BaseProperties with IProperties {
 
   BoxConstraints? getBoxConstraints(Map? spec) {
     if (spec == null ||
-        (spec["minWidth"] == null && spec["maxWidth"] == null && spec["minHeight"] == null && spec["maxHeight"] == null)) {
+        (spec["minWidth"] == null &&
+            spec["maxWidth"] == null &&
+            spec["minHeight"] == null &&
+            spec["maxHeight"] == null)) {
       return null;
     }
 
@@ -866,28 +964,41 @@ class BaseProperties with IProperties {
       focusedBorder: getInputBorder(spec["focusedBorder"]),
       focusedErrorBorder: getInputBorder(spec["focusedErrorBorder"]),
       contentPadding: Lowder.properties.getInsets(spec["contentPadding"]),
-      errorText: spec["errorText"] != null ? Lowder.properties.getText(spec["errorText"], "errorMessage") : null,
+      errorText: spec["errorText"] != null
+          ? Lowder.properties.getText(spec["errorText"], "errorMessage")
+          : null,
       errorStyle: getTextStyle(spec["errorStyle"]),
       label: widgetMap?["label"],
-      labelText: spec["labelText"] != null ? Lowder.properties.getText(spec["labelText"], "label") : null,
+      labelText: spec["labelText"] != null
+          ? Lowder.properties.getText(spec["labelText"], "label")
+          : null,
       labelStyle: getTextStyle(spec["labelStyle"]),
       focusColor: tryParseColor(spec["focusColor"]),
       filled: tryParseColor(spec["fillColor"]) != null,
       fillColor: tryParseColor(spec["fillColor"]),
       hoverColor: tryParseColor(spec["hoverColor"]),
-      hintText: spec["hintText"] != null ? Lowder.properties.getText(spec["hintText"], "hintText") : null,
+      hintText: spec["hintText"] != null
+          ? Lowder.properties.getText(spec["hintText"], "hintText")
+          : null,
       hintStyle: getTextStyle(spec["hintStyle"]),
       floatingLabelStyle: getTextStyle(spec["floatingLabelStyle"]),
-      floatingLabelBehavior: getFloatingLabelBehavior(spec["floatingLabelBehavior"]),
+      floatingLabelBehavior:
+          getFloatingLabelBehavior(spec["floatingLabelBehavior"]),
       prefix: widgetMap?["prefix"],
       prefixIcon: widgetMap?["prefixIcon"],
-      prefixText: spec["prefixText"] != null ? Lowder.properties.getText(spec["prefixText"], "prefixText") : null,
+      prefixText: spec["prefixText"] != null
+          ? Lowder.properties.getText(spec["prefixText"], "prefixText")
+          : null,
       prefixStyle: getTextStyle(spec["prefixStyle"]),
       suffix: widgetMap?["suffix"],
       suffixIcon: widgetMap?["suffixIcon"],
-      suffixText: spec["suffixText"] != null ? Lowder.properties.getText(spec["suffixText"], "suffixText") : null,
+      suffixText: spec["suffixText"] != null
+          ? Lowder.properties.getText(spec["suffixText"], "suffixText")
+          : null,
       suffixStyle: getTextStyle(spec["suffixStyle"]),
-      helperText: spec["helperText"] != null ? Lowder.properties.getText(spec["helperText"], "helperText") : null,
+      helperText: spec["helperText"] != null
+          ? Lowder.properties.getText(spec["helperText"], "helperText")
+          : null,
       helperStyle: getTextStyle(spec["helperStyle"]),
       icon: widgetMap?["icon"],
     );
@@ -961,7 +1072,8 @@ class BaseProperties with IProperties {
       top: getBorderSide(spec["top"]) ?? BorderSide.none,
       right: getBorderSide(spec["right"]) ?? BorderSide.none,
       bottom: getBorderSide(spec["bottom"]) ?? BorderSide.none,
-      horizontalInside: getBorderSide(spec["horizontalInside"]) ?? BorderSide.none,
+      horizontalInside:
+          getBorderSide(spec["horizontalInside"]) ?? BorderSide.none,
       verticalInside: getBorderSide(spec["verticalInside"]) ?? BorderSide.none,
     );
   }
@@ -1015,14 +1127,17 @@ class BaseProperties with IProperties {
       case "OutlineInputBorder":
         return OutlineInputBorder(
           borderSide: borderSide,
-          borderRadius: getBorderRadius(spec["borderRadius"]) ?? const BorderRadius.all(Radius.circular(4.0)),
+          borderRadius: getBorderRadius(spec["borderRadius"]) ??
+              const BorderRadius.all(Radius.circular(4.0)),
           gapPadding: parseDouble(spec["gapPadding"], defaultValue: 4.0),
         );
       default:
         return UnderlineInputBorder(
             borderSide: borderSide,
             borderRadius: getBorderRadius(spec["borderRadius"]) ??
-                const BorderRadius.only(topLeft: Radius.circular(4.0), topRight: Radius.circular(4.0)));
+                const BorderRadius.only(
+                    topLeft: Radius.circular(4.0),
+                    topRight: Radius.circular(4.0)));
     }
   }
 
@@ -1131,7 +1246,8 @@ class BaseProperties with IProperties {
 
   BorderRadius? getBorderRadius(dynamic value) {
     if (value == null) return null;
-    if (value is num) return BorderRadius.all(Radius.circular(parseDouble(value)));
+    if (value is num)
+      return BorderRadius.all(Radius.circular(parseDouble(value)));
 
     var parts = value.split("|");
     if (parts.length == 4) {
@@ -1308,7 +1424,9 @@ class BaseProperties with IProperties {
     var maximumSize = getSize(spec["maximumSize"]);
     var minimumSize = getSize(spec["minimumSize"]);
     BorderSide? borderSide;
-    if (spec["side"] != null && spec["side"]["color"] != null && spec["side"]["width"] != null) {
+    if (spec["side"] != null &&
+        spec["side"]["color"] != null &&
+        spec["side"]["width"] != null) {
       borderSide = BorderSide(
         color: parseColor(spec["side"]["color"], defaultColor: Colors.black),
         width: parseDouble(spec["side"]["width"], defaultValue: 1.0),
@@ -1317,24 +1435,46 @@ class BaseProperties with IProperties {
 
     return ButtonStyle(
       alignment: getAlignment(spec["alignment"]),
-      shape: spec["shape"] != null ? MaterialStateProperty.all(getShapeBorder(spec["shape"])) : null,
-      padding: padding != null ? MaterialStateProperty.all<EdgeInsets>(padding) : null,
-      foregroundColor: foregroundColor != null ? MaterialStateProperty.all<Color>(foregroundColor) : null,
-      backgroundColor: backgroundColor != null ? MaterialStateProperty.all<Color>(backgroundColor) : null,
-      overlayColor: overlayColor != null ? MaterialStateProperty.all<Color>(overlayColor) : null,
-      side: borderSide != null ? MaterialStateProperty.all<BorderSide>(borderSide) : null,
-      textStyle: textStyle != null ? MaterialStateProperty.all<TextStyle>(textStyle) : null,
-      fixedSize: fixedSize != null ? MaterialStateProperty.all<Size>(fixedSize) : null,
-      maximumSize: maximumSize != null ? MaterialStateProperty.all<Size>(maximumSize) : null,
-      minimumSize: minimumSize != null ? MaterialStateProperty.all<Size>(minimumSize) : null,
-      visualDensity: const VisualDensity(vertical: VisualDensity.minimumDensity, horizontal: VisualDensity.maximumDensity),
+      shape: spec["shape"] != null
+          ? MaterialStateProperty.all(getShapeBorder(spec["shape"]))
+          : null,
+      padding: padding != null
+          ? MaterialStateProperty.all<EdgeInsets>(padding)
+          : null,
+      foregroundColor: foregroundColor != null
+          ? MaterialStateProperty.all<Color>(foregroundColor)
+          : null,
+      backgroundColor: backgroundColor != null
+          ? MaterialStateProperty.all<Color>(backgroundColor)
+          : null,
+      overlayColor: overlayColor != null
+          ? MaterialStateProperty.all<Color>(overlayColor)
+          : null,
+      side: borderSide != null
+          ? MaterialStateProperty.all<BorderSide>(borderSide)
+          : null,
+      textStyle: textStyle != null
+          ? MaterialStateProperty.all<TextStyle>(textStyle)
+          : null,
+      fixedSize:
+          fixedSize != null ? MaterialStateProperty.all<Size>(fixedSize) : null,
+      maximumSize: maximumSize != null
+          ? MaterialStateProperty.all<Size>(maximumSize)
+          : null,
+      minimumSize: minimumSize != null
+          ? MaterialStateProperty.all<Size>(minimumSize)
+          : null,
+      visualDensity: const VisualDensity(
+          vertical: VisualDensity.minimumDensity,
+          horizontal: VisualDensity.maximumDensity),
     );
   }
 
   OutlinedBorder? getShapeBorder(Map? spec) {
     if (spec == null || spec.isEmpty) return null;
 
-    var borderRadius = getBorderRadius(spec["borderRadius"]) ?? BorderRadius.zero;
+    var borderRadius =
+        getBorderRadius(spec["borderRadius"]) ?? BorderRadius.zero;
     BorderSide borderSide = BorderSide.none;
     if (spec["color"] != null && spec["width"] != null) {
       borderSide = BorderSide(
@@ -1345,11 +1485,14 @@ class BaseProperties with IProperties {
 
     switch (spec["type"]) {
       case "roundedRectangle":
-        return RoundedRectangleBorder(side: borderSide, borderRadius: borderRadius);
+        return RoundedRectangleBorder(
+            side: borderSide, borderRadius: borderRadius);
       case "beveledRectangle":
-        return BeveledRectangleBorder(side: borderSide, borderRadius: borderRadius);
+        return BeveledRectangleBorder(
+            side: borderSide, borderRadius: borderRadius);
       case "continuousRectangle":
-        return ContinuousRectangleBorder(side: borderSide, borderRadius: borderRadius);
+        return ContinuousRectangleBorder(
+            side: borderSide, borderRadius: borderRadius);
       case "circle":
         return CircleBorder(side: borderSide);
       default:
@@ -1490,11 +1633,14 @@ class BaseProperties with IProperties {
       case "AssetImage":
         return AssetImage(value, package: spec["package"]);
       case "NetworkImage":
-        return NetworkImage(value, scale: parseDouble(spec["scale"], defaultValue: 1));
+        return NetworkImage(value,
+            scale: parseDouble(spec["scale"], defaultValue: 1));
       case "MemoryImage":
-        return MemoryImage(value, scale: parseDouble(spec["scale"], defaultValue: 1));
+        return MemoryImage(value,
+            scale: parseDouble(spec["scale"], defaultValue: 1));
       case "FileImage":
-        return FileImage(File(value), scale: parseDouble(spec["scale"], defaultValue: 1));
+        return FileImage(File(value),
+            scale: parseDouble(spec["scale"], defaultValue: 1));
       default:
         return null;
     }
@@ -1520,7 +1666,8 @@ class BaseProperties with IProperties {
     if (spec != null) {
       switch (spec["_type"]) {
         case "KFormatterTranslate":
-          final attributes = Map<String, dynamic>.from(spec["attributes"] ?? {});
+          final attributes =
+              Map<String, dynamic>.from(spec["attributes"] ?? {});
           if (spec["transform"] == "upper") {
             return Strings.getUpper(value, attributes: attributes);
           } else if (spec["transform"] == "lower") {
@@ -1546,7 +1693,8 @@ class BaseProperties with IProperties {
         case "KFormatterCurrency":
           return NumberFormat.currency(
                   symbol: spec["symbol"] ?? Strings.get("_currency_symbol_"),
-                  decimalDigits: parseInt(spec["decimalDigits"], defaultValue: 2))
+                  decimalDigits:
+                      parseInt(spec["decimalDigits"], defaultValue: 2))
               .format(parseDouble(value));
       }
     }

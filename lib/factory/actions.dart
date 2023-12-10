@@ -18,8 +18,11 @@ import '../util/extensions.dart';
 import '../util/parser.dart';
 import '../widget/lowder.dart';
 
-typedef ExecutorFunction<R extends ActionResult> = FutureOr<R> Function(NodeSpec action, ActionContext context);
-typedef PageLoadFunction<E extends LoadPageActionEvent, R extends PageLoadedState> = FutureOr<R> Function(E event);
+typedef ExecutorFunction<R extends ActionResult> = FutureOr<R> Function(
+    NodeSpec action, ActionContext context);
+typedef PageLoadFunction<E extends LoadPageActionEvent,
+        R extends PageLoadedState>
+    = FutureOr<R> Function(E event);
 
 /// An interface for registering a Solution's Actions.
 mixin IActions {
@@ -142,7 +145,8 @@ class NoActions with IActions {
 class BaseActions with IActions {
   @override
   void registerActions() {
-    registerAction(EditorAction.terminationAction, (_, __) => ActionResult(false),
+    registerAction(
+        EditorAction.terminationAction, (_, __) => ActionResult(false),
         abstract: true,
         baseType: null,
         properties: {
@@ -161,39 +165,51 @@ class BaseActions with IActions {
           "nextAction": EditorActionType.action(),
         });
 
-    registerSilentAction("KActionMessage", onMessage, baseType: EditorAction.terminationAction, properties: {
-      "type": const EditorPropertyListType(["success", "warning", "error", "info"]),
-      "message": Types.string,
-    });
+    registerSilentAction("KActionMessage", onMessage,
+        baseType: EditorAction.terminationAction,
+        properties: {
+          "type": const EditorPropertyListType(
+              ["success", "warning", "error", "info"]),
+          "message": Types.string,
+        });
 
-    registerSilentAction("KActionNavigate", onNavigate, baseType: EditorAction.terminationAction, properties: {
-      "jumpToScreen": Types.screen,
-      "replacePrevious": Types.bool,
-      "state": Types.json,
-      "transition": Types.routeTransitionBuilder,
-      "transitionDuration": Types.int
-    }, actions: {
-      "onPop": EditorActionType.action()
-    });
-    registerSilentAction("KActionPop", onPop, baseType: EditorAction.terminationAction, properties: {
-      "returnValue": Types.string,
-      "returnMessage": Types.string,
-      "returnMessageType": const EditorPropertyListType(["success", "warning", "error", "info"])
-    });
-    registerSilentAction("KActionShowDialog", onShowDialog, baseType: EditorAction.terminationAction, properties: {
-      "jumpToScreen": Types.screen,
-      "state": Types.json,
-      "barrierDismissible": Types.bool,
-      "barrierColor": Types.color,
-      "backgroundColor": Types.color,
-      "padding": Types.intArray,
-      "alignment": Types.alignment,
-      "elevation": Types.int,
-      "transition": Types.routeTransitionBuilder,
-      "transitionDuration": Types.int
-    }, actions: {
-      "onPop": EditorActionType.action()
-    });
+    registerSilentAction("KActionNavigate", onNavigate,
+        baseType: EditorAction.terminationAction,
+        properties: {
+          "jumpToScreen": Types.screen,
+          "replacePrevious": Types.bool,
+          "state": Types.json,
+          "transition": Types.routeTransitionBuilder,
+          "transitionDuration": Types.int
+        },
+        actions: {
+          "onPop": EditorActionType.action()
+        });
+    registerSilentAction("KActionPop", onPop,
+        baseType: EditorAction.terminationAction,
+        properties: {
+          "returnValue": Types.string,
+          "returnMessage": Types.string,
+          "returnMessageType": const EditorPropertyListType(
+              ["success", "warning", "error", "info"])
+        });
+    registerSilentAction("KActionShowDialog", onShowDialog,
+        baseType: EditorAction.terminationAction,
+        properties: {
+          "jumpToScreen": Types.screen,
+          "state": Types.json,
+          "barrierDismissible": Types.bool,
+          "barrierColor": Types.color,
+          "backgroundColor": Types.color,
+          "padding": Types.intArray,
+          "alignment": Types.alignment,
+          "elevation": Types.int,
+          "transition": Types.routeTransitionBuilder,
+          "transitionDuration": Types.int
+        },
+        actions: {
+          "onPop": EditorActionType.action()
+        });
 
     registerSilentAction("BlocState", onBlocState, properties: {
       "name": Types.string,
@@ -209,8 +225,15 @@ class BaseActions with IActions {
     });
     registerSilentAction("KActionIf", onIf,
         baseType: EditorAction.terminationAction,
-        properties: {"left": Types.string, "operator": Types.kOperator, "right": Types.string},
-        actions: {"onTrue": EditorActionType.action(), "onFalse": EditorActionType.action()});
+        properties: {
+          "left": Types.string,
+          "operator": Types.kOperator,
+          "right": Types.string
+        },
+        actions: {
+          "onTrue": EditorActionType.action(),
+          "onFalse": EditorActionType.action()
+        });
 
     registerHttpAction("KActionRequest", onRequest, properties: {
       "request": Types.request,
@@ -218,14 +241,16 @@ class BaseActions with IActions {
     registerHttpAction("KActionRest", onRest, properties: {
       "url": Types.string,
       "path": Types.string,
-      "method": const EditorPropertyListType(["get", "post", "put", "delete", "patch"]),
+      "method": const EditorPropertyListType(
+          ["get", "post", "put", "delete", "patch"]),
       "queryArgs": Types.json,
       "body": Types.json,
     });
 
     registerAction("KActionReload", onReload);
     registerAction("KActionReloadAll", onReloadAll);
-    registerAction("SetLanguage", onSetLanguage, properties: {"language": Types.string});
+    registerAction("SetLanguage", onSetLanguage,
+        properties: {"language": Types.string});
 
     // registerAction("KActionLinkToAction", onLinkToAction, EditorAction(
     //   baseType: EditorAction.terminationAction,
@@ -234,16 +259,19 @@ class BaseActions with IActions {
     //   },
     // ));
 
-    registerAction(EditorAction.listAction, (_, __) => ActionResult(false), abstract: true, baseType: null);
-    registerLoadPageAction("KListActionRequest", onLoadPageRequest, properties: {
-      "request": Types.request,
-      "arrayKey": Types.string,
-      "isPaged": Types.bool,
-    });
+    registerAction(EditorAction.listAction, (_, __) => ActionResult(false),
+        abstract: true, baseType: null);
+    registerLoadPageAction("KListActionRequest", onLoadPageRequest,
+        properties: {
+          "request": Types.request,
+          "arrayKey": Types.string,
+          "isPaged": Types.bool,
+        });
     registerLoadPageAction("KListActionRest", onLoadPageRest, properties: {
       "url": Types.string,
       "path": Types.string,
-      "method": const EditorPropertyListType(["get", "post", "put", "delete", "patch"]),
+      "method": const EditorPropertyListType(
+          ["get", "post", "put", "delete", "patch"]),
       "queryArgs": Types.json,
       "body": Types.json,
       "arrayKey": Types.string,
@@ -253,9 +281,11 @@ class BaseActions with IActions {
       "data": Types.json,
       "shuffle": Types.bool,
     });
-    registerAction("ReloadList", onReloadList, baseType: EditorAction.action, properties: {
-      "listId": Types.string,
-    });
+    registerAction("ReloadList", onReloadList,
+        baseType: EditorAction.action,
+        properties: {
+          "listId": Types.string,
+        });
   }
 
   Future<PageLoadedState> onLoadPageRequest(LoadPageActionEvent event) async {
@@ -264,8 +294,10 @@ class BaseActions with IActions {
       return PageLoadedState(event.page, event.fullData, false);
     }
 
-    final restNode = NodeSpec(event.action.type, restSpec, actions: event.action.actions);
-    final restEvent = LoadPageActionEvent(restNode, event.context, event.page, event.pageSize, event.fullData);
+    final restNode =
+        NodeSpec(event.action.type, restSpec, actions: event.action.actions);
+    final restEvent = LoadPageActionEvent(
+        restNode, event.context, event.page, event.pageSize, event.fullData);
     return await onLoadPageRest(restEvent);
   }
 
@@ -298,7 +330,8 @@ class BaseActions with IActions {
 
       if (responseData is List) {
         event.fullData.addAll(responseData);
-        return PageLoadedState(event.page, event.fullData, isPaged && responseData.length == event.pageSize);
+        return PageLoadedState(event.page, event.fullData,
+            isPaged && responseData.length == event.pageSize);
       }
     }
 
@@ -306,7 +339,8 @@ class BaseActions with IActions {
   }
 
   PageLoadedState handleStaticData(LoadPageActionEvent event) {
-    if (event.page > 1) return PageLoadedState(event.page, event.fullData, false);
+    if (event.page > 1)
+      return PageLoadedState(event.page, event.fullData, false);
     final List data = event.action.props["data"] ?? [];
     if (parseBool(event.action.props["shuffle"])) {
       data.shuffle();
@@ -314,7 +348,8 @@ class BaseActions with IActions {
     return PageLoadedState(event.page, data, false);
   }
 
-  Future<HttpActionResult> onRequest(NodeSpec action, ActionContext context) async {
+  Future<HttpActionResult> onRequest(
+      NodeSpec action, ActionContext context) async {
     final restSpec = transformRequestToRest(action, context);
     if (restSpec == null) {
       return HttpActionResult(false);
@@ -328,9 +363,11 @@ class BaseActions with IActions {
         context);
   }
 
-  Future<HttpActionResult> onRest(NodeSpec action, ActionContext context) async {
+  Future<HttpActionResult> onRest(
+      NodeSpec action, ActionContext context) async {
     final spec = action.props;
-    final uri = UriExtensions.buildUri(spec["url"], path: spec["path"], queryArgs: spec["queryArgs"]);
+    final uri = UriExtensions.buildUri(spec["url"],
+        path: spec["path"], queryArgs: spec["queryArgs"]);
 
     final body = spec["body"] != null ? json.safeEncode(spec["body"]!) : null;
     final headers = Lowder.actions.getHttpDefaultHeaders(
@@ -338,10 +375,12 @@ class BaseActions with IActions {
       otherHeaders: spec["headers"],
     );
 
-    var response = await Lowder.actions.httpCall(uri, spec["method"], body: body, headers: headers);
+    var response = await Lowder.actions
+        .httpCall(uri, spec["method"], body: body, headers: headers);
     if (!response.isSuccess) {
       if ((await Lowder.actions.onHttpError(response, action, context)).retry) {
-        response = await Lowder.actions.httpCall(uri, spec["method"], body: body, headers: headers);
+        response = await Lowder.actions
+            .httpCall(uri, spec["method"], body: body, headers: headers);
       }
     }
 
@@ -351,7 +390,8 @@ class BaseActions with IActions {
     return HttpActionResult(false);
   }
 
-  Future<SilentActionResult> onBlocState(NodeSpec action, ActionContext context) async {
+  Future<SilentActionResult> onBlocState(
+      NodeSpec action, ActionContext context) async {
     final stateName = action.props["name"] as String?;
     if (stateName == null || stateName.isEmpty) {
       return SilentActionResult(true);
@@ -364,13 +404,15 @@ class BaseActions with IActions {
       try {
         BlocProvider.of<LocalBloc>(context.buildContext).add(EmitState(state));
       } catch (e, stack) {
-        Lowder.actions.logError("LocalBloc not found while emitting BlocState.", error: e, stackTrace: stack);
+        Lowder.actions.logError("LocalBloc not found while emitting BlocState.",
+            error: e, stackTrace: stack);
       }
     }
     return SilentActionResult(true);
   }
 
-  Future<SilentActionResult> onMessage(NodeSpec action, ActionContext context) async {
+  Future<SilentActionResult> onMessage(
+      NodeSpec action, ActionContext context) async {
     Lowder.widgets.showMessage(
       type: action.props["type"] ?? "info",
       message: action.props["message"],
@@ -378,14 +420,16 @@ class BaseActions with IActions {
     return SilentActionResult(true);
   }
 
-  Future<SilentActionResult> onNavigate(NodeSpec action, ActionContext context) async {
+  Future<SilentActionResult> onNavigate(
+      NodeSpec action, ActionContext context) async {
     final props = action.props;
     final screen = Schema.getScreen(props["jumpToScreen"]);
     final screenState = props["state"];
 
     if (screen != null) {
       Route route;
-      final transition = Types.routeTransitionBuilder.build(props["transition"]);
+      final transition =
+          Types.routeTransitionBuilder.build(props["transition"]);
       if (transition == null) {
         route = Lowder.widgets.buildRoute(screen, state: screenState);
       } else {
@@ -394,7 +438,9 @@ class BaseActions with IActions {
           pageBuilder: (context, animation, secondaryAnimation) =>
               Lowder.widgets.buildScreen(context, screen, state: screenState),
           transitionsBuilder: transition,
-          transitionDuration: Duration(milliseconds: parseInt(props["transitionDuration"], defaultValue: 300)),
+          transitionDuration: Duration(
+              milliseconds:
+                  parseInt(props["transitionDuration"], defaultValue: 300)),
         );
       }
 
@@ -428,7 +474,8 @@ class BaseActions with IActions {
     return SilentActionResult(true);
   }
 
-  Future<SilentActionResult> onPop(NodeSpec action, ActionContext context) async {
+  Future<SilentActionResult> onPop(
+      NodeSpec action, ActionContext context) async {
     final props = action.props;
     final navigator = Lowder.actions.appNavigator;
     if (!navigator.canPop()) {
@@ -448,7 +495,8 @@ class BaseActions with IActions {
     return SilentActionResult(true, returnData: value);
   }
 
-  Future<SilentActionResult> onShowDialog(NodeSpec action, ActionContext context) async {
+  Future<SilentActionResult> onShowDialog(
+      NodeSpec action, ActionContext context) async {
     final props = action.props;
     final screen = Schema.getScreen(props["jumpToScreen"]);
     final screenState = props["state"];
@@ -475,32 +523,41 @@ class BaseActions with IActions {
           insetPadding: Lowder.properties.getInsets(props["padding"]),
           alignment: Lowder.properties.build("Alignment", props["alignment"]),
           elevation: tryParseDouble(props["elevation"]),
-          child: Lowder.widgets.buildScreen(context, screen, state: screenState),
+          child:
+              Lowder.widgets.buildScreen(context, screen, state: screenState),
         );
 
     showGeneralDialog(
       context: context.buildContext,
       barrierLabel: "",
       barrierDismissible: parseBool(props["barrierDismissible"]),
-      barrierColor: parseColor(props["barrierColor"], defaultColor: const Color(0x80000000)),
+      barrierColor: parseColor(props["barrierColor"],
+          defaultColor: const Color(0x80000000)),
       pageBuilder: (context, anim1, anim2) => getDialog(context),
-      transitionBuilder: Types.routeTransitionBuilder.build(props["transition"]),
-      transitionDuration: Duration(milliseconds: parseInt(props["transitionDuration"], defaultValue: 200)),
+      transitionBuilder:
+          Types.routeTransitionBuilder.build(props["transition"]),
+      transitionDuration: Duration(
+          milliseconds:
+              parseInt(props["transitionDuration"], defaultValue: 200)),
     ).then((value) => tailFunc(value));
     return SilentActionResult(true);
   }
 
-  Future<SilentActionResult> onSetState(NodeSpec action, ActionContext context) async {
+  Future<SilentActionResult> onSetState(
+      NodeSpec action, ActionContext context) async {
     final newState = Map<String, dynamic>.from(action.props["newState"] ?? {});
     try {
-      BlocProvider.of<LocalBloc>(context.buildContext).add(EmitState(SetStateState(newState)));
+      BlocProvider.of<LocalBloc>(context.buildContext)
+          .add(EmitState(SetStateState(newState)));
     } catch (e, stack) {
-      Lowder.actions.logError("LocalBloc not found while emitting SetState.", error: e, stackTrace: stack);
+      Lowder.actions.logError("LocalBloc not found while emitting SetState.",
+          error: e, stackTrace: stack);
     }
     return SilentActionResult(true, returnData: newState);
   }
 
-  Future<SilentActionResult> onSetGlobalVar(NodeSpec action, ActionContext context) async {
+  Future<SilentActionResult> onSetGlobalVar(
+      NodeSpec action, ActionContext context) async {
     final key = action.props["key"];
     final value = action.props["value"];
     if (key != null && key is String) {
@@ -513,42 +570,50 @@ class BaseActions with IActions {
     return SilentActionResult(true);
   }
 
-  Future<SilentActionResult> onIf(NodeSpec action, ActionContext context) async {
+  Future<SilentActionResult> onIf(
+      NodeSpec action, ActionContext context) async {
     final props = action.props;
     final actions = action.actions;
-    final result = Lowder.properties.evaluateOperator(props["left"], props["operator"], props["right"]);
+    final result = Lowder.properties
+        .evaluateOperator(props["left"], props["operator"], props["right"]);
 
     Map? nextAction = result ? actions["onTrue"] : actions["onFalse"];
 
     return SilentActionResult(true, nextAction: nextAction);
   }
 
-  Future<ActionResult> onReloadAll(NodeSpec action, ActionContext context) async {
+  Future<ActionResult> onReloadAll(
+      NodeSpec action, ActionContext context) async {
     GlobalBloc.emitState(ReloadAll());
     return ActionResult(true);
   }
 
   Future<ActionResult> onReload(NodeSpec action, ActionContext context) async {
     try {
-      BlocProvider.of<LocalBloc>(context.buildContext).add(EmitState(ReloadState()));
+      BlocProvider.of<LocalBloc>(context.buildContext)
+          .add(EmitState(ReloadState()));
     } catch (e, stack) {
-      Lowder.actions.logError("LocalBloc not found while emitting Reload.", error: e, stackTrace: stack);
+      Lowder.actions.logError("LocalBloc not found while emitting Reload.",
+          error: e, stackTrace: stack);
     }
     return ActionResult(true);
   }
 
-  Future<ActionResult> onReloadList(NodeSpec action, ActionContext context) async {
+  Future<ActionResult> onReloadList(
+      NodeSpec action, ActionContext context) async {
     GlobalBloc.emitState(ReloadListState(action.props["listId"]));
     return ActionResult(true);
   }
 
-  Future<ActionResult> onSetLanguage(NodeSpec action, ActionContext context) async {
+  Future<ActionResult> onSetLanguage(
+      NodeSpec action, ActionContext context) async {
     final result = Solution.setLanguage(action.props["language"]);
     if (result) GlobalBloc.emitState(ReloadAll());
     return ActionResult(result);
   }
 
-  Future<ActionResult> onLinkToAction(NodeSpec action, ActionContext context) async {
+  Future<ActionResult> onLinkToAction(
+      NodeSpec action, ActionContext context) async {
     final actionId = action.props["action"];
     if (actionId == null || actionId is! String || actionId.isEmpty) {
       return ActionResult(false);
@@ -579,7 +644,8 @@ class BaseActions with IActions {
         final pathParameters = requestValue["pathParameters"];
         if (pathParameters != null && pathParameters is Map) {
           for (var propKey in pathParameters.keys) {
-            path = path!.replaceAll("{$propKey}", pathParameters[propKey] ?? "");
+            path =
+                path!.replaceAll("{$propKey}", pathParameters[propKey] ?? "");
           }
         }
       }
@@ -587,7 +653,8 @@ class BaseActions with IActions {
       Lowder.widgets.mergeMaps(restSpec, requestValue);
     }
 
-    final evaluatorContext = Lowder.actions.getEvaluatorContext(context.actionValue, context.state, context.actionContext);
+    final evaluatorContext = Lowder.actions.getEvaluatorContext(
+        context.actionValue, context.state, context.actionContext);
     Lowder.properties.evaluateMap(restSpec, evaluatorContext);
     return restSpec;
   }

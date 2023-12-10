@@ -7,7 +7,8 @@ class ActionContext {
   final dynamic actionValue;
   final BuildContext buildContext;
 
-  ActionContext(this.state, this.actionContext, this.actionValue, this.buildContext);
+  ActionContext(
+      this.state, this.actionContext, this.actionValue, this.buildContext);
 }
 
 /// A class to return an Action's execution result.

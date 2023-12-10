@@ -19,7 +19,8 @@ abstract class Strings {
     "_number_format_": ".00",
     "_currency_symbol_": "€",
   };
-  static final Map<String, String> _strings = Map<String, String>.from(_initialStrings);
+  static final Map<String, String> _strings =
+      Map<String, String>.from(_initialStrings);
 
   /// method used to load string resources into memory.
   static void load(Map<String, String> strings, {bool clear = false}) {
@@ -29,32 +30,52 @@ abstract class Strings {
   }
 
   /// return a string resource capitalized.
-  static String getCapitalized(String key, {String? fallbackValue, Map<String, dynamic>? attributes}) {
-    return get(key, fallbackValue: fallbackValue, attributes: attributes, transform: Transform.capitalize);
+  static String getCapitalized(String key,
+      {String? fallbackValue, Map<String, dynamic>? attributes}) {
+    return get(key,
+        fallbackValue: fallbackValue,
+        attributes: attributes,
+        transform: Transform.capitalize);
   }
 
   /// return a string resource in upper case.
-  static String getUpper(String key, {String? fallbackValue, Map<String, dynamic>? attributes}) {
-    return get(key, fallbackValue: fallbackValue, attributes: attributes, transform: Transform.upper);
+  static String getUpper(String key,
+      {String? fallbackValue, Map<String, dynamic>? attributes}) {
+    return get(key,
+        fallbackValue: fallbackValue,
+        attributes: attributes,
+        transform: Transform.upper);
   }
 
   /// return a string resource in lower case.
-  static String getLower(String key, {String? fallbackValue, Map<String, dynamic>? attributes}) {
-    return get(key, fallbackValue: fallbackValue, attributes: attributes, transform: Transform.lower);
+  static String getLower(String key,
+      {String? fallbackValue, Map<String, dynamic>? attributes}) {
+    return get(key,
+        fallbackValue: fallbackValue,
+        attributes: attributes,
+        transform: Transform.lower);
   }
 
   /// return a string resource in title case.
-  static String getTitle(String key, {String? fallbackValue, Map<String, dynamic>? attributes}) {
-    return get(key, fallbackValue: fallbackValue, attributes: attributes, transform: Transform.title);
+  static String getTitle(String key,
+      {String? fallbackValue, Map<String, dynamic>? attributes}) {
+    return get(key,
+        fallbackValue: fallbackValue,
+        attributes: attributes,
+        transform: Transform.title);
   }
 
   /// return a string resource.
   static String get(String key,
-      {String? fallbackValue, Map<String, dynamic>? attributes, Transform transform = Transform.none}) {
-    var value = _strings[key] ?? _strings[key.toLowerCase()] ?? fallbackValue ?? key;
+      {String? fallbackValue,
+      Map<String, dynamic>? attributes,
+      Transform transform = Transform.none}) {
+    var value =
+        _strings[key] ?? _strings[key.toLowerCase()] ?? fallbackValue ?? key;
     if (attributes != null) {
       for (var key in attributes.keys) {
-        var keyValue = attributes[key] != null ? attributes[key].toString() : "";
+        var keyValue =
+            attributes[key] != null ? attributes[key].toString() : "";
         value = value.replaceAll("{$key}", keyValue);
       }
     }

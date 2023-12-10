@@ -46,7 +46,8 @@ class RootNodeSpec extends NodeSpec {
 
   @override
   RootNodeSpec clone() {
-    return RootNodeSpec(id, name, type, props.clone(), actions: actions.clone());
+    return RootNodeSpec(id, name, type, props.clone(),
+        actions: actions.clone());
   }
 }
 
@@ -56,7 +57,8 @@ class WidgetNodeSpec extends RootNodeSpec {
   final Map widgets;
   final Map extra;
 
-  WidgetNodeSpec(String id, String? name, String type, this.template, Map props, Map actions, this.widgets, this.extra)
+  WidgetNodeSpec(String id, String? name, String type, this.template, Map props,
+      Map actions, this.widgets, this.extra)
       : super(id, name, type, props, actions: actions);
 
   dynamic buildProp(String key, {dynamic argument}) {
@@ -100,7 +102,8 @@ class WidgetNodeSpec extends RootNodeSpec {
 
 /// Class representing a Model's Action Node.
 class ActionNodeSpec extends RootNodeSpec {
-  ActionNodeSpec(super.id, super.name, super.type, super.props, Map actions) : super(actions: actions);
+  ActionNodeSpec(super.id, super.name, super.type, super.props, Map actions)
+      : super(actions: actions);
 
   @override
   ActionNodeSpec clone() {

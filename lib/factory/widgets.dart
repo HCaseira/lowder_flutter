@@ -81,169 +81,217 @@ class NoWidgets with IWidgets {
 class BaseWidgets with IWidgets {
   @override
   void registerWidgets() {
-    registerWidget("Screen", (_) => const SizedBox(), baseType: null, abstract: true, widgets: {
-      "body": EditorWidgetType.rootWidget(),
-    }, actions: {
-      "onEnter": EditorActionType.action(),
-    });
-    registerWidget("RootWidget", (_) => const SizedBox(), baseType: null, abstract: true, properties: {
-      "template": const EditorPropertyType("KTemplate"),
-    });
-    registerWidget("PreferredSizeWidget", (_) => const SizedBox(), baseType: null, abstract: true, properties: {
-      "template": const EditorPropertyType("KTemplate"),
-      "heroTag": Types.string,
-      "safeArea": Types.bool,
-      "buildCondition": Types.kCondition,
-    });
-    registerWidget("Widget", (_) => const SizedBox(), baseType: null, abstract: true, properties: {
-      "template": const EditorPropertyType("KTemplate"),
-      "decorator": const EditorPropertyType("Decorator"),
-      "wrapExpanded": Types.bool,
-      "visible": Types.bool,
-      "margin": Types.intArray,
-      "heroTag": Types.string,
-      "safeArea": Types.safeArea,
-      "buildCondition": Types.kCondition,
-    });
+    registerWidget("Screen", (_) => const SizedBox(),
+        baseType: null,
+        abstract: true,
+        widgets: {
+          "body": EditorWidgetType.rootWidget(),
+        },
+        actions: {
+          "onEnter": EditorActionType.action(),
+        });
+    registerWidget("RootWidget", (_) => const SizedBox(),
+        baseType: null,
+        abstract: true,
+        properties: {
+          "template": const EditorPropertyType("KTemplate"),
+        });
+    registerWidget("PreferredSizeWidget", (_) => const SizedBox(),
+        baseType: null,
+        abstract: true,
+        properties: {
+          "template": const EditorPropertyType("KTemplate"),
+          "heroTag": Types.string,
+          "safeArea": Types.bool,
+          "buildCondition": Types.kCondition,
+        });
+    registerWidget("Widget", (_) => const SizedBox(),
+        baseType: null,
+        abstract: true,
+        properties: {
+          "template": const EditorPropertyType("KTemplate"),
+          "decorator": const EditorPropertyType("Decorator"),
+          "wrapExpanded": Types.bool,
+          "visible": Types.bool,
+          "margin": Types.intArray,
+          "heroTag": Types.string,
+          "safeArea": Types.safeArea,
+          "buildCondition": Types.kCondition,
+        });
 
     final componentProperties = {
       "component": const EditorPropertyType("KComponent"),
       // "state": Types.json,
     };
     registerWidget("PreferredSizeComponent", buildComponent,
-        baseType: EditorWidget.preferredSizeWidget, properties: componentProperties);
-    registerWidget("WidgetComponent", buildComponent, properties: componentProperties);
+        baseType: EditorWidget.preferredSizeWidget,
+        properties: componentProperties);
+    registerWidget("WidgetComponent", buildComponent,
+        properties: componentProperties);
 
-    registerWidget("material", buildMaterial, baseType: EditorWidget.rootWidget, properties: {
-      "type": Types.materialType,
-      "shape": Types.shapeBorder,
-      "borderRadius": Types.intArray,
-      "elevation": Types.double,
-      "color": Types.color,
-      "shadowColor": Types.color,
-    }, widgets: {
-      "child": EditorWidgetType.widget(),
-    });
-    registerWidget("scaffold", buildScaffold, baseType: EditorWidget.rootWidget, properties: {
-      "tabController": Types.tabController,
-      "backgroundColor": Types.color,
-      "extendBody": Types.bool,
-      "extendBodyBehindAppBar": Types.bool,
-      "resizeToAvoidBottomInset": Types.bool,
-      "floatingActionButtonLocation": Types.floatingActionButtonLocation,
-    }, widgets: {
-      "appBar": EditorWidgetType.preferredSizeWidget(),
-      "drawer": EditorWidgetType.widget(),
-      "navigationRail": EditorWidgetType("navigationRail"),
-      "body": EditorWidgetType.widget(),
-      "bottomSheet": EditorWidgetType.widget(),
-      "bottomNavigationBar": EditorWidgetType.widget(),
-      "floatingActionButton": EditorWidgetType.widget(),
-      "persistentFooterButtons": EditorWidgetType.widget(isArray: true),
-    });
-    registerWidget("sliverScaffold", buildSliverScaffold, baseType: EditorWidget.rootWidget, properties: {
-      "tabController": Types.tabController,
-      "backgroundColor": Types.color,
-      "reverse": Types.bool,
-      "scrollDirection": Types.axis,
-      "extendBody": Types.bool,
-      "extendBodyBehindAppBar": Types.bool,
-      "floatingActionButtonLocation": Types.floatingActionButtonLocation
-    }, widgets: {
-      "appBar": EditorWidgetType("sliverAppBar"),
-      "drawer": EditorWidgetType.widget(),
-      "children": EditorWidgetType.widget(isArray: true),
-      "bottomSheet": EditorWidgetType.widget(),
-      "bottomNavigationBar": EditorWidgetType.widget(),
-      "floatingActionButton": EditorWidgetType.widget(),
-      "persistentFooterButtons": EditorWidgetType.widget(isArray: true),
-    });
+    registerWidget("material", buildMaterial,
+        baseType: EditorWidget.rootWidget,
+        properties: {
+          "type": Types.materialType,
+          "shape": Types.shapeBorder,
+          "borderRadius": Types.intArray,
+          "elevation": Types.double,
+          "color": Types.color,
+          "shadowColor": Types.color,
+        },
+        widgets: {
+          "child": EditorWidgetType.widget(),
+        });
+    registerWidget("scaffold", buildScaffold,
+        baseType: EditorWidget.rootWidget,
+        properties: {
+          "tabController": Types.tabController,
+          "backgroundColor": Types.color,
+          "extendBody": Types.bool,
+          "extendBodyBehindAppBar": Types.bool,
+          "resizeToAvoidBottomInset": Types.bool,
+          "floatingActionButtonLocation": Types.floatingActionButtonLocation,
+        },
+        widgets: {
+          "appBar": EditorWidgetType.preferredSizeWidget(),
+          "drawer": EditorWidgetType.widget(),
+          "navigationRail": EditorWidgetType("navigationRail"),
+          "body": EditorWidgetType.widget(),
+          "bottomSheet": EditorWidgetType.widget(),
+          "bottomNavigationBar": EditorWidgetType.widget(),
+          "floatingActionButton": EditorWidgetType.widget(),
+          "persistentFooterButtons": EditorWidgetType.widget(isArray: true),
+        });
+    registerWidget("sliverScaffold", buildSliverScaffold,
+        baseType: EditorWidget.rootWidget,
+        properties: {
+          "tabController": Types.tabController,
+          "backgroundColor": Types.color,
+          "reverse": Types.bool,
+          "scrollDirection": Types.axis,
+          "extendBody": Types.bool,
+          "extendBodyBehindAppBar": Types.bool,
+          "floatingActionButtonLocation": Types.floatingActionButtonLocation
+        },
+        widgets: {
+          "appBar": EditorWidgetType("sliverAppBar"),
+          "drawer": EditorWidgetType.widget(),
+          "children": EditorWidgetType.widget(isArray: true),
+          "bottomSheet": EditorWidgetType.widget(),
+          "bottomNavigationBar": EditorWidgetType.widget(),
+          "floatingActionButton": EditorWidgetType.widget(),
+          "persistentFooterButtons": EditorWidgetType.widget(isArray: true),
+        });
 
-    registerWidget("appBar", buildAppBar, baseType: EditorWidget.preferredSizeWidget, properties: {
-      "title": Types.string,
-      "centerTitle": Types.bool,
-      "leadingIcon": Types.appBarLeadingIcon,
-      "foregroundColor": Types.color,
+    registerWidget("appBar", buildAppBar,
+        baseType: EditorWidget.preferredSizeWidget,
+        properties: {
+          "title": Types.string,
+          "centerTitle": Types.bool,
+          "leadingIcon": Types.appBarLeadingIcon,
+          "foregroundColor": Types.color,
+          "backgroundColor": Types.color,
+          "surfaceTintColor": Types.color,
+          "shadowColor": Types.color,
+          "elevation": Types.int,
+          "toolbarHeight": Types.int,
+          "toolbarOpacity": Types.double,
+          "bottomOpacity": Types.double,
+          "automaticallyImplyLeading": Types.bool,
+        },
+        widgets: {
+          "leading": EditorWidgetType.widget(),
+          "titleWidget": EditorWidgetType.widget(),
+          "actions": EditorWidgetType.widget(isArray: true),
+          "bottom": EditorWidgetType.preferredSizeWidget(),
+        });
+    registerWidget("sliverAppBar", buildSliverAppBar,
+        baseType: "",
+        properties: {
+          "title": Types.string,
+          "centerTitle": Types.bool,
+          "titlePadding": Types.intArray,
+          "leadingIcon": Types.appBarLeadingIcon,
+          "backgroundColor": Types.color,
+          "foregroundColor": Types.color,
+          "elevation": Types.int,
+          "collapsedHeight": Types.int,
+          "expandedHeight": Types.int,
+          "expandedTitleScale": Types.double,
+          "collapseMode": Types.collapseMode,
+          "stretchMode": Types.stretchMode,
+          "floating": Types.bool,
+          "pinned": Types.bool,
+          "snap": Types.bool,
+          "stretch": Types.bool,
+        },
+        actions: {
+          "onStretchTrigger": EditorActionType.action(),
+        },
+        widgets: {
+          "leading": EditorWidgetType.widget(),
+          "titleWidget": EditorWidgetType.widget(),
+          "background": EditorWidgetType.widget(),
+          "actions": EditorWidgetType.widget(isArray: true),
+          "bottom": EditorWidgetType.preferredSizeWidget(),
+        });
+    registerWidget("navigationRail", (params) => buildNavigationRail(params),
+        properties: {
+          "selectedIndex": Types.int,
+          "useIndicator": Types.bool,
+          "indicatorColor": Types.color,
+          "backgroundColor": Types.color,
+          "minWidth": Types.double,
+          "minExtendedWidth": Types.double,
+          "labelType": Types.navigationRailLabelType,
+          "selectedLabelTextStyle": Types.textStyle,
+          "selectedIconTheme": Types.iconThemeData,
+          "unselectedLabelTextStyle": Types.textStyle,
+          "unselectedIconTheme": Types.iconThemeData,
+          "groupAlignment": Types.double,
+          "elevation": Types.double,
+          "extended": Types.bool,
+        },
+        widgets: {
+          "destinations":
+              EditorWidgetType("NavigationRailDestination", isArray: true),
+          "leading": EditorWidgetType.widget(),
+          "trailing": EditorWidgetType.widget(),
+          "toggle": EditorWidgetType.widget(),
+        });
+    registerWidget("NavigationRailDestination", (_) => const SizedBox(),
+        abstract: true,
+        baseType: null,
+        properties: {
+          "label": Types.string,
+          "iconCode": Types.int,
+          "selectedIconCode": Types.int,
+          "padding": Types.intArray,
+          "buildCondition": Types.kCondition,
+        });
+    registerWidget("ActionDestination", (_) => const SizedBox(),
+        baseType: "NavigationRailDestination",
+        actions: {
+          "onTap": EditorActionType.action(),
+        });
+    registerWidget("ScreenDestination", (_) => const SizedBox(),
+        baseType: "NavigationRailDestination",
+        properties: {
+          "screen": Types.screen,
+        });
+    registerWidget("drawer", buildDrawer, properties: {
       "backgroundColor": Types.color,
-      "surfaceTintColor": Types.color,
-      "shadowColor": Types.color,
-      "elevation": Types.int,
-      "toolbarHeight": Types.int,
-      "toolbarOpacity": Types.double,
-      "bottomOpacity": Types.double,
-      "automaticallyImplyLeading": Types.bool,
-    }, widgets: {
-      "leading": EditorWidgetType.widget(),
-      "titleWidget": EditorWidgetType.widget(),
-      "actions": EditorWidgetType.widget(isArray: true),
-      "bottom": EditorWidgetType.preferredSizeWidget(),
-    });
-    registerWidget("sliverAppBar", buildSliverAppBar, baseType: "", properties: {
-      "title": Types.string,
-      "centerTitle": Types.bool,
-      "titlePadding": Types.intArray,
-      "leadingIcon": Types.appBarLeadingIcon,
-      "backgroundColor": Types.color,
-      "foregroundColor": Types.color,
-      "elevation": Types.int,
-      "collapsedHeight": Types.int,
-      "expandedHeight": Types.int,
-      "expandedTitleScale": Types.double,
-      "collapseMode": Types.collapseMode,
-      "stretchMode": Types.stretchMode,
-      "floating": Types.bool,
-      "pinned": Types.bool,
-      "snap": Types.bool,
-      "stretch": Types.bool,
-    }, actions: {
-      "onStretchTrigger": EditorActionType.action(),
-    }, widgets: {
-      "leading": EditorWidgetType.widget(),
-      "titleWidget": EditorWidgetType.widget(),
-      "background": EditorWidgetType.widget(),
-      "actions": EditorWidgetType.widget(isArray: true),
-      "bottom": EditorWidgetType.preferredSizeWidget(),
-    });
-    registerWidget("navigationRail", (params) => buildNavigationRail(params), properties: {
-      "selectedIndex": Types.int,
-      "useIndicator": Types.bool,
-      "indicatorColor": Types.color,
-      "backgroundColor": Types.color,
-      "minWidth": Types.double,
-      "minExtendedWidth": Types.double,
-      "labelType": Types.navigationRailLabelType,
-      "selectedLabelTextStyle": Types.textStyle,
-      "selectedIconTheme": Types.iconThemeData,
-      "unselectedLabelTextStyle": Types.textStyle,
-      "unselectedIconTheme": Types.iconThemeData,
-      "groupAlignment": Types.double,
       "elevation": Types.double,
-      "extended": Types.bool,
+      "shape": Types.shapeBorder
     }, widgets: {
-      "destinations": EditorWidgetType("NavigationRailDestination", isArray: true),
-      "leading": EditorWidgetType.widget(),
-      "trailing": EditorWidgetType.widget(),
-      "toggle": EditorWidgetType.widget(),
+      "child": EditorWidgetType.widget()
     });
-    registerWidget("NavigationRailDestination", (_) => const SizedBox(), abstract: true, baseType: null, properties: {
-      "label": Types.string,
-      "iconCode": Types.int,
-      "selectedIconCode": Types.int,
+    registerWidget("drawerHeader", buildDrawerHeader, properties: {
       "padding": Types.intArray,
-      "buildCondition": Types.kCondition,
+      "decoration": Types.boxDecoration
+    }, widgets: {
+      "child": EditorWidgetType.widget()
     });
-    registerWidget("ActionDestination", (_) => const SizedBox(), baseType: "NavigationRailDestination", actions: {
-      "onTap": EditorActionType.action(),
-    });
-    registerWidget("ScreenDestination", (_) => const SizedBox(), baseType: "NavigationRailDestination", properties: {
-      "screen": Types.screen,
-    });
-    registerWidget("drawer", buildDrawer,
-        properties: {"backgroundColor": Types.color, "elevation": Types.double, "shape": Types.shapeBorder},
-        widgets: {"child": EditorWidgetType.widget()});
-    registerWidget("drawerHeader", buildDrawerHeader,
-        properties: {"padding": Types.intArray, "decoration": Types.boxDecoration},
-        widgets: {"child": EditorWidgetType.widget()});
     registerWidget("userDrawerHeader", buildUserDrawerHeader, properties: {
       "accountName": Types.string,
       "accountEmail": Types.string,
@@ -266,29 +314,36 @@ class BaseWidgets with IWidgets {
     }, widgets: {
       "child": EditorWidgetType.widget()
     });
-    registerWidget("bottomNavigationBar", buildBottomNavigationBar, properties: {
-      "startIndex": Types.int,
-      "type": const EditorPropertyListType(["fixed", "shifting"]),
-      "layout": const EditorPropertyListType(["centered", "linear", "spread"]),
-      "elevation": Types.int,
-      "backgroundColor": Types.color,
-      "iconSize": Types.double,
-      "selectedFontSize": Types.double,
-      "selectedItemColor": Types.color,
-      "unselectedFontSize": Types.double,
-      "unselectedItemColor": Types.color
-    }, widgets: {
-      "children": EditorWidgetType("bottomNavigationBarItem", isArray: true),
-    });
-    registerWidget("bottomNavigationBar", (_) => const SizedBox(), baseType: "", properties: {
-      "iconCode": Types.int,
-      "activeIconCode": Types.int,
-      "label": Types.string,
-      "tooltip": Types.string,
-      "backgroundColor": Types.color,
-    }, actions: {
-      "onTap": EditorActionType.action(),
-    });
+    registerWidget("bottomNavigationBar", buildBottomNavigationBar,
+        properties: {
+          "startIndex": Types.int,
+          "type": const EditorPropertyListType(["fixed", "shifting"]),
+          "layout":
+              const EditorPropertyListType(["centered", "linear", "spread"]),
+          "elevation": Types.int,
+          "backgroundColor": Types.color,
+          "iconSize": Types.double,
+          "selectedFontSize": Types.double,
+          "selectedItemColor": Types.color,
+          "unselectedFontSize": Types.double,
+          "unselectedItemColor": Types.color
+        },
+        widgets: {
+          "children":
+              EditorWidgetType("bottomNavigationBarItem", isArray: true),
+        });
+    registerWidget("bottomNavigationBar", (_) => const SizedBox(),
+        baseType: "",
+        properties: {
+          "iconCode": Types.int,
+          "activeIconCode": Types.int,
+          "label": Types.string,
+          "tooltip": Types.string,
+          "backgroundColor": Types.color,
+        },
+        actions: {
+          "onTap": EditorActionType.action(),
+        });
 
     registerWidget("sizedBox", buildSizedBox, properties: {
       "width": Types.int,
@@ -382,9 +437,13 @@ class BaseWidgets with IWidgets {
       "children": EditorWidgetType.widget(isArray: true),
     });
     registerWidget("row", buildRow,
-        properties: rowProperties.properties, actions: rowProperties.actions, widgets: rowProperties.widgets);
+        properties: rowProperties.properties,
+        actions: rowProperties.actions,
+        widgets: rowProperties.widgets);
     registerWidget("column", buildColumn,
-        properties: rowProperties.properties, actions: rowProperties.actions, widgets: rowProperties.widgets);
+        properties: rowProperties.properties,
+        actions: rowProperties.actions,
+        widgets: rowProperties.widgets);
     registerWidget("wrap", buildWrap, properties: {
       "direction": Types.axis,
       "alignment": Types.mainAxisAlignment,
@@ -392,7 +451,8 @@ class BaseWidgets with IWidgets {
       "runAlignment": Types.mainAxisAlignment,
       "runSpacing": Types.double,
       "verticalDirection": Types.verticalDirection,
-      "crossAxisAlignment": const EditorPropertyListType(["start", "center", "end"]),
+      "crossAxisAlignment":
+          const EditorPropertyListType(["start", "center", "end"]),
     }, widgets: {
       "children": EditorWidgetType.widget(isArray: true),
     });
@@ -436,9 +496,11 @@ class BaseWidgets with IWidgets {
           ...blocListWidgets,
           "separator": EditorWidgetType.widget(),
         });
-    registerWidget("staticListView", buildStaticListView, properties: listViewProps, widgets: {
-      "children": EditorWidgetType.widget(isArray: true),
-    });
+    registerWidget("staticListView", buildStaticListView,
+        properties: listViewProps,
+        widgets: {
+          "children": EditorWidgetType.widget(isArray: true),
+        });
 
     final gridViewProps = {
       "crossAxisCount": Types.int,
@@ -458,9 +520,11 @@ class BaseWidgets with IWidgets {
         },
         actions: blocListActions,
         widgets: blocListWidgets);
-    registerWidget("staticGridView", buildStaticGridView, properties: gridViewProps, widgets: {
-      "children": EditorWidgetType.widget(isArray: true),
-    });
+    registerWidget("staticGridView", buildStaticGridView,
+        properties: gridViewProps,
+        widgets: {
+          "children": EditorWidgetType.widget(isArray: true),
+        });
 
     final pageViewProps = {
       "initialPage": Types.int,
@@ -481,11 +545,14 @@ class BaseWidgets with IWidgets {
           "onPageChanged": EditorActionType.action(),
         },
         widgets: blocListWidgets);
-    registerWidget("staticPageView", buildStaticPageView, properties: pageViewProps, widgets: {
-      "children": EditorWidgetType.widget(isArray: true),
-    }, actions: {
-      "onPageChanged": EditorActionType.action(),
-    });
+    registerWidget("staticPageView", buildStaticPageView,
+        properties: pageViewProps,
+        widgets: {
+          "children": EditorWidgetType.widget(isArray: true),
+        },
+        actions: {
+          "onPageChanged": EditorActionType.action(),
+        });
 
     registerWidget("tableView", buildTable, properties: {
       "border": Types.tableBorder,
@@ -550,22 +617,25 @@ class BaseWidgets with IWidgets {
       "tabs": EditorWidgetType.widget(isArray: true),
       "children": EditorWidgetType.widget(isArray: true),
     });
-    registerWidget("tabBar", buildTabBar, baseType: EditorWidget.preferredSizeWidget, properties: {
-      "padding": Types.intArray,
-      "indicator": Types.boxDecoration,
-      "indicatorColor": Types.color,
-      "indicatorPadding": Types.intArray,
-      "indicatorSize": Types.tabBarIndicatorSize,
-      "indicatorWeight": Types.double,
-      "isScrollable": Types.bool,
-      "labelColor": Types.color,
-      "labelPadding": Types.intArray,
-      "labelStyle": Types.textStyle,
-      "unselectedLabelColor": Types.color,
-      "unselectedLabelStyle": Types.textStyle,
-    }, widgets: {
-      "tabs": EditorWidgetType.widget(isArray: true),
-    });
+    registerWidget("tabBar", buildTabBar,
+        baseType: EditorWidget.preferredSizeWidget,
+        properties: {
+          "padding": Types.intArray,
+          "indicator": Types.boxDecoration,
+          "indicatorColor": Types.color,
+          "indicatorPadding": Types.intArray,
+          "indicatorSize": Types.tabBarIndicatorSize,
+          "indicatorWeight": Types.double,
+          "isScrollable": Types.bool,
+          "labelColor": Types.color,
+          "labelPadding": Types.intArray,
+          "labelStyle": Types.textStyle,
+          "unselectedLabelColor": Types.color,
+          "unselectedLabelStyle": Types.textStyle,
+        },
+        widgets: {
+          "tabs": EditorWidgetType.widget(isArray: true),
+        });
     registerWidget("tabBarView", buildTabBarView, widgets: {
       "children": EditorWidgetType.widget(isArray: true),
     });
@@ -623,12 +693,15 @@ class BaseWidgets with IWidgets {
     }, widgets: {
       "children": EditorWidgetType("TextSpan", isArray: true),
     });
-    registerWidget("TextSpan", (_) => const SizedBox(), baseType: "", properties: {
-      "value": Types.string,
-      "style": Types.textStyle
-    }, actions: {
-      "onTap": EditorActionType.action(),
-    });
+    registerWidget("TextSpan", (_) => const SizedBox(),
+        baseType: "",
+        properties: {
+          "value": Types.string,
+          "style": Types.textStyle
+        },
+        actions: {
+          "onTap": EditorActionType.action(),
+        });
     registerWidget("text", buildText, properties: {
       "alias": Types.string,
       "value": Types.string,
@@ -686,27 +759,33 @@ class BaseWidgets with IWidgets {
         properties: textFormFieldProperties.properties,
         widgets: textFormFieldProperties.widgets,
         actions: textFormFieldProperties.actions);
-    registerWidget("datePicker", buildDatePicker, baseType: "textFormField", properties: {
-      "value": Types.string,
-      "firstDate": Types.string,
-      "lastDate": Types.string,
-      "mode": const EditorPropertyListType(["dateTime", "date", "time"]),
-      "label": Types.string,
-    });
-    registerWidget("select", buildSelect, baseType: "textFormField", properties: {
-      "valueKey": Types.string,
-      "textKey": Types.string,
-      "dialogTitle": Types.string,
-      "dialogMaxWidth": Types.int,
-      "dialogMaxHeight": Types.int,
-    }, actions: {
-      "loadValue": EditorActionType.listAction(),
-      "loadData": EditorActionType.listAction(),
-    }, widgets: {
-      "dialogHeader": EditorWidgetType.widget(),
-      "dialogList": EditorWidgetType.widget(),
-      "dialogListTile": EditorWidgetType.widget(),
-    });
+    registerWidget("datePicker", buildDatePicker,
+        baseType: "textFormField",
+        properties: {
+          "value": Types.string,
+          "firstDate": Types.string,
+          "lastDate": Types.string,
+          "mode": const EditorPropertyListType(["dateTime", "date", "time"]),
+          "label": Types.string,
+        });
+    registerWidget("select", buildSelect,
+        baseType: "textFormField",
+        properties: {
+          "valueKey": Types.string,
+          "textKey": Types.string,
+          "dialogTitle": Types.string,
+          "dialogMaxWidth": Types.int,
+          "dialogMaxHeight": Types.int,
+        },
+        actions: {
+          "loadValue": EditorActionType.listAction(),
+          "loadData": EditorActionType.listAction(),
+        },
+        widgets: {
+          "dialogHeader": EditorWidgetType.widget(),
+          "dialogList": EditorWidgetType.widget(),
+          "dialogListTile": EditorWidgetType.widget(),
+        });
     final boolInputProperties = EditorWidget(properties: {
       "value": Types.bool,
       "alias": Types.string,
@@ -774,11 +853,17 @@ class BaseWidgets with IWidgets {
       "child": EditorWidgetType.widget()
     });
     registerWidget("textButton", buildTextButton,
-        properties: buttonProperties.properties, actions: buttonProperties.actions, widgets: buttonProperties.widgets);
+        properties: buttonProperties.properties,
+        actions: buttonProperties.actions,
+        widgets: buttonProperties.widgets);
     registerWidget("elevatedButton", buildElevatedButton,
-        properties: buttonProperties.properties, actions: buttonProperties.actions, widgets: buttonProperties.widgets);
+        properties: buttonProperties.properties,
+        actions: buttonProperties.actions,
+        widgets: buttonProperties.widgets);
     registerWidget("outlinedButton", buildOutlinedButton,
-        properties: buttonProperties.properties, actions: buttonProperties.actions, widgets: buttonProperties.widgets);
+        properties: buttonProperties.properties,
+        actions: buttonProperties.actions,
+        widgets: buttonProperties.widgets);
     registerWidget("iconButton", buildIconButton, properties: {
       "iconCode": Types.int,
       "iconSize": Types.double,
@@ -797,26 +882,29 @@ class BaseWidgets with IWidgets {
     }, widgets: {
       "icon": EditorWidgetType.widget()
     });
-    registerWidget("floatingActionButton", buildFloatingActionButton, properties: {
-      "iconCode": Types.int,
-      "tooltip": Types.string,
-      "mini": Types.bool,
-      "shape": Types.shapeBorder,
-      "backgroundColor": Types.color,
-      "foregroundColor": Types.color,
-      "hoverColor": Types.color,
-      "splashColor": Types.color,
-      "focusColor": Types.color,
-      "elevation": Types.double,
-      "focusElevation": Types.double,
-      "highlightElevation": Types.double,
-      "hoverElevation": Types.double,
-      "disabledElevation": Types.double,
-    }, actions: {
-      "onPressed": EditorActionType.action()
-    }, widgets: {
-      "child": EditorWidgetType.widget()
-    });
+    registerWidget("floatingActionButton", buildFloatingActionButton,
+        properties: {
+          "iconCode": Types.int,
+          "tooltip": Types.string,
+          "mini": Types.bool,
+          "shape": Types.shapeBorder,
+          "backgroundColor": Types.color,
+          "foregroundColor": Types.color,
+          "hoverColor": Types.color,
+          "splashColor": Types.color,
+          "focusColor": Types.color,
+          "elevation": Types.double,
+          "focusElevation": Types.double,
+          "highlightElevation": Types.double,
+          "hoverElevation": Types.double,
+          "disabledElevation": Types.double,
+        },
+        actions: {
+          "onPressed": EditorActionType.action()
+        },
+        widgets: {
+          "child": EditorWidgetType.widget()
+        });
 
     registerWidget("dropdownButton", buildDropdownButton, properties: {
       "value": Types.string,
@@ -906,11 +994,14 @@ class BaseWidgets with IWidgets {
       "child": EditorWidgetType.widget(),
       "states": EditorWidgetType("BuildState", isArray: true),
     });
-    registerWidget("BuildState", (_) => const SizedBox(), baseType: null, properties: {
-      "state": Types.string,
-    }, widgets: {
-      "child": EditorWidgetType.widget(),
-    });
+    registerWidget("BuildState", (_) => const SizedBox(),
+        baseType: null,
+        properties: {
+          "state": Types.string,
+        },
+        widgets: {
+          "child": EditorWidgetType.widget(),
+        });
   }
 
   @protected
@@ -928,7 +1019,8 @@ class BaseWidgets with IWidgets {
     /// Maybe when building Component's widget tree, ids should be generated so they can be unique
 
     // format: <widgetId>.<property type>.<property key>
-    final exposedProps = Map<String, dynamic>.from(componentSpec.extra["exposedProperties"] ?? {});
+    final exposedProps = Map<String, dynamic>.from(
+        componentSpec.extra["exposedProperties"] ?? {});
     for (String key in exposedProps.keys) {
       if (exposedProps[key] == null || exposedProps[key].isEmpty) {
         continue;
@@ -938,7 +1030,8 @@ class BaseWidgets with IWidgets {
       var keyParts = (exposedProps[key] as String).split(".");
       var propertyType = keyParts.removeAt(1);
       var stateKey = keyParts.join(".");
-      params.state.remove(stateKey); // To avoid inheriting this property from previous component build
+      params.state.remove(
+          stateKey); // To avoid inheriting this property from previous component build
 
       switch (propertyType) {
         case "action":
@@ -984,7 +1077,8 @@ class BaseWidgets with IWidgets {
     //   }
     // }
 
-    return builder.buildWidgetFromSpec(params.context, componentSpec, params.state, params.parentContext);
+    return builder.buildWidgetFromSpec(
+        params.context, componentSpec, params.state, params.parentContext);
   }
 
   @protected
@@ -996,25 +1090,30 @@ class BaseWidgets with IWidgets {
     if (widgets["persistentFooterButtons"] != null) {
       persistentFooterButtons = <Widget>[];
       for (Map childSpec in widgets["persistentFooterButtons"] as List<Map>) {
-        persistentFooterButtons.add(builder.buildWidget(params.context, childSpec, params.state, params.parentContext));
+        persistentFooterButtons.add(builder.buildWidget(
+            params.context, childSpec, params.state, params.parentContext));
       }
     }
 
-    var appBar = builder.tryBuildWidget(params.context, widgets["appBar"], params.state, params.parentContext);
+    var appBar = builder.tryBuildWidget(
+        params.context, widgets["appBar"], params.state, params.parentContext);
     if (appBar is! PreferredSizeWidget) {
       appBar = null;
     }
-    final bottomSheet = builder.tryBuildWidget(params.context, widgets["bottomSheet"], params.state, params.parentContext);
-    final bottomNavigationBar =
-        builder.tryBuildWidget(params.context, widgets["bottomNavigationBar"], params.state, params.parentContext);
-    final floatingActionButton =
-        builder.tryBuildWidget(params.context, widgets["floatingActionButton"], params.state, params.parentContext);
-    var body = builder.tryBuildWidget(params.context, widgets["body"], params.state, params.parentContext);
-    final drawer = builder.tryBuildWidget(params.context, widgets["drawer"], params.state, params.parentContext);
+    final bottomSheet = builder.tryBuildWidget(params.context,
+        widgets["bottomSheet"], params.state, params.parentContext);
+    final bottomNavigationBar = builder.tryBuildWidget(params.context,
+        widgets["bottomNavigationBar"], params.state, params.parentContext);
+    final floatingActionButton = builder.tryBuildWidget(params.context,
+        widgets["floatingActionButton"], params.state, params.parentContext);
+    var body = builder.tryBuildWidget(
+        params.context, widgets["body"], params.state, params.parentContext);
+    final drawer = builder.tryBuildWidget(
+        params.context, widgets["drawer"], params.state, params.parentContext);
 
     if (widgets["navigationRail"] != null) {
-      final navigationRail =
-          builder.buildWidget(params.context, widgets["navigationRail"], params.state, params.parentContext);
+      final navigationRail = builder.buildWidget(params.context,
+          widgets["navigationRail"], params.state, params.parentContext);
       body = Row(
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -1038,7 +1137,8 @@ class BaseWidgets with IWidgets {
       extendBodyBehindAppBar: parseBool(props["extendBodyBehindAppBar"]),
       resizeToAvoidBottomInset: tryParseBool(props["resizeToAvoidBottomInset"]),
       appBar: appBar != null ? appBar as PreferredSizeWidget : null,
-      floatingActionButtonLocation: params.buildProp("floatingActionButtonLocation"),
+      floatingActionButtonLocation:
+          params.buildProp("floatingActionButtonLocation"),
     );
 
     if (props["tabController"] != null) {
@@ -1062,7 +1162,8 @@ class BaseWidgets with IWidgets {
       elevation: parseDouble(params.props["elevation"]),
       color: tryParseColor(params.props["color"]),
       shadowColor: tryParseColor(params.props["shadowColor"]),
-      child: builder.tryBuildWidget(params.context, params.widgets["child"], params.state, params.parentContext),
+      child: builder.tryBuildWidget(params.context, params.widgets["child"],
+          params.state, params.parentContext),
     );
   }
 
@@ -1075,22 +1176,27 @@ class BaseWidgets with IWidgets {
     if (widgets["persistentFooterButtons"] != null) {
       persistentFooterButtons = <Widget>[];
       for (Map childSpec in widgets["persistentFooterButtons"] as List<Map>) {
-        persistentFooterButtons.add(builder.buildWidget(params.context, childSpec, params.state, params.parentContext));
+        persistentFooterButtons.add(builder.buildWidget(
+            params.context, childSpec, params.state, params.parentContext));
       }
     }
 
-    final appBar = builder.tryBuildWidget(params.context, widgets["appBar"], params.state, params.parentContext);
-    final bottomSheet = builder.tryBuildWidget(params.context, widgets["bottomSheet"], params.state, params.parentContext);
-    final bottomNavigationBar =
-        builder.tryBuildWidget(params.context, widgets["bottomNavigationBar"], params.state, params.parentContext);
-    final floatingActionButton =
-        builder.tryBuildWidget(params.context, widgets["floatingActionButton"], params.state, params.parentContext);
-    final drawer = builder.tryBuildWidget(params.context, widgets["drawer"], params.state, params.parentContext);
+    final appBar = builder.tryBuildWidget(
+        params.context, widgets["appBar"], params.state, params.parentContext);
+    final bottomSheet = builder.tryBuildWidget(params.context,
+        widgets["bottomSheet"], params.state, params.parentContext);
+    final bottomNavigationBar = builder.tryBuildWidget(params.context,
+        widgets["bottomNavigationBar"], params.state, params.parentContext);
+    final floatingActionButton = builder.tryBuildWidget(params.context,
+        widgets["floatingActionButton"], params.state, params.parentContext);
+    final drawer = builder.tryBuildWidget(
+        params.context, widgets["drawer"], params.state, params.parentContext);
 
     final children = <Widget>[];
     if (params.widgets["children"] != null) {
       for (Map childSpec in params.widgets["children"] as List<Map>) {
-        children.add(builder.buildWidget(params.context, childSpec, params.state, params.parentContext));
+        children.add(builder.buildWidget(
+            params.context, childSpec, params.state, params.parentContext));
       }
     }
 
@@ -1115,7 +1221,8 @@ class BaseWidgets with IWidgets {
       drawer: drawer,
       extendBody: parseBool(props["extendBody"]),
       extendBodyBehindAppBar: parseBool(props["extendBodyBehindAppBar"]),
-      floatingActionButtonLocation: params.buildProp("floatingActionButtonLocation"),
+      floatingActionButtonLocation:
+          params.buildProp("floatingActionButtonLocation"),
     );
 
     if (props["tabController"] != null) {
@@ -1131,15 +1238,18 @@ class BaseWidgets with IWidgets {
 
   @protected
   Widget buildAppBar(BuildParameters params) {
-    var leading = builder.tryBuildWidget(params.context, params.widgets["leading"], params.state, params.parentContext);
+    var leading = builder.tryBuildWidget(params.context,
+        params.widgets["leading"], params.state, params.parentContext);
     leading ??= params.buildProp("leadingIcon");
 
-    var title = builder.tryBuildWidget(params.context, params.widgets["titleWidget"], params.state, params.parentContext);
+    var title = builder.tryBuildWidget(params.context,
+        params.widgets["titleWidget"], params.state, params.parentContext);
     if (title == null && params.props["title"] != null) {
       title = Text(properties.getText(params.props["title"], "appBar"));
     }
 
-    var bottom = builder.tryBuildWidget(params.context, params.widgets["bottom"], params.state, params.parentContext);
+    var bottom = builder.tryBuildWidget(params.context,
+        params.widgets["bottom"], params.state, params.parentContext);
     if (bottom is! PreferredSizeWidget) {
       bottom = null;
     }
@@ -1147,7 +1257,8 @@ class BaseWidgets with IWidgets {
     final actions = <Widget>[];
     if (params.widgets["actions"] != null) {
       for (Map actionSpec in params.widgets["actions"] as List<Map>) {
-        actions.add(builder.buildWidget(params.context, actionSpec, params.state, params.parentContext));
+        actions.add(builder.buildWidget(
+            params.context, actionSpec, params.state, params.parentContext));
       }
     }
 
@@ -1156,32 +1267,40 @@ class BaseWidgets with IWidgets {
       key: properties.getKey(params.id),
       foregroundColor: tryParseColor(params.props["foregroundColor"]),
       backgroundColor: backgroundColor,
-      surfaceTintColor: tryParseColor(params.props["surfaceTintColor"]) ?? backgroundColor,
+      surfaceTintColor:
+          tryParseColor(params.props["surfaceTintColor"]) ?? backgroundColor,
       shadowColor: tryParseColor(params.props["shadowColor"]),
       leading: leading,
       title: title,
-      automaticallyImplyLeading: parseBool(params.props["automaticallyImplyLeading"], defaultValue: true),
+      automaticallyImplyLeading: parseBool(
+          params.props["automaticallyImplyLeading"],
+          defaultValue: true),
       centerTitle: tryParseBool(params.props["centerTitle"]),
       elevation: tryParseDouble(params.props["elevation"]),
       bottom: bottom != null ? bottom as PreferredSizeWidget : null,
-      bottomOpacity: parseDouble(params.props["bottomOpacity"], defaultValue: 1),
+      bottomOpacity:
+          parseDouble(params.props["bottomOpacity"], defaultValue: 1),
       toolbarHeight: tryParseDouble(params.props["toolbarHeight"]),
-      toolbarOpacity: parseDouble(params.props["toolbarOpacity"], defaultValue: 1),
+      toolbarOpacity:
+          parseDouble(params.props["toolbarOpacity"], defaultValue: 1),
       actions: actions,
     );
   }
 
   @protected
   Widget buildSliverAppBar(BuildParameters params) {
-    var leading = builder.tryBuildWidget(params.context, params.widgets["leading"], params.state, params.parentContext);
+    var leading = builder.tryBuildWidget(params.context,
+        params.widgets["leading"], params.state, params.parentContext);
     leading ??= params.buildProp("leadingIcon");
 
-    var title = builder.tryBuildWidget(params.context, params.widgets["titleWidget"], params.state, params.parentContext);
+    var title = builder.tryBuildWidget(params.context,
+        params.widgets["titleWidget"], params.state, params.parentContext);
     if (title == null && params.props["title"] != null) {
       title = Text(properties.getText(params.props["title"], "appBar"));
     }
 
-    var bottom = builder.tryBuildWidget(params.context, params.widgets["bottom"], params.state, params.parentContext);
+    var bottom = builder.tryBuildWidget(params.context,
+        params.widgets["bottom"], params.state, params.parentContext);
     if (bottom is! PreferredSizeWidget) {
       bottom = null;
     }
@@ -1189,7 +1308,8 @@ class BaseWidgets with IWidgets {
     final actions = <Widget>[];
     if (params.widgets["actions"] != null) {
       for (Map actionSpec in params.widgets["actions"] as List<Map>) {
-        actions.add(builder.buildWidget(params.context, actionSpec, params.state, params.parentContext));
+        actions.add(builder.buildWidget(
+            params.context, actionSpec, params.state, params.parentContext));
       }
     }
 
@@ -1197,10 +1317,14 @@ class BaseWidgets with IWidgets {
       title: title,
       centerTitle: tryParseBool(params.props["centerTitle"]),
       titlePadding: properties.getInsets(params.props["titlePadding"]),
-      expandedTitleScale: parseDouble(params.props["expandedTitleScale"], defaultValue: 1.5),
+      expandedTitleScale:
+          parseDouble(params.props["expandedTitleScale"], defaultValue: 1.5),
       collapseMode: params.buildProp("collapseMode") ?? CollapseMode.parallax,
-      stretchModes: [params.buildProp("stretchMode") ?? StretchMode.zoomBackground],
-      background: builder.tryBuildWidget(params.context, params.widgets["background"], params.state, params.parentContext),
+      stretchModes: [
+        params.buildProp("stretchMode") ?? StretchMode.zoomBackground
+      ],
+      background: builder.tryBuildWidget(params.context,
+          params.widgets["background"], params.state, params.parentContext),
     );
 
     return SliverAppBar(
@@ -1219,7 +1343,8 @@ class BaseWidgets with IWidgets {
       //onStretchTrigger: params.actions["onStretchTrigger"] != null ? widgetEvents.getFunction(params.context, params.actions["onStretchTrigger"], params.state) : null,
       floating: parseBool(params.props["floating"]),
       pinned: parseBool(params.props["pinned"]),
-      snap: parseBool(params.props["snap"]) && parseBool(params.props["floating"]),
+      snap: parseBool(params.props["snap"]) &&
+          parseBool(params.props["floating"]),
       stretch: parseBool(params.props["stretch"]),
       flexibleSpace: flexible,
     );
@@ -1273,13 +1398,14 @@ class BaseWidgets with IWidgets {
           });
         } else {
           var specActions = spec["actions"] ?? {};
-          destinationActions
-              .add(events.getFunction(params.context, specActions["onTap"], params.state, params.parentContext));
+          destinationActions.add(events.getFunction(params.context,
+              specActions["onTap"], params.state, params.parentContext));
         }
 
         destinations.add(NavigationRailDestination(
           icon: Icon(IconData(iconCode, fontFamily: "MaterialIcons")),
-          selectedIcon: Icon(IconData(selectedIconCode, fontFamily: "MaterialIcons")),
+          selectedIcon:
+              Icon(IconData(selectedIconCode, fontFamily: "MaterialIcons")),
           label: Text(properties.getText(label, "menu")),
           padding: properties.getInsets(specProps["padding"]),
         ));
@@ -1287,22 +1413,26 @@ class BaseWidgets with IWidgets {
     }
 
     final minWidth = parseDouble(props["minWidth"], defaultValue: 72);
-    final minExtendedWidth = parseDouble(props["minExtendedWidth"], defaultValue: 256);
-    final groupAlignment = parseDouble(props["groupAlignment"], defaultValue: -1);
+    final minExtendedWidth =
+        parseDouble(props["minExtendedWidth"], defaultValue: 256);
+    final groupAlignment =
+        parseDouble(props["groupAlignment"], defaultValue: -1);
 
     return StatefulBuilder(builder: (context, setState) {
-      final selectedIndex = parseInt(Lowder.globalVariables["${params.id}.selectedIndex"],
+      final selectedIndex = parseInt(
+          Lowder.globalVariables["${params.id}.selectedIndex"],
           defaultValue: parseInt(params.props["selectedIndex"]));
-      var extended = parseBool(Lowder.globalVariables["${params.id}.extended"], defaultValue: parseBool(props["extended"]));
+      var extended = parseBool(Lowder.globalVariables["${params.id}.extended"],
+          defaultValue: parseBool(props["extended"]));
 
-      var leadingWidget =
-          builder.tryBuildWidget(params.context, params.widgets["leading"], params.state, params.parentContext);
+      var leadingWidget = builder.tryBuildWidget(params.context,
+          params.widgets["leading"], params.state, params.parentContext);
       if (leadingWidget != null && groupAlignment != -1) {
         leadingWidget = Expanded(child: leadingWidget);
       }
 
-      final trailing =
-          builder.tryBuildWidget(params.context, params.widgets["trailing"], params.state, params.parentContext);
+      final trailing = builder.tryBuildWidget(params.context,
+          params.widgets["trailing"], params.state, params.parentContext);
       var trailingWidget = trailing;
       if (params.widgets["toggle"] != null) {
         trailingWidget = Column(
@@ -1315,8 +1445,11 @@ class BaseWidgets with IWidgets {
                 extended = !extended;
                 Lowder.globalVariables["${params.id}.extended"] = extended;
               }),
-              child: builder.buildWidget(params.context, params.widgets["toggle"],
-                  params.state.clone()..addAll({"extended": extended}), params.parentContext),
+              child: builder.buildWidget(
+                  params.context,
+                  params.widgets["toggle"],
+                  params.state.clone()..addAll({"extended": extended}),
+                  params.parentContext),
             ),
           ],
         );
@@ -1341,7 +1474,8 @@ class BaseWidgets with IWidgets {
             labelType: params.buildProp("labelType"),
             selectedLabelTextStyle: params.buildProp("selectedLabelTextStyle"),
             selectedIconTheme: params.buildProp("selectedIconTheme"),
-            unselectedLabelTextStyle: params.buildProp("unselectedLabelTextStyle"),
+            unselectedLabelTextStyle:
+                params.buildProp("unselectedLabelTextStyle"),
             unselectedIconTheme: params.buildProp("unselectedIconTheme"),
             groupAlignment: groupAlignment,
             leading: leadingWidget,
@@ -1364,7 +1498,8 @@ class BaseWidgets with IWidgets {
       elevation: tryParseDouble(params.props["elevation"]),
       backgroundColor: tryParseColor(params.props["backgroundColor"]),
       shape: params.buildProp("shape"),
-      child: builder.tryBuildWidget(params.context, params.widgets["child"], params.state, params.parentContext),
+      child: builder.tryBuildWidget(params.context, params.widgets["child"],
+          params.state, params.parentContext),
     );
   }
 
@@ -1372,28 +1507,44 @@ class BaseWidgets with IWidgets {
   Widget buildDrawerHeader(BuildParameters params) {
     return DrawerHeader(
       key: properties.getKey(params.id),
-      padding: properties.getInsets(params.props["padding"]) ?? const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
+      padding: properties.getInsets(params.props["padding"]) ??
+          const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
       decoration: params.buildProp("decoration"),
-      child: builder.tryBuildWidget(params.context, params.widgets["child"], params.state, params.parentContext),
+      child: builder.tryBuildWidget(params.context, params.widgets["child"],
+          params.state, params.parentContext),
     );
   }
 
   @protected
   Widget buildUserDrawerHeader(BuildParameters params) {
-    Widget? accountName =
-        builder.tryBuildWidget(params.context, params.widgets["accountNameWidget"], params.state, params.parentContext);
-    accountName ??= params.props["accountName"] != null ? Text(params.props["accountName"]) : null;
-    Widget? accountEmail =
-        builder.tryBuildWidget(params.context, params.widgets["accountEmailWidget"], params.state, params.parentContext);
-    accountEmail ??= params.props["accountEmail"] != null ? Text(params.props["accountEmail"]) : null;
-    Widget? currentAccountPicture =
-        builder.tryBuildWidget(params.context, params.widgets["accountPictureWidget"], params.state, params.parentContext);
+    Widget? accountName = builder.tryBuildWidget(
+        params.context,
+        params.widgets["accountNameWidget"],
+        params.state,
+        params.parentContext);
+    accountName ??= params.props["accountName"] != null
+        ? Text(params.props["accountName"])
+        : null;
+    Widget? accountEmail = builder.tryBuildWidget(
+        params.context,
+        params.widgets["accountEmailWidget"],
+        params.state,
+        params.parentContext);
+    accountEmail ??= params.props["accountEmail"] != null
+        ? Text(params.props["accountEmail"])
+        : null;
+    Widget? currentAccountPicture = builder.tryBuildWidget(
+        params.context,
+        params.widgets["accountPictureWidget"],
+        params.state,
+        params.parentContext);
 
     final accountPicture = params.props["accountPicture"];
     if (currentAccountPicture == null && accountPicture != null) {
       var uri = Uri.tryParse(accountPicture);
       if (uri != null) {
-        currentAccountPicture = CircleAvatar(backgroundImage: NetworkImage(accountPicture));
+        currentAccountPicture =
+            CircleAvatar(backgroundImage: NetworkImage(accountPicture));
       } else {
         currentAccountPicture = CircleAvatar(child: Text(accountPicture));
       }
@@ -1404,10 +1555,13 @@ class BaseWidgets with IWidgets {
       accountName: accountName,
       accountEmail: accountEmail,
       currentAccountPicture: currentAccountPicture,
-      currentAccountPictureSize: Size.square(parseDouble(params.props["accountPictureSize"], defaultValue: 72.0)),
+      currentAccountPictureSize: Size.square(
+          parseDouble(params.props["accountPictureSize"], defaultValue: 72.0)),
       decoration: params.buildProp("decoration"),
-      arrowColor: parseColor(params.props["arrowColor"], defaultColor: Colors.white),
-      onDetailsPressed: events.getFunction(params.context, params.actions["onTap"], params.state, params.parentContext),
+      arrowColor:
+          parseColor(params.props["arrowColor"], defaultColor: Colors.white),
+      onDetailsPressed: events.getFunction(params.context,
+          params.actions["onTap"], params.state, params.parentContext),
     );
   }
 
@@ -1419,14 +1573,17 @@ class BaseWidgets with IWidgets {
       elevation: tryParseDouble(params.props["elevation"]),
       notchMargin: parseDouble(params.props["notchMargin"], defaultValue: 4.0),
       shape: params.buildProp("shape"),
-      child: builder.tryBuildWidget(params.context, params.widgets["child"], params.state, params.parentContext),
+      child: builder.tryBuildWidget(params.context, params.widgets["child"],
+          params.state, params.parentContext),
     );
   }
 
   @protected
   Widget buildBottomNavigationBar(BuildParameters params) {
     var currentIdx = parseInt(params.props["startIndex"]);
-    final type = params.props["type"] == "shifting" ? BottomNavigationBarType.shifting : BottomNavigationBarType.fixed;
+    final type = params.props["type"] == "shifting"
+        ? BottomNavigationBarType.shifting
+        : BottomNavigationBarType.fixed;
 
     var landscapeLayout = BottomNavigationBarLandscapeLayout.centered;
     if (params.props["layout"] != null) {
@@ -1453,12 +1610,16 @@ class BaseWidgets with IWidgets {
     final items = <BottomNavigationBarItem>[];
     for (var child in children) {
       items.add(BottomNavigationBarItem(
-        icon: Icon(IconData(parseInt(child.props["iconCode"]), fontFamily: "MaterialIcons")),
+        icon: Icon(IconData(parseInt(child.props["iconCode"]),
+            fontFamily: "MaterialIcons")),
         activeIcon: child.props["activeIconCode"] != null
-            ? Icon(IconData(parseInt(child.props["activeIconCode"]), fontFamily: "MaterialIcons"))
+            ? Icon(IconData(parseInt(child.props["activeIconCode"]),
+                fontFamily: "MaterialIcons"))
             : null,
         label: properties.getText(child.props["label"], "label"),
-        tooltip: child.props["tooltip"] != null ? properties.getText(child.props["tooltip"], "label") : null,
+        tooltip: child.props["tooltip"] != null
+            ? properties.getText(child.props["tooltip"], "label")
+            : null,
         backgroundColor: tryParseColor(child.props["backgroundColor"]),
       ));
     }
@@ -1474,15 +1635,23 @@ class BaseWidgets with IWidgets {
           landscapeLayout: landscapeLayout,
           currentIndex: currentIdx,
           iconSize: parseDouble(params.props["iconSize"], defaultValue: 24.0),
-          selectedFontSize: parseDouble(params.props["selectedFontSize"], defaultValue: 13.0),
+          selectedFontSize:
+              parseDouble(params.props["selectedFontSize"], defaultValue: 13.0),
           selectedItemColor: tryParseColor(params.props["selectedItemColor"]),
-          unselectedFontSize: parseDouble(params.props["unselectedFontSize"], defaultValue: 12.0),
-          unselectedItemColor: tryParseColor(params.props["unselectedItemColor"]),
+          unselectedFontSize: parseDouble(params.props["unselectedFontSize"],
+              defaultValue: 12.0),
+          unselectedItemColor:
+              tryParseColor(params.props["unselectedItemColor"]),
           onTap: (idx) {
             setState(() => currentIdx = idx);
             final spec = children[idx];
             if (spec.actions["onTap"] != null) {
-              events.run(params.context, NodeSpec.fromMap(spec.actions["onTap"]), params.state, null, params.parentContext);
+              events.run(
+                  params.context,
+                  NodeSpec.fromMap(spec.actions["onTap"]),
+                  params.state,
+                  null,
+                  params.parentContext);
             }
           },
         );
@@ -1496,13 +1665,15 @@ class BaseWidgets with IWidgets {
       key: properties.getKey(params.id),
       widthFactor: tryParseDouble(params.props["widthFactor"]),
       heightFactor: tryParseDouble(params.props["heightFactor"]),
-      child: builder.tryBuildWidget(params.context, params.widgets["child"], params.state, params.parentContext),
+      child: builder.tryBuildWidget(params.context, params.widgets["child"],
+          params.state, params.parentContext),
     );
   }
 
   @protected
   Widget buildContainer(BuildParameters params) {
-    final child = builder.tryBuildWidget(params.context, params.widgets["child"], params.state, params.parentContext);
+    final child = builder.tryBuildWidget(params.context,
+        params.widgets["child"], params.state, params.parentContext);
     final decoration = params.buildProp("decoration");
 
     return Container(
@@ -1520,8 +1691,10 @@ class BaseWidgets with IWidgets {
 
   @protected
   Widget buildAnimatedContainer(BuildParameters params) {
-    final onEnd = events.getFunction(params.context, params.actions["onEnd"], params.state, params.parentContext);
-    final child = builder.tryBuildWidget(params.context, params.widgets["child"], params.state, params.parentContext);
+    final onEnd = events.getFunction(params.context, params.actions["onEnd"],
+        params.state, params.parentContext);
+    final child = builder.tryBuildWidget(params.context,
+        params.widgets["child"], params.state, params.parentContext);
     final decoration = params.buildProp("decoration");
 
     return AnimatedContainer(
@@ -1534,7 +1707,8 @@ class BaseWidgets with IWidgets {
       decoration: decoration,
       clipBehavior: decoration != null ? Clip.antiAlias : Clip.none,
       curve: params.buildProp("curve"),
-      duration: Duration(milliseconds: parseInt(params.props["duration"], defaultValue: 500)),
+      duration: Duration(
+          milliseconds: parseInt(params.props["duration"], defaultValue: 500)),
       onEnd: onEnd,
       child: child,
     );
@@ -1546,12 +1720,14 @@ class BaseWidgets with IWidgets {
     return Card(
       key: properties.getKey(params.id),
       color: color,
-      surfaceTintColor: tryParseColor(params.props["surfaceTintColor"]) ?? color,
+      surfaceTintColor:
+          tryParseColor(params.props["surfaceTintColor"]) ?? color,
       shadowColor: tryParseColor(params.props["shadowColor"]),
       elevation: tryParseDouble(params.props["elevation"]),
       shape: params.buildProp("shape"),
       clipBehavior: Clip.antiAlias,
-      child: builder.tryBuildWidget(params.context, params.widgets["child"], params.state, params.parentContext),
+      child: builder.tryBuildWidget(params.context, params.widgets["child"],
+          params.state, params.parentContext),
     );
   }
 
@@ -1560,7 +1736,8 @@ class BaseWidgets with IWidgets {
     final children = <Widget>[];
     if (params.widgets["children"] != null) {
       for (Map childSpec in params.widgets["children"] as List<Map>) {
-        children.add(builder.buildWidget(params.context, childSpec, params.state, params.parentContext));
+        children.add(builder.buildWidget(
+            params.context, childSpec, params.state, params.parentContext));
       }
     }
 
@@ -1569,7 +1746,9 @@ class BaseWidgets with IWidgets {
       verticalDirection: params.buildProp("verticalDirection"),
       crossAxisAlignment: params.buildProp("crossAxisAlignment"),
       mainAxisAlignment: params.buildProp("mainAxisAlignment"),
-      mainAxisSize: params.props["mainAxisSize"] == "min" ? MainAxisSize.min : MainAxisSize.max,
+      mainAxisSize: params.props["mainAxisSize"] == "min"
+          ? MainAxisSize.min
+          : MainAxisSize.max,
       children: children,
     );
   }
@@ -1579,7 +1758,8 @@ class BaseWidgets with IWidgets {
     final children = <Widget>[];
     if (params.widgets["children"] != null) {
       for (Map childSpec in params.widgets["children"] as List<Map>) {
-        children.add(builder.buildWidget(params.context, childSpec, params.state, params.parentContext));
+        children.add(builder.buildWidget(
+            params.context, childSpec, params.state, params.parentContext));
       }
     }
 
@@ -1588,7 +1768,9 @@ class BaseWidgets with IWidgets {
       verticalDirection: params.buildProp("verticalDirection"),
       crossAxisAlignment: params.buildProp("crossAxisAlignment"),
       mainAxisAlignment: params.buildProp("mainAxisAlignment"),
-      mainAxisSize: params.props["mainAxisSize"] == "min" ? MainAxisSize.min : MainAxisSize.max,
+      mainAxisSize: params.props["mainAxisSize"] == "min"
+          ? MainAxisSize.min
+          : MainAxisSize.max,
       children: children,
     );
   }
@@ -1598,7 +1780,8 @@ class BaseWidgets with IWidgets {
     final children = <Widget>[];
     if (params.widgets["children"] != null) {
       for (Map childSpec in params.widgets["children"] as List<Map>) {
-        children.add(builder.buildWidget(params.context, childSpec, params.state, params.parentContext));
+        children.add(builder.buildWidget(
+            params.context, childSpec, params.state, params.parentContext));
       }
     }
 
@@ -1607,28 +1790,39 @@ class BaseWidgets with IWidgets {
       direction: params.buildProp("direction") ?? Axis.horizontal,
       verticalDirection: params.buildProp("verticalDirection"),
       spacing: parseDouble(params.props["spacing"]),
-      runAlignment: BaseProperties().getWrapAlignment(params.props["runAlignment"]),
+      runAlignment:
+          BaseProperties().getWrapAlignment(params.props["runAlignment"]),
       runSpacing: parseDouble(params.props["runSpacing"]),
       alignment: params.buildProp("alignment"),
-      crossAxisAlignment: BaseProperties().getWrapCrossAlignment(params.props["crossAxisAlignment"]),
+      crossAxisAlignment: BaseProperties()
+          .getWrapCrossAlignment(params.props["crossAxisAlignment"]),
       children: children,
     );
   }
 
   @protected
   Widget buildListTile(BuildParameters params) {
-    Widget? leading = builder.tryBuildWidget(params.context, params.widgets["leading"], params.state, params.parentContext);
+    Widget? leading = builder.tryBuildWidget(params.context,
+        params.widgets["leading"], params.state, params.parentContext);
     leading ??= params.props["iconCode"] != null
-        ? Icon(IconData(parseInt(params.props["iconCode"]), fontFamily: 'MaterialIcons'))
+        ? Icon(IconData(parseInt(params.props["iconCode"]),
+            fontFamily: 'MaterialIcons'))
         : null;
-    Widget? title = builder.tryBuildWidget(params.context, params.widgets["title"], params.state, params.parentContext);
-    title ??= params.props["value"] != null ? Text(properties.getText(params.props["value"], "listTile")) : null;
-    Widget? subtitle =
-        builder.tryBuildWidget(params.context, params.widgets["subtitle"], params.state, params.parentContext);
-    subtitle ??= params.props["subValue"] != null ? Text(properties.getText(params.props["subValue"], "listTile")) : null;
+    Widget? title = builder.tryBuildWidget(params.context,
+        params.widgets["title"], params.state, params.parentContext);
+    title ??= params.props["value"] != null
+        ? Text(properties.getText(params.props["value"], "listTile"))
+        : null;
+    Widget? subtitle = builder.tryBuildWidget(params.context,
+        params.widgets["subtitle"], params.state, params.parentContext);
+    subtitle ??= params.props["subValue"] != null
+        ? Text(properties.getText(params.props["subValue"], "listTile"))
+        : null;
     ListTileStyle? listTileStyle;
     if (params.props["listTileStyle"] != null) {
-      listTileStyle = params.props["listTileStyle"] == "drawer" ? ListTileStyle.drawer : ListTileStyle.list;
+      listTileStyle = params.props["listTileStyle"] == "drawer"
+          ? ListTileStyle.drawer
+          : ListTileStyle.list;
     }
 
     return ListTile(
@@ -1636,7 +1830,8 @@ class BaseWidgets with IWidgets {
       leading: leading,
       title: title,
       subtitle: subtitle,
-      trailing: builder.tryBuildWidget(params.context, params.widgets["trailing"], params.state, params.parentContext),
+      trailing: builder.tryBuildWidget(params.context,
+          params.widgets["trailing"], params.state, params.parentContext),
       contentPadding: properties.getInsets(params.props["contentPadding"]),
       horizontalTitleGap: tryParseDouble(params.props["horizontalTitleGap"]),
       style: listTileStyle,
@@ -1647,7 +1842,8 @@ class BaseWidgets with IWidgets {
       hoverColor: tryParseColor(params.props["hoverColor"]),
       shape: params.buildProp("shape"),
       enabled: parseBool(params.props["enabled"], defaultValue: true),
-      onTap: events.getFunction(params.context, params.actions["onTap"], params.state, params.parentContext),
+      onTap: events.getFunction(params.context, params.actions["onTap"],
+          params.state, params.parentContext),
     );
   }
 
@@ -1656,7 +1852,8 @@ class BaseWidgets with IWidgets {
     final spanParts = <TextSpan>[];
     for (var child in params.widgets["children"]) {
       properties.evaluateMap(child, params.parentContext);
-      spanParts.add(buildTextSpan(params.context, WidgetNodeSpec.fromMap(child), params.state, params.parentContext));
+      spanParts.add(buildTextSpan(params.context, WidgetNodeSpec.fromMap(child),
+          params.state, params.parentContext));
     }
 
     return RichText(
@@ -1670,11 +1867,14 @@ class BaseWidgets with IWidgets {
   }
 
   @protected
-  TextSpan buildTextSpan(BuildContext context, WidgetNodeSpec spec, Map state, Map? parentContext) {
+  TextSpan buildTextSpan(BuildContext context, WidgetNodeSpec spec, Map state,
+      Map? parentContext) {
     return TextSpan(
       text: Strings.get(spec.props["value"]),
       style: spec.buildProp("style"),
-      recognizer: TapGestureRecognizer()..onTap = events.getFunction(context, spec.actions["onTap"], state, parentContext),
+      recognizer: TapGestureRecognizer()
+        ..onTap = events.getFunction(
+            context, spec.actions["onTap"], state, parentContext),
     );
   }
 
@@ -1698,10 +1898,14 @@ class BaseWidgets with IWidgets {
     final actions = params.actions;
     final alias = props["alias"] ?? params.id;
     final enabled = parseBool(props["enabled"], defaultValue: true);
-    final textStyle = enabled ? params.buildProp("style") : params.buildProp("disabledStyle");
-    final textInputAction = Types.textInputAction.build(props["textInputAction"]);
-    final TextEditingController controller = props["controller"] ?? TextEditingController(text: props["value"]?.toString());
-    controller.selection = TextSelection.collapsed(offset: controller.text.length);
+    final textStyle =
+        enabled ? params.buildProp("style") : params.buildProp("disabledStyle");
+    final textInputAction =
+        Types.textInputAction.build(props["textInputAction"]);
+    final TextEditingController controller = props["controller"] ??
+        TextEditingController(text: props["value"]?.toString());
+    controller.selection =
+        TextSelection.collapsed(offset: controller.text.length);
     final onSaved = props["onSaved"] ??
         (v) {
           if (alias != null) {
@@ -1711,23 +1915,26 @@ class BaseWidgets with IWidgets {
 
     final widgetMap = <String, Widget>{};
     for (var key in params.widgets.keys) {
-      widgetMap[key] = builder.buildWidget(params.context, params.widgets[key], params.state, params.parentContext);
+      widgetMap[key] = builder.buildWidget(params.context, params.widgets[key],
+          params.state, params.parentContext);
     }
 
-    var onFieldSubmitted =
-        events.getValueFunction(params.context, actions["onFieldSubmitted"], params.state, params.parentContext);
-    var onEditingComplete =
-        events.getValueFunction(params.context, actions["onEditingComplete"], params.state, params.parentContext);
-    final onChangedAction =
-        events.getValueFunction(params.context, actions["onChanged"], params.state, params.parentContext);
+    var onFieldSubmitted = events.getValueFunction(params.context,
+        actions["onFieldSubmitted"], params.state, params.parentContext);
+    var onEditingComplete = events.getValueFunction(params.context,
+        actions["onEditingComplete"], params.state, params.parentContext);
+    final onChangedAction = events.getValueFunction(params.context,
+        actions["onChanged"], params.state, params.parentContext);
 
     ActionValueFunction<String>? onChanged;
     if (onChangedAction != null) {
-      final onChangeDebounce = parseInt(props["onChangedDebounce"], defaultValue: 500);
+      final onChangeDebounce =
+          parseInt(props["onChangedDebounce"], defaultValue: 500);
       Timer? timer;
       onChanged = (value) {
         if (timer?.isActive ?? false) timer!.cancel();
-        timer = Timer(Duration(milliseconds: onChangeDebounce), () => onChangedAction(value));
+        timer = Timer(Duration(milliseconds: onChangeDebounce),
+            () => onChangedAction(value));
       };
       onFieldSubmitted ??= (value) {
         if (timer?.isActive ?? false) timer!.cancel();
@@ -1762,13 +1969,15 @@ class BaseWidgets with IWidgets {
       readOnly: parseBool(props["readOnly"]),
       autofocus: parseBool(props["autofocus"]),
       validator: builder.getStringValidator(props),
-      enableSuggestions: parseBool(props["enableSuggestions"], defaultValue: true),
+      enableSuggestions:
+          parseBool(props["enableSuggestions"], defaultValue: true),
       expands: parseBool(props["expands"]),
       inputFormatters: params.buildProp("inputFormatters"),
       contextMenuBuilder: params.buildProp("toolbarOptions"),
       textCapitalization: params.buildProp("textCapitalization"),
       decoration: params.buildProp("decoration", argument: widgetMap),
-      onTap: events.getFunction(params.context, params.actions["onTap"], params.state, params.parentContext),
+      onTap: events.getFunction(params.context, params.actions["onTap"],
+          params.state, params.parentContext),
       onEditingComplete: finalOnEditingComplete,
       onFieldSubmitted: onFieldSubmitted,
       onChanged: onChanged,
@@ -1791,7 +2000,8 @@ class BaseWidgets with IWidgets {
     } else {
       firstDate = DateTime(1900);
       if (params.props["firstDate"] != null) {
-        firstDate = parseDateTime(params.props["lastDate"], defaultValue: firstDate);
+        firstDate =
+            parseDateTime(params.props["lastDate"], defaultValue: firstDate);
       }
     }
     DateTime lastDate;
@@ -1800,7 +2010,8 @@ class BaseWidgets with IWidgets {
     } else {
       lastDate = DateTime(2100);
       if (params.props["lastDate"] != null) {
-        lastDate = parseDateTime(params.props["lastDate"], defaultValue: lastDate);
+        lastDate =
+            parseDateTime(params.props["lastDate"], defaultValue: lastDate);
       }
     }
 
@@ -1840,7 +2051,9 @@ class BaseWidgets with IWidgets {
       value = tryParseDateTime(params.props["value"]);
     }
 
-    final controller = TextEditingController(text: properties.build(Types.kFormatter.type, formatSpec, argument: value));
+    final controller = TextEditingController(
+        text: properties.build(Types.kFormatter.type, formatSpec,
+            argument: value));
     params.props["controller"] = controller;
     final alias = params.props["alias"] ?? params.id;
     params.props["onSaved"] = (v) {
@@ -1855,7 +2068,8 @@ class BaseWidgets with IWidgets {
     } else {
       firstDate = DateTime(1900);
       if (params.props["firstDate"] != null) {
-        firstDate = parseDateTime(params.props["lastDate"], defaultValue: firstDate);
+        firstDate =
+            parseDateTime(params.props["lastDate"], defaultValue: firstDate);
       }
     }
     DateTime lastDate;
@@ -1864,7 +2078,8 @@ class BaseWidgets with IWidgets {
     } else {
       lastDate = DateTime(2100);
       if (params.props["lastDate"] != null) {
-        lastDate = parseDateTime(params.props["lastDate"], defaultValue: lastDate);
+        lastDate =
+            parseDateTime(params.props["lastDate"], defaultValue: lastDate);
       }
     }
 
@@ -1875,20 +2090,26 @@ class BaseWidgets with IWidgets {
         var newValue = value;
         if (pickDate) {
           final date = await showDatePicker(
-              context: buildContext, initialDate: initialValue, firstDate: firstDate, lastDate: lastDate);
+              context: buildContext,
+              initialDate: initialValue,
+              firstDate: firstDate,
+              lastDate: lastDate);
           if (date == null) {
             return;
           }
           newValue = date;
         }
         if (pickTime && buildContext.mounted) {
-          final time = await showTimePicker(context: buildContext, initialTime: TimeOfDay.fromDateTime(initialValue));
+          final time = await showTimePicker(
+              context: buildContext,
+              initialTime: TimeOfDay.fromDateTime(initialValue));
           if (time == null) {
             return;
           }
 
           final dateValue = newValue ?? initialValue;
-          newValue = DateTime(dateValue.year, dateValue.month, dateValue.day, time.hour, time.minute);
+          newValue = DateTime(dateValue.year, dateValue.month, dateValue.day,
+              time.hour, time.minute);
         }
         if (newValue != value) {
           value = newValue;
@@ -1965,8 +2186,10 @@ class BaseWidgets with IWidgets {
 
             final content = Container(
               constraints: BoxConstraints(
-                maxWidth: parseDouble(params.props["dialogMaxWidth"], defaultValue: 350),
-                maxHeight: parseDouble(params.props["dialogMaxHeight"], defaultValue: 550),
+                maxWidth: parseDouble(params.props["dialogMaxWidth"],
+                    defaultValue: 350),
+                maxHeight: parseDouble(params.props["dialogMaxHeight"],
+                    defaultValue: 550),
               ),
               child: LocalBlocWidget(
                 params.id,
@@ -1979,19 +2202,26 @@ class BaseWidgets with IWidgets {
                           padding: const EdgeInsets.fromLTRB(10, 10, 10, 20),
                           child: Text(
                             Strings.getCapitalized(params.props["dialogTitle"]),
-                            style: DialogTheme.of(context).titleTextStyle ?? Theme.of(context).textTheme.titleLarge!,
+                            style: DialogTheme.of(context).titleTextStyle ??
+                                Theme.of(context).textTheme.titleLarge!,
                           )),
-                    if (headerSpec != null) builder.buildWidget(context, headerSpec, stateClone, params.parentContext),
-                    Expanded(child: builder.buildWidget(context, listSpec, stateClone, params.parentContext)),
+                    if (headerSpec != null)
+                      builder.buildWidget(context, headerSpec, stateClone,
+                          params.parentContext),
+                    Expanded(
+                        child: builder.buildWidget(context, listSpec,
+                            stateClone, params.parentContext)),
                     Padding(
                         padding: const EdgeInsets.all(10),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             TextButton(
-                                onPressed: () => Navigator.of(context).pop(), child: Text(Strings.getCapitalized("cancel"))),
+                                onPressed: () => Navigator.of(context).pop(),
+                                child: Text(Strings.getCapitalized("cancel"))),
                             TextButton(
-                                onPressed: () => setValue(context, null), child: Text(Strings.getCapitalized("clear"))),
+                                onPressed: () => setValue(context, null),
+                                child: Text(Strings.getCapitalized("clear"))),
                           ],
                         )),
                   ],
@@ -2016,11 +2246,13 @@ class BaseWidgets with IWidgets {
       bloc: bloc,
       listener: (context, state) {},
       buildWhen: (oldState, newState) {
-        return oldState != newState && (newState is InitialState || newState is PageLoadedState);
+        return oldState != newState &&
+            (newState is InitialState || newState is PageLoadedState);
       },
       builder: (context, state) {
         if (state is InitialState) {
-          events.executePageLoadAction(context, bloc, 1, 1, [], loadValueSpec, stateClone, params.parentContext,
+          events.executePageLoadAction(context, bloc, 1, 1, [], loadValueSpec,
+              stateClone, params.parentContext,
               value: value);
         } else if (state is PageLoadedState) {
           if (state.fullData.isNotEmpty) {
@@ -2038,23 +2270,28 @@ class BaseWidgets with IWidgets {
     final alias = params.props["alias"] ?? params.id;
     final enabled = parseBool(params.props["enabled"], defaultValue: true);
     final triState = parseBool(params.props["triState"]);
-    bool? initialValue = triState ? tryParseBool(params.props["value"]) : parseBool(params.props["value"]);
+    bool? initialValue = triState
+        ? tryParseBool(params.props["value"])
+        : parseBool(params.props["value"]);
     final controlAffinity = params.props["direction"] == "leading"
         ? ListTileControlAffinity.leading
         : params.props["direction"] == "trailing"
             ? ListTileControlAffinity.trailing
             : ListTileControlAffinity.platform;
 
-    Widget? title =
-        builder.tryBuildWidget(params.context, params.widgets["titleWidget"], params.state, params.parentContext);
-    title ??= params.props["title"] != null ? Text(properties.getText(params.props["title"], "titleMessage")) : null;
-    Widget? subtitle =
-        builder.tryBuildWidget(params.context, params.widgets["subtitleWidget"], params.state, params.parentContext);
-    subtitle ??=
-        params.props["subtitle"] != null ? Text(properties.getText(params.props["subtitle"], "titleMessage")) : null;
+    Widget? title = builder.tryBuildWidget(params.context,
+        params.widgets["titleWidget"], params.state, params.parentContext);
+    title ??= params.props["title"] != null
+        ? Text(properties.getText(params.props["title"], "titleMessage"))
+        : null;
+    Widget? subtitle = builder.tryBuildWidget(params.context,
+        params.widgets["subtitleWidget"], params.state, params.parentContext);
+    subtitle ??= params.props["subtitle"] != null
+        ? Text(properties.getText(params.props["subtitle"], "titleMessage"))
+        : null;
 
-    final onChanged =
-        events.getValueFunction<bool?>(params.context, params.actions["onChanged"], params.state, params.parentContext);
+    final onChanged = events.getValueFunction<bool?>(params.context,
+        params.actions["onChanged"], params.state, params.parentContext);
     final onSaved = params.props["onSaved"] ??
         (v) {
           if (alias != null) {
@@ -2063,7 +2300,8 @@ class BaseWidgets with IWidgets {
         };
 
     return FormField<bool>(
-      key: UniqueKey(), // otherwise on a ListView, FormField's state would override the real value
+      key:
+          UniqueKey(), // otherwise on a ListView, FormField's state would override the real value
       initialValue: initialValue,
       enabled: enabled,
       autovalidateMode: AutovalidateMode.disabled,
@@ -2082,9 +2320,11 @@ class BaseWidgets with IWidgets {
           title: title,
           subtitle: state.hasError
               ? Text(properties.getText(state.errorText!, "errorMessage"),
-                  style: TextStyle(color: Theme.of(params.context).colorScheme.error))
+                  style: TextStyle(
+                      color: Theme.of(params.context).colorScheme.error))
               : subtitle,
-          secondary: builder.tryBuildWidget(params.context, params.widgets["secondary"], params.state, params.parentContext),
+          secondary: builder.tryBuildWidget(params.context,
+              params.widgets["secondary"], params.state, params.parentContext),
           contentPadding: properties.getInsets(params.props["contentPadding"]),
           onChanged: enabled
               ? (val) {
@@ -2109,16 +2349,19 @@ class BaseWidgets with IWidgets {
             ? ListTileControlAffinity.trailing
             : ListTileControlAffinity.platform;
 
-    Widget? title =
-        builder.tryBuildWidget(params.context, params.widgets["titleWidget"], params.state, params.parentContext);
-    title ??= params.props["title"] != null ? Text(properties.getText(params.props["title"], "titleMessage")) : null;
-    Widget? subtitle =
-        builder.tryBuildWidget(params.context, params.widgets["subtitleWidget"], params.state, params.parentContext);
-    subtitle ??=
-        params.props["subtitle"] != null ? Text(properties.getText(params.props["subtitle"], "titleMessage")) : null;
+    Widget? title = builder.tryBuildWidget(params.context,
+        params.widgets["titleWidget"], params.state, params.parentContext);
+    title ??= params.props["title"] != null
+        ? Text(properties.getText(params.props["title"], "titleMessage"))
+        : null;
+    Widget? subtitle = builder.tryBuildWidget(params.context,
+        params.widgets["subtitleWidget"], params.state, params.parentContext);
+    subtitle ??= params.props["subtitle"] != null
+        ? Text(properties.getText(params.props["subtitle"], "titleMessage"))
+        : null;
 
-    var onChanged =
-        events.getValueFunction<bool?>(params.context, params.actions["onChanged"], params.state, params.parentContext);
+    var onChanged = events.getValueFunction<bool?>(params.context,
+        params.actions["onChanged"], params.state, params.parentContext);
     var onSaved = params.props["onSaved"] ??
         (v) {
           if (alias != null) {
@@ -2127,7 +2370,8 @@ class BaseWidgets with IWidgets {
         };
 
     return FormField<bool>(
-      key: UniqueKey(), // otherwise on a ListView, FormField's state would override the real value when reusing widgets
+      key:
+          UniqueKey(), // otherwise on a ListView, FormField's state would override the real value when reusing widgets
       initialValue: parseBool(params.props["value"]),
       enabled: enabled,
       autovalidateMode: AutovalidateMode.disabled,
@@ -2147,9 +2391,11 @@ class BaseWidgets with IWidgets {
           title: title,
           subtitle: state.hasError
               ? Text(properties.getText(state.errorText!, "errorMessage"),
-                  style: TextStyle(color: Theme.of(params.context).colorScheme.error))
+                  style: TextStyle(
+                      color: Theme.of(params.context).colorScheme.error))
               : subtitle,
-          secondary: builder.tryBuildWidget(params.context, params.widgets["secondary"], params.state, params.parentContext),
+          secondary: builder.tryBuildWidget(params.context,
+              params.widgets["secondary"], params.state, params.parentContext),
           contentPadding: properties.getInsets(params.props["contentPadding"]),
           onChanged: enabled
               ? (val) {
@@ -2169,8 +2415,8 @@ class BaseWidgets with IWidgets {
     final alias = params.props["alias"] ?? params.id;
     final enabled = parseBool(params.props["enabled"], defaultValue: true);
 
-    final onChanged =
-        events.getValueFunction<double?>(params.context, params.actions["onChanged"], params.state, params.parentContext);
+    final onChanged = events.getValueFunction<double?>(params.context,
+        params.actions["onChanged"], params.state, params.parentContext);
     final onSaved = params.props["onSaved"] ??
         (v) {
           if (alias != null) {
@@ -2179,7 +2425,8 @@ class BaseWidgets with IWidgets {
         };
 
     return FormField<double>(
-      key: UniqueKey(), // otherwise on a ListView, FormField's state would override the real value when reusing widgets
+      key:
+          UniqueKey(), // otherwise on a ListView, FormField's state would override the real value when reusing widgets
       initialValue: parseDouble(params.props["value"]),
       enabled: enabled,
       autovalidateMode: AutovalidateMode.disabled,
@@ -2194,8 +2441,10 @@ class BaseWidgets with IWidgets {
           thumbColor: tryParseColor(params.props["thumbColor"]),
           activeColor: tryParseColor(params.props["activeColor"]),
           inactiveColor: tryParseColor(params.props["inactiveColor"]),
-          secondaryActiveColor: tryParseColor(params.props["secondaryActiveColor"]),
-          secondaryTrackValue: tryParseDouble(params.props["secondaryTrackValue"]),
+          secondaryActiveColor:
+              tryParseColor(params.props["secondaryActiveColor"]),
+          secondaryTrackValue:
+              tryParseDouble(params.props["secondaryTrackValue"]),
           label: params.props["label"],
           onChanged: enabled
               ? (val) {
@@ -2224,7 +2473,8 @@ class BaseWidgets with IWidgets {
     var children = <Widget>[];
     if (params.widgets["children"] != null) {
       for (Map childSpec in params.widgets["children"] as List<Map>) {
-        children.add(builder.buildWidget(params.context, childSpec, params.state, params.parentContext));
+        children.add(builder.buildWidget(
+            params.context, childSpec, params.state, params.parentContext));
       }
     }
 
@@ -2239,7 +2489,8 @@ class BaseWidgets with IWidgets {
   Widget buildPositioned(BuildParameters params) {
     final childSpec = params.widgets["child"];
     final child = childSpec != null
-        ? builder.buildWidget(params.context, params.widgets["child"], params.state, params.parentContext)
+        ? builder.buildWidget(params.context, params.widgets["child"],
+            params.state, params.parentContext)
         : const SizedBox();
 
     return Positioned(
@@ -2256,10 +2507,12 @@ class BaseWidgets with IWidgets {
 
   @protected
   Widget buildAnimatedPositioned(BuildParameters params) {
-    final onEnd = events.getFunction(params.context, params.actions["onEnd"], params.state, params.parentContext);
+    final onEnd = events.getFunction(params.context, params.actions["onEnd"],
+        params.state, params.parentContext);
     final childSpec = params.widgets["child"];
     final child = childSpec != null
-        ? builder.buildWidget(params.context, params.widgets["child"], params.state, params.parentContext)
+        ? builder.buildWidget(params.context, params.widgets["child"],
+            params.state, params.parentContext)
         : const SizedBox();
 
     return AnimatedPositioned(
@@ -2271,7 +2524,8 @@ class BaseWidgets with IWidgets {
       width: tryParseDouble(params.buildProp("width")),
       height: tryParseDouble(params.buildProp("height")),
       curve: params.buildProp("curve"),
-      duration: Duration(milliseconds: parseInt(params.props["duration"], defaultValue: 500)),
+      duration: Duration(
+          milliseconds: parseInt(params.props["duration"], defaultValue: 500)),
       onEnd: onEnd,
       child: child,
     );
@@ -2282,7 +2536,8 @@ class BaseWidgets with IWidgets {
     return Expanded(
       key: properties.getKey(params.id),
       flex: parseInt(params.props["flex"], defaultValue: 1),
-      child: builder.tryBuildWidget(params.context, params.widgets["child"], params.state, params.parentContext) ??
+      child: builder.tryBuildWidget(params.context, params.widgets["child"],
+              params.state, params.parentContext) ??
           const SizedBox(),
     );
   }
@@ -2292,7 +2547,8 @@ class BaseWidgets with IWidgets {
     final slivers = <Widget>[];
     if (params.widgets["slivers"] != null) {
       for (Map childSpec in params.widgets["slivers"] as List<Map>) {
-        slivers.add(builder.buildWidget(params.context, childSpec, params.state, params.parentContext));
+        slivers.add(builder.buildWidget(
+            params.context, childSpec, params.state, params.parentContext));
       }
     }
 
@@ -2309,7 +2565,8 @@ class BaseWidgets with IWidgets {
     var children = <Widget>[];
     if (params.widgets["children"] != null) {
       for (Map childSpec in params.widgets["children"] as List<Map>) {
-        children.add(builder.buildWidget(params.context, childSpec, params.state, params.parentContext));
+        children.add(builder.buildWidget(
+            params.context, childSpec, params.state, params.parentContext));
       }
     }
 
@@ -2355,7 +2612,8 @@ class BaseWidgets with IWidgets {
     final children = <Widget>[];
     if (params.widgets["children"] != null) {
       for (Map childSpec in params.widgets["children"] as List<Map>) {
-        children.add(builder.buildWidget(params.context, childSpec, params.state, params.parentContext));
+        children.add(builder.buildWidget(
+            params.context, childSpec, params.state, params.parentContext));
       }
     }
 
@@ -2379,7 +2637,8 @@ class BaseWidgets with IWidgets {
     final children = <Widget>[];
     if (params.widgets["children"] != null) {
       for (Map childSpec in params.widgets["children"] as List<Map>) {
-        children.add(builder.buildWidget(params.context, childSpec, params.state, params.parentContext));
+        children.add(builder.buildWidget(
+            params.context, childSpec, params.state, params.parentContext));
       }
     }
 
@@ -2388,7 +2647,8 @@ class BaseWidgets with IWidgets {
       crossAxisCount: spec.buildProp("crossAxisCount") ?? 1,
       mainAxisSpacing: parseDouble(props["mainAxisSpacing"]),
       crossAxisSpacing: parseDouble(props["crossAxisSpacing"]),
-      childAspectRatio: parseDouble(props["childAspectRatio"], defaultValue: 1.0),
+      childAspectRatio:
+          parseDouble(props["childAspectRatio"], defaultValue: 1.0),
       scrollDirection: spec.buildProp("scrollDirection") ?? Axis.vertical,
       reverse: parseBool(props["reverse"]),
       shrinkWrap: parseBool(props["shrinkWrap"]),
@@ -2403,13 +2663,14 @@ class BaseWidgets with IWidgets {
   Widget buildStaticPageView(BuildParameters params) {
     final spec = params.spec;
     final props = spec.props;
-    final onPageChanged =
-        events.getValueFunction<int?>(params.context, params.actions["onPageChanged"], params.state, params.parentContext);
+    final onPageChanged = events.getValueFunction<int?>(params.context,
+        params.actions["onPageChanged"], params.state, params.parentContext);
 
     final children = <Widget>[];
     if (params.widgets["children"] != null) {
       for (Map childSpec in params.widgets["children"] as List<Map>) {
-        children.add(builder.buildWidget(params.context, childSpec, params.state, params.parentContext));
+        children.add(builder.buildWidget(
+            params.context, childSpec, params.state, params.parentContext));
       }
     }
 
@@ -2421,7 +2682,8 @@ class BaseWidgets with IWidgets {
       scrollDirection: spec.buildProp("scrollDirection") ?? Axis.horizontal,
       controller: PageController(
         initialPage: parseInt(props["initialPage"]),
-        viewportFraction: parseDouble(props["viewportFraction"], defaultValue: 1.0),
+        viewportFraction:
+            parseDouble(props["viewportFraction"], defaultValue: 1.0),
         keepPage: parseBool(props["keepPage"], defaultValue: true),
       ),
       onPageChanged: onPageChanged,
@@ -2434,14 +2696,16 @@ class BaseWidgets with IWidgets {
     var children = <Widget>[];
     if (params.widgets["children"] != null) {
       for (Map childSpec in params.widgets["children"] as List<Map>) {
-        children.add(builder.buildWidget(params.context, childSpec, params.state, params.parentContext));
+        children.add(builder.buildWidget(
+            params.context, childSpec, params.state, params.parentContext));
       }
     }
 
     var tabs = <Widget>[];
     if (params.widgets["tabs"] != null) {
       for (Map childSpec in params.widgets["tabs"] as List<Map>) {
-        tabs.add(builder.buildWidget(params.context, childSpec, params.state, params.parentContext));
+        tabs.add(builder.buildWidget(
+            params.context, childSpec, params.state, params.parentContext));
       }
     }
 
@@ -2451,7 +2715,9 @@ class BaseWidgets with IWidgets {
       initialIndex: parseInt(params.props["initialIndex"]),
       child: Column(
         key: properties.getKey("${params.id}_tabs"),
-        mainAxisSize: params.props["mainAxisSize"] == "min" ? MainAxisSize.min : MainAxisSize.max,
+        mainAxisSize: params.props["mainAxisSize"] == "min"
+            ? MainAxisSize.min
+            : MainAxisSize.max,
         mainAxisAlignment: params.buildProp("mainAxisAlignment"),
         crossAxisAlignment: params.buildProp("crossAxisAlignment"),
         verticalDirection: params.buildProp("verticalDirection"),
@@ -2461,14 +2727,18 @@ class BaseWidgets with IWidgets {
             padding: properties.getInsets(params.props["padding"]),
             indicator: params.buildProp("indicator"),
             indicatorColor: tryParseColor(params.props["indicatorColor"]),
-            indicatorPadding: properties.getInsets(params.props["indicatorPadding"]) ?? EdgeInsets.zero,
+            indicatorPadding:
+                properties.getInsets(params.props["indicatorPadding"]) ??
+                    EdgeInsets.zero,
             indicatorSize: params.buildProp("indicatorSize"),
-            indicatorWeight: parseDouble(params.props["indicatorWeight"], defaultValue: 2.0),
+            indicatorWeight:
+                parseDouble(params.props["indicatorWeight"], defaultValue: 2.0),
             isScrollable: parseBool(params.props["isScrollable"]),
             labelColor: tryParseColor(params.props["labelColor"]),
             labelPadding: properties.getInsets(params.props["labelPadding"]),
             labelStyle: params.buildProp("labelStyle"),
-            unselectedLabelColor: tryParseColor(params.props["unselectedLabelColor"]),
+            unselectedLabelColor:
+                tryParseColor(params.props["unselectedLabelColor"]),
             unselectedLabelStyle: params.buildProp("unselectedLabelStyle"),
           ),
           Expanded(
@@ -2486,7 +2756,8 @@ class BaseWidgets with IWidgets {
     var tabs = <Widget>[];
     if (params.widgets["tabs"] != null) {
       for (Map childSpec in params.widgets["tabs"] as List<Map>) {
-        tabs.add(builder.buildWidget(params.context, childSpec, params.state, params.parentContext));
+        tabs.add(builder.buildWidget(
+            params.context, childSpec, params.state, params.parentContext));
       }
     }
 
@@ -2496,9 +2767,12 @@ class BaseWidgets with IWidgets {
       padding: properties.getInsets(params.props["padding"]),
       indicator: params.buildProp("indicator"),
       indicatorColor: tryParseColor(params.props["indicatorColor"]),
-      indicatorPadding: properties.getInsets(params.props["indicatorPadding"]) ?? EdgeInsets.zero,
+      indicatorPadding:
+          properties.getInsets(params.props["indicatorPadding"]) ??
+              EdgeInsets.zero,
       indicatorSize: params.buildProp("indicatorSize"),
-      indicatorWeight: parseDouble(params.props["indicatorWeight"], defaultValue: 2.0),
+      indicatorWeight:
+          parseDouble(params.props["indicatorWeight"], defaultValue: 2.0),
       isScrollable: parseBool(params.props["isScrollable"]),
       labelColor: tryParseColor(params.props["labelColor"]),
       labelPadding: properties.getInsets(params.props["labelPadding"]),
@@ -2513,7 +2787,8 @@ class BaseWidgets with IWidgets {
     var children = <Widget>[];
     if (params.widgets["children"] != null) {
       for (Map childSpec in params.widgets["children"] as List<Map>) {
-        children.add(builder.buildWidget(params.context, childSpec, params.state, params.parentContext));
+        children.add(builder.buildWidget(
+            params.context, childSpec, params.state, params.parentContext));
       }
     }
     return TabBarView(key: properties.getKey(params.id), children: children);
@@ -2523,7 +2798,8 @@ class BaseWidgets with IWidgets {
   Widget buildTextButton(BuildParameters params) {
     Widget child;
     if (params.widgets["child"] != null) {
-      child = builder.buildWidget(params.context, params.widgets["child"], params.state, params.parentContext);
+      child = builder.buildWidget(params.context, params.widgets["child"],
+          params.state, params.parentContext);
     } else if (params.props["text"] != null) {
       child = Text(properties.getText(params.props["text"], "button"));
     } else {
@@ -2533,7 +2809,8 @@ class BaseWidgets with IWidgets {
     return TextButton(
       key: properties.getKey(params.id),
       style: params.buildProp("style"),
-      onPressed: events.getFunction(params.context, params.actions["onPressed"], params.state, params.parentContext),
+      onPressed: events.getFunction(params.context, params.actions["onPressed"],
+          params.state, params.parentContext),
       child: child,
     );
   }
@@ -2542,7 +2819,8 @@ class BaseWidgets with IWidgets {
   Widget buildElevatedButton(BuildParameters params) {
     Widget child;
     if (params.widgets["child"] != null) {
-      child = builder.buildWidget(params.context, params.widgets["child"], params.state, params.parentContext);
+      child = builder.buildWidget(params.context, params.widgets["child"],
+          params.state, params.parentContext);
     } else if (params.props["text"] != null) {
       child = Text(properties.getText(params.props["text"], "button"));
     } else {
@@ -2552,7 +2830,8 @@ class BaseWidgets with IWidgets {
     return ElevatedButton(
       key: properties.getKey(params.id),
       style: params.buildProp("style"),
-      onPressed: events.getFunction(params.context, params.actions["onPressed"], params.state, params.parentContext),
+      onPressed: events.getFunction(params.context, params.actions["onPressed"],
+          params.state, params.parentContext),
       child: child,
     );
   }
@@ -2561,7 +2840,8 @@ class BaseWidgets with IWidgets {
   Widget buildOutlinedButton(BuildParameters params) {
     Widget child;
     if (params.widgets["child"] != null) {
-      child = builder.buildWidget(params.context, params.widgets["child"], params.state, params.parentContext);
+      child = builder.buildWidget(params.context, params.widgets["child"],
+          params.state, params.parentContext);
     } else if (params.props["text"] != null) {
       child = Text(properties.getText(params.props["text"], "button"));
     } else {
@@ -2571,7 +2851,8 @@ class BaseWidgets with IWidgets {
     return OutlinedButton(
       key: properties.getKey(params.id),
       style: params.buildProp("style"),
-      onPressed: events.getFunction(params.context, params.actions["onPressed"], params.state, params.parentContext),
+      onPressed: events.getFunction(params.context, params.actions["onPressed"],
+          params.state, params.parentContext),
       child: child,
     );
   }
@@ -2580,14 +2861,18 @@ class BaseWidgets with IWidgets {
   Widget buildFloatingActionButton(BuildParameters params) {
     Widget? child;
     if (params.widgets["child"] != null) {
-      child = builder.buildWidget(params.context, params.widgets["child"], params.state, params.parentContext);
+      child = builder.buildWidget(params.context, params.widgets["child"],
+          params.state, params.parentContext);
     } else if (params.props["iconCode"] != null) {
-      child = Icon(IconData(parseInt(params.props["iconCode"]), fontFamily: 'MaterialIcons'));
+      child = Icon(IconData(parseInt(params.props["iconCode"]),
+          fontFamily: 'MaterialIcons'));
     }
 
     return FloatingActionButton(
       key: properties.getKey(params.id),
-      tooltip: params.props["tooltip"] != null ? properties.getText(params.props["tooltip"], "label") : null,
+      tooltip: params.props["tooltip"] != null
+          ? properties.getText(params.props["tooltip"], "label")
+          : null,
       mini: parseBool(params.props["mini"]),
       shape: params.buildProp("shape"),
       backgroundColor: tryParseColor(params.props["backgroundColor"]),
@@ -2600,7 +2885,8 @@ class BaseWidgets with IWidgets {
       highlightElevation: tryParseDouble(params.props["highlightElevation"]),
       hoverElevation: tryParseDouble(params.props["hoverElevation"]),
       disabledElevation: tryParseDouble(params.props["disabledElevation"]),
-      onPressed: events.getFunction(params.context, params.actions["onPressed"], params.state, params.parentContext),
+      onPressed: events.getFunction(params.context, params.actions["onPressed"],
+          params.state, params.parentContext),
       child: child,
     );
   }
@@ -2616,17 +2902,20 @@ class BaseWidgets with IWidgets {
     for (var map in valueList) {
       menuItems.add(DropdownMenuItem<String>(
         value: map[valueKey],
-        alignment: params.buildProp("alignment") ?? AlignmentDirectional.centerStart,
-        child: Text(properties.getText(map[nameKey], "menu"), overflow: TextOverflow.ellipsis),
+        alignment:
+            params.buildProp("alignment") ?? AlignmentDirectional.centerStart,
+        child: Text(properties.getText(map[nameKey], "menu"),
+            overflow: TextOverflow.ellipsis),
       ));
     }
 
     final enabled = parseBool(params.props["enabled"], defaultValue: true);
-    final textStyle = enabled ? params.buildProp("style") : params.buildProp("disabledStyle");
+    final textStyle =
+        enabled ? params.buildProp("style") : params.buildProp("disabledStyle");
     ValueChanged<String?>? onChangeFunc;
     if (enabled) {
-      final onChangeAction =
-          events.getValueFunction<String?>(params.context, params.actions["onChanged"], params.state, params.parentContext);
+      final onChangeAction = events.getValueFunction<String?>(params.context,
+          params.actions["onChanged"], params.state, params.parentContext);
       onChangeFunc = (newValue) {
         if (onChangeAction != null) {
           onChangeAction(newValue);
@@ -2639,7 +2928,8 @@ class BaseWidgets with IWidgets {
       if (params.widgets[key] is List) {
         continue;
       }
-      widgetMap[key] = builder.buildWidget(params.context, params.widgets[key], params.state, params.parentContext);
+      widgetMap[key] = builder.buildWidget(params.context, params.widgets[key],
+          params.state, params.parentContext);
     }
 
     return DropdownButtonFormField<String>(
@@ -2652,13 +2942,16 @@ class BaseWidgets with IWidgets {
       elevation: parseInt(params.props["elevation"], defaultValue: 8),
       isExpanded: true,
       itemHeight: tryParseDouble(params.props["itemHeight"]),
-      alignment: params.buildProp("alignment") ?? AlignmentDirectional.centerStart,
+      alignment:
+          params.buildProp("alignment") ?? AlignmentDirectional.centerStart,
       decoration: params.buildProp("decoration", argument: widgetMap),
       autovalidateMode: AutovalidateMode.disabled,
-      hint: builder.tryBuildWidget(params.context, params.widgets["hint"], params.state, params.parentContext),
+      hint: builder.tryBuildWidget(params.context, params.widgets["hint"],
+          params.state, params.parentContext),
       value: params.props["value"]?.toString(),
       validator: builder.getStringValidator(params.props),
-      icon: builder.tryBuildWidget(params.context, params.widgets["icon"], params.state, params.parentContext),
+      icon: builder.tryBuildWidget(params.context, params.widgets["icon"],
+          params.state, params.parentContext),
       iconSize: parseDouble(params.props["iconSize"], defaultValue: 24.0),
       menuMaxHeight: tryParseDouble(params.props["menuMaxHeight"]),
       items: menuItems,
@@ -2674,8 +2967,8 @@ class BaseWidgets with IWidgets {
   @protected
   Widget buildPopupMenuButton(BuildParameters params) {
     final alias = params.props["alias"] ?? params.id;
-    final function =
-        events.getValueFunction<Object?>(params.context, params.actions["onSelected"], params.state, params.parentContext);
+    final function = events.getValueFunction<Object?>(params.context,
+        params.actions["onSelected"], params.state, params.parentContext);
 
     final nameKey = params.props["nameKey"] ?? "name";
     final valueKey = params.props["valueKey"] ?? "id";
@@ -2694,15 +2987,20 @@ class BaseWidgets with IWidgets {
       key: properties.getKey(params.id),
       initialValue: params.props["value"]?.toString(),
       color: tryParseColor(params.props["color"]),
-      tooltip: params.props["tooltip"] != null ? properties.getText(params.props["tooltip"], "label") : null,
+      tooltip: params.props["tooltip"] != null
+          ? properties.getText(params.props["tooltip"], "label")
+          : null,
       shape: params.buildProp("shape"),
-      padding: properties.getInsets(params.props["padding"]) ?? const EdgeInsets.all(8.0),
+      padding: properties.getInsets(params.props["padding"]) ??
+          const EdgeInsets.all(8.0),
       enabled: parseBool(params.props["enabled"], defaultValue: true),
       offset: params.buildProp("offset") ?? Offset.zero,
       elevation: tryParseDouble(params.props["elevation"]),
-      icon: builder.tryBuildWidget(params.context, params.widgets["icon"], params.state, params.parentContext),
+      icon: builder.tryBuildWidget(params.context, params.widgets["icon"],
+          params.state, params.parentContext),
       iconSize: tryParseDouble(params.props["iconSize"]),
-      child: builder.tryBuildWidget(params.context, params.widgets["child"], params.state, params.parentContext),
+      child: builder.tryBuildWidget(params.context, params.widgets["child"],
+          params.state, params.parentContext),
       onSelected: (v) {
         if (alias != null) {
           params.state[alias] = v;
@@ -2715,7 +3013,8 @@ class BaseWidgets with IWidgets {
   }
 
   @protected
-  List<Map<String, dynamic>> getMenuValues(dynamic values, String nameKey, String valueKey) {
+  List<Map<String, dynamic>> getMenuValues(
+      dynamic values, String nameKey, String valueKey) {
     final valueList = <Map<String, dynamic>>[];
     if (values is String) {
       final valueSplit = values.split("|");
@@ -2747,18 +3046,23 @@ class BaseWidgets with IWidgets {
   Widget buildIconButton(BuildParameters params) {
     Widget icon;
     if (params.widgets["icon"] != null) {
-      icon = builder.buildWidget(params.context, params.widgets["icon"], params.state, params.parentContext);
+      icon = builder.buildWidget(params.context, params.widgets["icon"],
+          params.state, params.parentContext);
     } else {
-      icon = Icon(IconData(parseInt(params.props["iconCode"]), fontFamily: 'MaterialIcons'));
+      icon = Icon(IconData(parseInt(params.props["iconCode"]),
+          fontFamily: 'MaterialIcons'));
     }
 
     return IconButton(
       key: properties.getKey(params.id),
       icon: icon,
       alignment: params.buildProp("alignment") ?? AlignmentDirectional.center,
-      padding: properties.getInsets(params.props["padding"]) ?? const EdgeInsets.all(8.0),
+      padding: properties.getInsets(params.props["padding"]) ??
+          const EdgeInsets.all(8.0),
       iconSize: parseDouble(params.props["iconSize"], defaultValue: 24.0),
-      tooltip: params.props["tooltip"] != null ? properties.getText(params.props["tooltip"], "label") : null,
+      tooltip: params.props["tooltip"] != null
+          ? properties.getText(params.props["tooltip"], "label")
+          : null,
       color: tryParseColor(params.props["color"]),
       focusColor: tryParseColor(params.props["focusColor"]),
       hoverColor: tryParseColor(params.props["hoverColor"]),
@@ -2766,14 +3070,16 @@ class BaseWidgets with IWidgets {
       highlightColor: tryParseColor(params.props["highlightColor"]),
       disabledColor: tryParseColor(params.props["disabledColor"]),
       constraints: params.buildProp("constraints"),
-      onPressed: events.getFunction(params.context, params.actions["onPressed"], params.state, params.parentContext),
+      onPressed: events.getFunction(params.context, params.actions["onPressed"],
+          params.state, params.parentContext),
     );
   }
 
   @protected
   Widget buildHero(BuildParameters params) {
     final child = params.widgets["child"] != null
-        ? builder.buildWidget(params.context, params.widgets["child"], params.state, params.parentContext)
+        ? builder.buildWidget(params.context, params.widgets["child"],
+            params.state, params.parentContext)
         : const SizedBox();
     return Hero(
         key: properties.getKey(params.id),
@@ -2801,25 +3107,37 @@ class BaseWidgets with IWidgets {
   @protected
   Widget buildInkWell(BuildParameters params) {
     final overlayColor = tryParseColor(params.props["overlayColor"]);
-    final onTapUp = events.getValueFunction(params.context, params.actions["onTapUp"], params.state, params.parentContext);
-    final onTapDown =
-        events.getValueFunction(params.context, params.actions["onTapDown"], params.state, params.parentContext);
+    final onTapUp = events.getValueFunction(params.context,
+        params.actions["onTapUp"], params.state, params.parentContext);
+    final onTapDown = events.getValueFunction(params.context,
+        params.actions["onTapDown"], params.state, params.parentContext);
 
     return InkWell(
       key: properties.getKey(params.id),
       borderRadius: params.buildProp("borderRadius"),
       customBorder: params.buildProp("customBorder"),
-      overlayColor: overlayColor != null ? MaterialStateProperty.all<Color>(overlayColor) : null,
+      overlayColor: overlayColor != null
+          ? MaterialStateProperty.all<Color>(overlayColor)
+          : null,
       highlightColor: tryParseColor(params.props["highlightColor"]),
       splashColor: tryParseColor(params.props["splashColor"]),
       hoverColor: tryParseColor(params.props["hoverColor"]),
       focusColor: tryParseColor(params.props["focusColor"]),
-      onTapDown: onTapDown != null ? (a) => onTapDown({"x": a.globalPosition.dx, "y": a.globalPosition.dy}) : null,
-      onTapUp: onTapUp != null ? (a) => onTapUp({"x": a.globalPosition.dx, "y": a.globalPosition.dy}) : null,
-      onTap: events.getFunction(params.context, params.actions["onTap"], params.state, params.parentContext),
-      onDoubleTap: events.getFunction(params.context, params.actions["onDoubleTap"], params.state, params.parentContext),
-      onLongPress: events.getFunction(params.context, params.actions["onLongPress"], params.state, params.parentContext),
-      child: builder.tryBuildWidget(params.context, params.widgets["child"], params.state, params.parentContext),
+      onTapDown: onTapDown != null
+          ? (a) =>
+              onTapDown({"x": a.globalPosition.dx, "y": a.globalPosition.dy})
+          : null,
+      onTapUp: onTapUp != null
+          ? (a) => onTapUp({"x": a.globalPosition.dx, "y": a.globalPosition.dy})
+          : null,
+      onTap: events.getFunction(params.context, params.actions["onTap"],
+          params.state, params.parentContext),
+      onDoubleTap: events.getFunction(params.context,
+          params.actions["onDoubleTap"], params.state, params.parentContext),
+      onLongPress: events.getFunction(params.context,
+          params.actions["onLongPress"], params.state, params.parentContext),
+      child: builder.tryBuildWidget(params.context, params.widgets["child"],
+          params.state, params.parentContext),
     );
   }
 
@@ -2848,8 +3166,10 @@ class BaseWidgets with IWidgets {
     final props = params.spec.props;
     ImageErrorListener? onForegroundImageError;
     ImageErrorListener? onBackgroundImageError;
-    var foregroundImage = params.buildProp("foregroundProvider", argument: props["foregroundValue"]);
-    var backgroundImage = params.buildProp("backgroundProvider", argument: props["backgroundValue"]);
+    var foregroundImage = params.buildProp("foregroundProvider",
+        argument: props["foregroundValue"]);
+    var backgroundImage = params.buildProp("backgroundProvider",
+        argument: props["backgroundValue"]);
 
     if (foregroundImage != null) {
       onForegroundImageError = (ex, stack) {};
@@ -2867,7 +3187,8 @@ class BaseWidgets with IWidgets {
       onBackgroundImageError: onBackgroundImageError,
       foregroundColor: tryParseColor(props["foregroundColor"]),
       backgroundColor: tryParseColor(props["backgroundColor"]),
-      child: builder.tryBuildWidget(params.context, params.widgets["child"], params.state, params.parentContext),
+      child: builder.tryBuildWidget(params.context, params.widgets["child"],
+          params.state, params.parentContext),
     );
   }
 
@@ -2895,7 +3216,8 @@ class BaseWidgets with IWidgets {
     final parentContext = params.parentContext ?? {};
     final type = params.props["type"] ?? "local";
     final defaultWidgetSpec = params.widgets["child"] as Map?;
-    buildWhen(BaseState prev, BaseState next) => prev != next && next is ActionState && states.contains(next.state);
+    buildWhen(BaseState prev, BaseState next) =>
+        prev != next && next is ActionState && states.contains(next.state);
     stateBuilder(BuildContext context, BaseState state) {
       Map? widgetSpec;
       if (state is ActionState) {
@@ -2909,11 +3231,14 @@ class BaseWidgets with IWidgets {
         stateContext.addAll({"stateData": state.data});
       }
       params.state.remove(widgetSpec["_id"]);
-      return builder.buildWidget(params.context, widgetSpec.clone(), params.state, stateContext);
+      return builder.buildWidget(
+          params.context, widgetSpec.clone(), params.state, stateContext);
     }
 
     return type == "global"
-        ? BlocBuilder<GlobalBloc, BaseState>(buildWhen: buildWhen, builder: stateBuilder)
-        : BlocBuilder<LocalBloc, BaseState>(buildWhen: buildWhen, builder: stateBuilder);
+        ? BlocBuilder<GlobalBloc, BaseState>(
+            buildWhen: buildWhen, builder: stateBuilder)
+        : BlocBuilder<LocalBloc, BaseState>(
+            buildWhen: buildWhen, builder: stateBuilder);
   }
 }

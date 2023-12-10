@@ -17,7 +17,8 @@ class Schema {
   //   _solution = solution;
   // }
 
-  static void loadSolutionsFromMaps(List<Map> solutions, String environment, {String language = "en"}) {
+  static void loadSolutionsFromMaps(List<Map> solutions, String environment,
+      {String language = "en"}) {
     if (solutions.isEmpty) {
       return;
     }
@@ -27,24 +28,28 @@ class Schema {
     final createdSolutions = <Solution>[];
 
     for (var solution in solutions) {
-      if (solution["landingScreen"] != null && solution["landingScreen"].isNotEmpty) {
+      if (solution["landingScreen"] != null &&
+          solution["landingScreen"].isNotEmpty) {
         landingScreen = solution["landingScreen"];
       }
-      var newSolution = Solution.fromMap(solution, environment, language: language);
+      var newSolution =
+          Solution.fromMap(solution, environment, language: language);
       createdSolutions.add(newSolution);
       if (newSolution.name.isNotEmpty) {
         name = newSolution.name;
       }
     }
 
-    final solution = Solution.empty(name, environment, language: language, landingScreen: landingScreen);
+    final solution = Solution.empty(name, environment,
+        language: language, landingScreen: landingScreen);
     for (var createdSolution in createdSolutions) {
       solution.merge(createdSolution);
     }
     _solution = solution;
   }
 
-  static Future loadSolutionsFromAssets(List<String> paths, String environment, {String language = "en"}) async {
+  static Future loadSolutionsFromAssets(List<String> paths, String environment,
+      {String language = "en"}) async {
     final maps = <Map>[];
     for (var path in paths) {
       try {
@@ -61,7 +66,8 @@ class Schema {
     loadSolutionsFromMaps(maps, environment, language: language);
   }
 
-  static Future loadSolutionsFromUrls(List<String> urls, String environment, {String language = "en"}) async {
+  static Future loadSolutionsFromUrls(List<String> urls, String environment,
+      {String language = "en"}) async {
     final maps = <Map>[];
     for (var url in urls) {
       try {
@@ -85,7 +91,8 @@ class Schema {
 
   static WidgetNodeSpec? getTemplate(String id) => _solution?.getTemplate(id);
 
-  static WidgetNodeSpec? getComponent(String id) => _solution?.getComponent(id)?.clone();
+  static WidgetNodeSpec? getComponent(String id) =>
+      _solution?.getComponent(id)?.clone();
 
   static ActionNodeSpec? getAction(String id) => _solution?.getAction(id);
 

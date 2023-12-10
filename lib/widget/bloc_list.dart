@@ -22,11 +22,13 @@ class BlocList extends BlocListBase {
 
     Function? selectFunction;
     if (!EditorBloc.editMode) {
-      selectFunction = Lowder.actions.getValueFunction(context, actions["onSelect"], state, evaluatorContext);
+      selectFunction = Lowder.actions.getValueFunction(
+          context, actions["onSelect"], state, evaluatorContext);
     }
 
     final axis = spec.buildProp("scrollDirection") ?? Axis.vertical;
-    Widget? separatorWidget = Lowder.widgets.tryBuildWidget(context, widgets["separator"], state, null);
+    Widget? separatorWidget = Lowder.widgets
+        .tryBuildWidget(context, widgets["separator"], state, null);
 
     return ListView(
       key: Lowder.properties.getKey(id),
@@ -52,7 +54,9 @@ class BlocList extends BlocListBase {
         if (separatorWidget != null && i < count - 1) {
           final children = [itemWidget, separatorWidget];
           itemWidget = axis == Axis.vertical
-              ? Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: children)
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: children)
               : Row(children: children);
         }
         return itemWidget;
@@ -74,7 +78,8 @@ class BlocGrid extends BlocListBase {
 
     Function? selectFunction;
     if (!EditorBloc.editMode) {
-      selectFunction = Lowder.actions.getValueFunction(context, actions["onSelect"], state, evaluatorContext);
+      selectFunction = Lowder.actions.getValueFunction(
+          context, actions["onSelect"], state, evaluatorContext);
     }
 
     return GridView.count(
@@ -83,7 +88,8 @@ class BlocGrid extends BlocListBase {
       crossAxisCount: spec.buildProp("crossAxisCount") ?? 1,
       mainAxisSpacing: parseDouble(props["mainAxisSpacing"]),
       crossAxisSpacing: parseDouble(props["crossAxisSpacing"]),
-      childAspectRatio: parseDouble(props["childAspectRatio"], defaultValue: 1.0),
+      childAspectRatio:
+          parseDouble(props["childAspectRatio"], defaultValue: 1.0),
       scrollDirection: spec.buildProp("scrollDirection") ?? Axis.vertical,
       reverse: parseBool(props["reverse"]),
       shrinkWrap: parseBool(props["shrinkWrap"]),
@@ -122,8 +128,10 @@ class BlocPageView extends BlocListBase {
     Function? selectFunction;
     Function? pageChangeFunction;
     if (!EditorBloc.editMode) {
-      selectFunction = Lowder.actions.getValueFunction(context, actions["onSelect"], state, evaluatorContext);
-      pageChangeFunction = Lowder.actions.getValueFunction<int?>(context, actions["onPageChanged"], state, evaluatorContext);
+      selectFunction = Lowder.actions.getValueFunction(
+          context, actions["onSelect"], state, evaluatorContext);
+      pageChangeFunction = Lowder.actions.getValueFunction<int?>(
+          context, actions["onPageChanged"], state, evaluatorContext);
     }
 
     return PageView(
@@ -134,7 +142,8 @@ class BlocPageView extends BlocListBase {
       reverse: parseBool(props["reverse"]),
       controller: PageController(
         initialPage: parseInt(props["initialPage"]),
-        viewportFraction: parseDouble(props["viewportFraction"], defaultValue: 1.0),
+        viewportFraction:
+            parseDouble(props["viewportFraction"], defaultValue: 1.0),
         keepPage: parseBool(props["keepPage"], defaultValue: true),
       ),
       onPageChanged: (idx) {
@@ -187,7 +196,8 @@ class BlocTable extends BlocListBase {
       key: Lowder.properties.getKey(id),
       border: spec.buildProp("border"),
       textBaseline: spec.buildProp("textBaseline"),
-      defaultVerticalAlignment: spec.buildProp("verticalAlignment") ?? TableCellVerticalAlignment.top,
+      defaultVerticalAlignment:
+          spec.buildProp("verticalAlignment") ?? TableCellVerticalAlignment.top,
       children: tableRows,
     );
 
@@ -201,7 +211,8 @@ class BlocTable extends BlocListBase {
     }
   }
 
-  TableRow buildTableRow(BuildContext context, Map entry, Decoration? decoration, int i) {
+  TableRow buildTableRow(
+      BuildContext context, Map entry, Decoration? decoration, int i) {
     final children = <Widget>[];
     for (Map childSpec in widgets["children"]) {
       final child = buildWidget(context, childSpec, i);
@@ -229,7 +240,8 @@ class BlocDataTable extends BlocListBase {
       state[alias] = <Map>[];
     }
 
-    Widget widget = StatefulBuilder(builder: (context, setState) => buildDataTable(context, setState));
+    Widget widget = StatefulBuilder(
+        builder: (context, setState) => buildDataTable(context, setState));
 
     if (parseBool(props["shrinkWrap"])) {
       return widget;
@@ -244,7 +256,8 @@ class BlocDataTable extends BlocListBase {
   DataTable buildDataTable(BuildContext context, StateSetter setState) {
     Function? selectFunction;
     if (!EditorBloc.editMode) {
-      selectFunction = Lowder.actions.getValueFunction<Map>(context, actions["onSelect"], state, evaluatorContext);
+      selectFunction = Lowder.actions.getValueFunction<Map>(
+          context, actions["onSelect"], state, evaluatorContext);
     }
 
     final alias = props["alias"] ?? id;
@@ -261,13 +274,18 @@ class BlocDataTable extends BlocListBase {
       border: spec.buildProp("border"),
       dividerThickness: tryParseDouble(props["dividerThickness"]),
       columnSpacing: tryParseDouble(props["columnSpacing"]),
-      checkboxHorizontalMargin: tryParseDouble(props["checkboxHorizontalMargin"]),
+      checkboxHorizontalMargin:
+          tryParseDouble(props["checkboxHorizontalMargin"]),
       horizontalMargin: tryParseDouble(props["horizontalMargin"]),
       showBottomBorder: parseBool(props["showBottomBorder"]),
-      headingRowColor: headingRowColor != null ? MaterialStateColor.resolveWith((states) => headingRowColor) : null,
+      headingRowColor: headingRowColor != null
+          ? MaterialStateColor.resolveWith((states) => headingRowColor)
+          : null,
       headingRowHeight: tryParseDouble(props["headingRowHeight"]),
       headingTextStyle: spec.buildProp("headingTextStyle"),
-      dataRowColor: dataRowColor != null ? MaterialStateColor.resolveWith((states) => dataRowColor) : null,
+      dataRowColor: dataRowColor != null
+          ? MaterialStateColor.resolveWith((states) => dataRowColor)
+          : null,
       dataRowMinHeight: tryParseDouble(props["dataRowHeight"]),
       dataTextStyle: spec.buildProp("dataTextStyle"),
       onSelectAll: !multiSelect
@@ -283,20 +301,23 @@ class BlocDataTable extends BlocListBase {
       columns: buildDataColumns(context, setState),
       rows: List<DataRow>.generate(
         mutable.lastState.fullData.length,
-        (idx) => buildDataRow(context, idx, state[alias], multiSelect, selectFunction, setState),
+        (idx) => buildDataRow(
+            context, idx, state[alias], multiSelect, selectFunction, setState),
       ),
     );
   }
 
-  DataRow buildDataRow(BuildContext context, int idx, List<Map> selectionList, bool multiSelect, Function? selectFunction,
-      StateSetter setState) {
+  DataRow buildDataRow(BuildContext context, int idx, List<Map> selectionList,
+      bool multiSelect, Function? selectFunction, StateSetter setState) {
     final entry = mutable.lastState.fullData[idx];
     final rowColor = tryParseColor(props["rowColor"]);
     final rowOddColor = tryParseColor(props["rowOddColor"]) ?? rowColor;
     final color = idx.isEven ? rowColor : rowOddColor;
 
     return DataRow(
-      color: color != null ? MaterialStateColor.resolveWith((states) => color) : null,
+      color: color != null
+          ? MaterialStateColor.resolveWith((states) => color)
+          : null,
       selected: selectionList.contains(entry),
       cells: buildDataCells(context, idx),
       onSelectChanged: (val) => setState(() {
@@ -325,7 +346,8 @@ class BlocDataTable extends BlocListBase {
     return cells;
   }
 
-  List<DataColumn> buildDataColumns(BuildContext context, StateSetter setState) {
+  List<DataColumn> buildDataColumns(
+      BuildContext context, StateSetter setState) {
     final columns = <DataColumn>[];
     final columnsSpec = widgets["columns"];
     final childrenSpec = widgets["children"];
@@ -333,18 +355,22 @@ class BlocDataTable extends BlocListBase {
 
     if (columnsSpec != null && columnsSpec.length == childrenSpec?.length) {
       for (var childSpec in columnsSpec) {
-        final widget = Lowder.widgets.buildWidget(context, childSpec, state, null);
-        columns.add(buildDataColumn(context, childSpec, sortable, setState, widget));
+        final widget =
+            Lowder.widgets.buildWidget(context, childSpec, state, null);
+        columns.add(
+            buildDataColumn(context, childSpec, sortable, setState, widget));
       }
     } else {
       for (var childSpec in childrenSpec) {
-        columns.add(buildDataColumn(context, childSpec, sortable, setState, null));
+        columns
+            .add(buildDataColumn(context, childSpec, sortable, setState, null));
       }
     }
     return columns;
   }
 
-  DataColumn buildDataColumn(BuildContext context, Map spec, bool sortable, StateSetter setState, Widget? labelWidget) {
+  DataColumn buildDataColumn(BuildContext context, Map spec, bool sortable,
+      StateSetter setState, Widget? labelWidget) {
     final props = spec["properties"] ?? {};
     final label = props["label"] ?? spec["name"] ?? "";
     final specAlias = props["alias"] ?? label;
@@ -397,7 +423,8 @@ abstract class BlocListBase extends StatefulWidget {
 
   scrollListener() {
     if (!mutable.lastState.hasMore) return;
-    if (!mutable.loadingPage && controller.position.maxScrollExtent == controller.offset) {
+    if (!mutable.loadingPage &&
+        controller.position.maxScrollExtent == controller.offset) {
       mutable.loadingPage = true;
       loadPage();
     }
@@ -433,7 +460,8 @@ abstract class BlocListBase extends StatefulWidget {
       stateClone.addAll(entry);
     }
 
-    return Lowder.widgets.buildWidget(context, specClone, stateClone, {"entry": entry, "parent": state});
+    return Lowder.widgets.buildWidget(
+        context, specClone, stateClone, {"entry": entry, "parent": state});
   }
 
   Widget getLoadingIndicator() {
@@ -443,18 +471,24 @@ abstract class BlocListBase extends StatefulWidget {
           padding: const EdgeInsets.all(10),
           child: CircularProgressIndicator(
             color: tryParseColor(loadingIndicatorSpec["color"]),
-            backgroundColor: tryParseColor(loadingIndicatorSpec["backgroundColor"]),
-            strokeWidth: parseDouble(loadingIndicatorSpec["strokeWidth"], defaultValue: 4.0),
+            backgroundColor:
+                tryParseColor(loadingIndicatorSpec["backgroundColor"]),
+            strokeWidth: parseDouble(loadingIndicatorSpec["strokeWidth"],
+                defaultValue: 4.0),
           )),
     );
   }
 
   Widget getNoEntriesWidget(BuildContext context) {
-    var noEntriesWidget = Lowder.widgets.tryBuildWidget(context, widgets["noEntriesWidget"], state, null);
+    var noEntriesWidget = Lowder.widgets
+        .tryBuildWidget(context, widgets["noEntriesWidget"], state, null);
     if (noEntriesWidget == null) {
-      var message = Strings.getCapitalized(props["noEntriesMessage"] ?? "no_entries_message");
+      var message = Strings.getCapitalized(
+          props["noEntriesMessage"] ?? "no_entries_message");
       noEntriesWidget = Text(message, style: spec.buildProp("noEntriesStyle"));
-      noEntriesWidget = Center(child: Padding(padding: const EdgeInsets.all(10), child: noEntriesWidget));
+      noEntriesWidget = Center(
+          child: Padding(
+              padding: const EdgeInsets.all(10), child: noEntriesWidget));
     }
     return noEntriesWidget;
   }
@@ -475,7 +509,8 @@ class BlocListState extends State<BlocListBase> {
 
     final listBuilder = BlocBuilder<ListBloc, BaseState>(
       buildWhen: (prev, next) {
-        return prev != next && (next is InitialState || next is PageLoadedState);
+        return prev != next &&
+            (next is InitialState || next is PageLoadedState);
       },
       builder: (context, state) {
         if (state is InitialState) {
@@ -494,11 +529,13 @@ class BlocListState extends State<BlocListBase> {
     );
 
     final globalBuilder = BlocBuilder<GlobalBloc, BaseState>(
-      buildWhen: (prev, next) => prev != next && next is ReloadListState && next.listId == widget.id,
+      buildWhen: (prev, next) =>
+          prev != next && next is ReloadListState && next.listId == widget.id,
       builder: (context, state) => listBuilder,
     );
 
-    return BlocProvider(create: (context) => createBloc(), child: globalBuilder);
+    return BlocProvider(
+        create: (context) => createBloc(), child: globalBuilder);
   }
 
   @override

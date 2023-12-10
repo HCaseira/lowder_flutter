@@ -45,9 +45,11 @@ class PropertyFactory {
 
     var parts = value.toString().split(RegExp(r'[|\s]'));
     if (parts.length > 2) {
-      return EdgeInsets.fromLTRB(parseDouble(parts[0]), parseDouble(parts[1]), parseDouble(parts[2]), parseDouble(parts[3]));
+      return EdgeInsets.fromLTRB(parseDouble(parts[0]), parseDouble(parts[1]),
+          parseDouble(parts[2]), parseDouble(parts[3]));
     } else if (parts.length > 1) {
-      return EdgeInsets.symmetric(vertical: parseDouble(parts[0]), horizontal: parseDouble(parts[1]));
+      return EdgeInsets.symmetric(
+          vertical: parseDouble(parts[0]), horizontal: parseDouble(parts[1]));
     } else {
       return EdgeInsets.all(parseDouble(parts[0]));
     }
@@ -56,7 +58,8 @@ class PropertyFactory {
   /// Utility method to return a translated string from a [value].
   /// A [context] value will define it's transformation.
   /// E.g.: a [context] 'button' will return a title cased translated string.
-  String getText(String value, String context, {Map<String, dynamic>? attributes}) {
+  String getText(String value, String context,
+      {Map<String, dynamic>? attributes}) {
     switch (context) {
       case "dialogTitle":
       case "dialogButton":
@@ -128,7 +131,8 @@ class PropertyFactory {
       if (value.length == endIdx - startIdx + 1) {
         return resolvedPart;
       } else {
-        value = value.replaceRange(startIdx, endIdx + 1, "${resolvedPart ?? ""}");
+        value =
+            value.replaceRange(startIdx, endIdx + 1, "${resolvedPart ?? ""}");
       }
       startIdx = 0;
     }
@@ -164,7 +168,8 @@ class PropertyFactory {
   }
 
   /// Evaluates the result of a given [leftStatement], an [operator] and a [rightStatement].
-  bool evaluateOperator(dynamic leftStatement, String operator, dynamic rightStatement) {
+  bool evaluateOperator(
+      dynamic leftStatement, String operator, dynamic rightStatement) {
     dynamic left;
     dynamic right;
     if (leftStatement is DateTime || rightStatement is DateTime) {
@@ -219,7 +224,8 @@ class PropertyFactory {
     if (spec["_type"] != "OperatorCondition") {
       return true;
     }
-    var result = evaluateOperator(spec["left"], spec["operator"], spec["right"]);
+    var result =
+        evaluateOperator(spec["left"], spec["operator"], spec["right"]);
     if (result && spec["and"] != null) {
       result = evaluateCondition(spec["and"]);
     }
