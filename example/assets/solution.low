@@ -13,6 +13,7 @@
         "body": {
           "_id": "fe620136-8192-4c3c-859b-3c72251715c0",
           "_type": "scaffold",
+          "name": "Counter Screen",
           "widgets": {
             "appBar": {
               "_id": "1a53aa90-0c79-434e-808e-ad754174065f",
@@ -66,7 +67,12 @@
                         "actions": {
                           "nextAction": {
                             "_id": "f022f5c1-c976-421c-8a98-ec6b84926d06",
-                            "_type": "KActionSetState"
+                            "_type": "KActionSetState",
+                            "properties": {
+                              "newState": {
+                                "counter": "${counter}"
+                              }
+                            }
                           }
                         }
                       }
@@ -99,13 +105,108 @@
                         "actions": {
                           "nextAction": {
                             "_id": "70ba1a4c-b76b-479f-94d0-d4c33d416fb3",
-                            "_type": "KActionSetState"
+                            "_type": "KActionSetState",
+                            "properties": {
+                              "newState": {
+                                "counter": "${counter}"
+                              }
+                            }
                           }
                         }
                       }
                     }
                   }
                 ]
+              }
+            }
+          }
+        }
+      },
+      "isRootNode": true
+    },
+    {
+      "_id": "99a239b5-7748-4974-9376-d2d2ee5160f7",
+      "_type": "Screen",
+      "name": "Editable Text Field",
+      "_folder": "Select a folder for the new screen",
+      "widgets": {
+        "body": {
+          "_id": "8e65dc4c-561a-48d0-887f-3ea9458fa9e3",
+          "_type": "scaffold",
+          "name": "Editable Text Field",
+          "widgets": {
+            "appBar": {
+              "_id": "ac3e5760-a80f-4d9a-8dd8-992e1397c87c",
+              "_type": "appBar",
+              "properties": {
+                "title": "Editable Text Field"
+              }
+            },
+            "body": {
+              "_id": "25ba83a9-3630-4ef9-ad94-fc7784278366",
+              "_type": "card",
+              "widgets": {
+                "child": {
+                  "_id": "a61890a1-4261-4cac-a7d2-09affdee4770",
+                  "_type": "column",
+                  "properties": {
+                    "margin": "18",
+                    "mainAxisSize": "min"
+                  },
+                  "widgets": {
+                    "children": [
+                      {
+                        "_id": "08f248ba-6f1c-4678-a59e-f649f713207d",
+                        "_type": "EditableText",
+                        "properties": {
+                          "alias": "firstName",
+                          "value": "John",
+                          "style": {
+                            "fontSize": "14"
+                          }
+                        }
+                      },
+                      {
+                        "_id": "cb6b650c-69ef-43fa-8fae-28cb8130dcc3",
+                        "_type": "sizedBox",
+                        "properties": {
+                          "height": "10"
+                        }
+                      },
+                      {
+                        "_id": "9dd98b56-1656-4e87-bdb5-048085a96109",
+                        "_type": "container",
+                        "properties": {
+                          "decoration": {
+                            "color": "#1c1b1f"
+                          },
+                          "height": "1"
+                        }
+                      },
+                      {
+                        "_id": "426b04c7-dbae-42c1-8c4c-8b65931c3353",
+                        "_type": "sizedBox",
+                        "properties": {
+                          "height": "10"
+                        }
+                      },
+                      {
+                        "_id": "66e84dea-4c1b-4d66-849c-ac5e1138087f",
+                        "_type": "EditableText",
+                        "properties": {
+                          "alias": "lastName",
+                          "value": "Doe",
+                          "style": {
+                            "fontSize": "14"
+                          },
+                          "editableStyle": {
+                            "fontSize": "16"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
               }
             }
           }
