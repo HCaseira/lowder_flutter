@@ -58,7 +58,7 @@ flutter:
   #   - images/a_dot_ham.jpeg
 ```
 
-Now open the `main.dart` file from the `lib` folder with your favorite editor and replace the whole content with:
+Open the `main.dart` file from the `lib` folder with your favorite editor and replace the whole content with:
 
 ```dart
 import 'package:flutter/widgets.dart';
@@ -88,6 +88,7 @@ Now let's start the Lowder `editor`, executing the following command from the te
 dart run lowder
 ```
 It may take a few seconds, for it has to build a web version of the app.
+
 You'll see an output like this:
 ```sh
 Compiling lib\main.dart for the Web...                             47,0s
@@ -98,14 +99,14 @@ When ready, open a browser and go to `http://localhost:8787/editor.html`.
 
 ![](https://github.com/HCaseira/lowder_flutter/raw/main/repo_files/images/editor_0.png)
 
-So that is the `Lowder Editor`. Here you'll create screens for your app.
+So that is the `Lowder Editor`. There you'll create screens for your app.
 
-Let's start by creating a new Screen.
+Let's start by creating a new screen.
 ![](https://github.com/HCaseira/lowder_flutter/raw/main/repo_files/images/editor_1.png)
 Name it `Hello Screen` and click `Ok`.
 ![](https://github.com/HCaseira/lowder_flutter/raw/main/repo_files/images/editor_2.png)
 
-Next, select the root Widget for the new Screen. Let's pick `Material`.
+Next, select the root Widget for the new screen. Let's pick `Material`.
 ![](https://github.com/HCaseira/lowder_flutter/raw/main/repo_files/images/editor_3.png)
 
 Now click on the `+` to add a child to `Material` Widget.

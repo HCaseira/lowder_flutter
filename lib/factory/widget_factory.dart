@@ -104,8 +104,7 @@ class WidgetFactory {
   @protected
   Widget createWidget(BuildContext context, WidgetNodeSpec spec, Map state,
       Map? parentContext) {
-    final evaluatorContext =
-        actions.getEvaluatorContext(null, state, parentContext);
+    final evaluatorContext = getEvaluatorContext(null, state, parentContext);
 
     final template = getTemplate(spec.template);
     mergeTemplateAndState(spec, template, state, evaluatorContext);
@@ -520,6 +519,11 @@ class WidgetFactory {
       return null;
     };
   }
+
+  /// Returns a Map with the evaluation context used when sanitizing properties of a [NodeSpec].
+  /// Used to resolve properties that use placeholders as values, like "${state.firstName}" or "${env.api_uri}".
+  Map getEvaluatorContext(Object? value, Map state, Map? specContext) =>
+      Lowder.properties.getEvaluatorContext(value, state, specContext);
 }
 
 typedef StringValueValidationFunction = String? Function(String? value);
@@ -527,9 +531,17 @@ typedef CheckboxValidationFunction = String? Function(bool? value);
 
 /// A structure containing contextual objects for a Widget's build.
 class BuildParameters {
+  /// The [BuildContext] from where the build function was triggered.
   final BuildContext context;
+
+  /// The Model object representing the Widget Node.
   final WidgetNodeSpec spec;
+
+  /// The existing state of the Screen from which the build was triggered.
   final Map state;
+
+  /// An optional Map containing contextual values.
+  /// E.g. Lists will set an "entry" attribute as context, referring an element from the array of data.
   final Map? parentContext;
 
   BuildParameters(this.context, this.spec, this.state, this.parentContext);
@@ -539,6 +551,7 @@ class BuildParameters {
   Map get actions => spec.actions;
   Map get widgets => spec.widgets;
 
+  /// Convenience method to resolve the value of a property.
   dynamic buildProp(String key, {dynamic argument}) =>
       spec.buildProp(key, argument: argument);
 }

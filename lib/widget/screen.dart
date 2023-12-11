@@ -20,7 +20,7 @@ class LowderScreen extends StatefulWidget {
 
   LocalBlocWidget getBlocWidget(String screenId, BlocBuilderFunction buildFunc,
       {BlocListenerFunction? listenFunc}) {
-    return LocalBlocWidget(screenId, buildFunc, listener: listenFunc);
+    return LocalBlocWidget(buildFunc, listener: listenFunc);
   }
 
   @protected

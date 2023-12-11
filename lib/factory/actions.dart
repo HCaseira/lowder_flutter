@@ -339,8 +339,10 @@ class BaseActions with IActions {
   }
 
   PageLoadedState handleStaticData(LoadPageActionEvent event) {
-    if (event.page > 1)
+    if (event.page > 1) {
       return PageLoadedState(event.page, event.fullData, false);
+    }
+
     final List data = event.action.props["data"] ?? [];
     if (parseBool(event.action.props["shuffle"])) {
       data.shuffle();

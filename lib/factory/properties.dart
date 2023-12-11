@@ -1246,8 +1246,9 @@ class BaseProperties with IProperties {
 
   BorderRadius? getBorderRadius(dynamic value) {
     if (value == null) return null;
-    if (value is num)
+    if (value is num) {
       return BorderRadius.all(Radius.circular(parseDouble(value)));
+    }
 
     var parts = value.split("|");
     if (parts.length == 4) {

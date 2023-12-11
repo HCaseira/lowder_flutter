@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
+import '../model/solution.dart';
 import '../util/parser.dart';
 import '../util/strings.dart';
+import '../widget/lowder.dart';
 import 'properties.dart';
 
 /// Class that handles Property related operations.
@@ -233,5 +237,39 @@ class PropertyFactory {
       result = evaluateCondition(spec["or"]);
     }
     return result;
+  }
+
+  /// Returns a Map with the evaluation context used when sanitizing properties of a [NodeSpec].
+  /// Used to resolve properties that use placeholders as values, like "${state.firstName}" or "${env.api_uri}".
+  Map getEvaluatorContext(Object? value, Map state, Map? specContext) {
+    final mediaQueryData = MediaQueryData.fromView(
+        WidgetsBinding.instance.platformDispatcher.views.single);
+
+    final map = {};
+    if (specContext != null) map.addAll(specContext);
+    map.addAll({
+      "null": null,
+      "languages": Solution.languages,
+      "language": Solution.language,
+      "env": Solution.environmentVariables,
+      "global": Lowder.globalVariables,
+      "state": state,
+      "value": value,
+      "media": {
+        "isWeb": kIsWeb,
+        "isMobile": !kIsWeb && mediaQueryData.size.shortestSide < 600,
+        "isTablet": !kIsWeb && mediaQueryData.size.shortestSide >= 600,
+        "isAndroid": kIsWeb ? false : Platform.isAndroid,
+        "isIOS": kIsWeb ? false : Platform.isIOS,
+        "isWindows": kIsWeb ? false : Platform.isWindows,
+        "isMacOS": kIsWeb ? false : Platform.isMacOS,
+        "isLinux": kIsWeb ? false : Platform.isLinux,
+        "isFuchsia": kIsWeb ? false : Platform.isFuchsia,
+        "portrait": mediaQueryData.orientation == Orientation.portrait,
+        "landscape": mediaQueryData.orientation == Orientation.landscape,
+        // "version": Platform.version,
+      }
+    });
+    return map;
   }
 }

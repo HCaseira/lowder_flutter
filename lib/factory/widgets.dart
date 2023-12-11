@@ -2192,7 +2192,6 @@ class BaseWidgets with IWidgets {
                     defaultValue: 550),
               ),
               child: LocalBlocWidget(
-                params.id,
                 (context, state) => Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.stretch,

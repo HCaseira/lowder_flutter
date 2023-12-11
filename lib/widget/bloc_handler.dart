@@ -86,6 +86,7 @@ class _LowderBlocConsumerState<B extends BaseBloc>
   }
 }
 
+/// Local Bloc consumer for handling local states
 class LocalBlocConsumer<B extends LocalBloc> extends LowderBlocConsumer<B> {
   LocalBlocConsumer(super.defaultBuilder, {super.key, super.defaultListener}) {
     buildOn<SetStateState>();
@@ -103,14 +104,12 @@ class GlobalBlocConsumer<B extends GlobalBloc> extends LowderBlocConsumer<B> {
   }
 }
 
-/// Local Bloc consumer for handling local states
+/// A LocalBloc Provider and Consumer Widgets.
 class LocalBlocWidget extends StatelessWidget {
-  final String screenId;
   final BlocBuilderFunction builder;
   final BlocListenerFunction? listener;
 
-  const LocalBlocWidget(this.screenId, this.builder,
-      {super.key, this.listener});
+  const LocalBlocWidget(this.builder, {super.key, this.listener});
 
   @override
   Widget build(BuildContext context) {

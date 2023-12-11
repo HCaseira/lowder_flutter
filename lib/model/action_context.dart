@@ -2,9 +2,17 @@ import 'package:flutter/widgets.dart';
 
 /// A structure containing contextual objects for an Action's execution.
 class ActionContext {
+  /// The existing state of the Screen from which the Action was triggered.
   final Map state;
+
+  /// An optional Map containing contextual values. E.g. Lists will set "page" and "pageSize" attributes.
   final Map actionContext;
+
+  /// The value triggering the Action. E.g. upon clicking on a row of a list,
+  /// the "onSelect" action will transport the element of the array of data.
   final dynamic actionValue;
+
+  /// The [BuildContext] from where the Action was triggered.
   final BuildContext buildContext;
 
   ActionContext(

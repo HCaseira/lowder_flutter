@@ -42,15 +42,27 @@ abstract class Lowder extends StatefulWidget {
       GlobalKey<NavigatorState>();
   static final List<SolutionSpec> _solutions = <SolutionSpec>[];
 
+  /// A bool indicating if interaction with the Editor is active.
   static bool get editorMode => _editorMode;
+
+  /// The url of the Editor http server.
   static String get editorServer => _editorServer;
+
+  /// The active environment name, matching an existing environment name in the model.
   static String get environment => _environment;
+
+  /// The instance of the [WidgetFactory].
   static WidgetFactory get widgets => _widgets;
+
+  /// The instance of the [ActionFactory].
   static ActionFactory get actions => _actions;
+
+  /// The instance of the [PropertyFactory].
   static PropertyFactory get properties => _properties;
   static Lowder? of(BuildContext context) =>
       context.findAncestorWidgetOfExactType<Lowder>();
 
+  /// The name for the App.
   final String title;
 
   Lowder(
