@@ -2,31 +2,63 @@
 
 This is a demo of a 'Flutter Lowder' app.
 
-## String Evaluation
+```dart
+import 'package:flutter/material.dart';
+import 'package:lowder/factory/action_factory.dart';
+import 'package:lowder/factory/property_factory.dart';
+import 'package:lowder/factory/widget_factory.dart';
+import 'package:lowder/widget/lowder.dart';
+import 'factory/actions.dart';
+import 'factory/properties.dart';
+import 'factory/widgets.dart';
 
-A value of a property can be a reference to objects within an evaluation context.
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(DemoApp());
+}
 
-String evaluation occurs upon building a Widget or an Action, in which each of the Node's properties will be sanitized.
+class DemoApp extends Lowder {
+  DemoApp({super.environment, super.editorMode, super.editorServer, super.key})
+      : super("Demo Solution");
 
-### How to refer to an object
+  @override
+  AppState createState() => _DemoAppState();
+  @override
+  WidgetFactory createWidgetFactory() => SolutionWidgets();
+  @override
+  ActionFactory createActionFactory() => SolutionActions();
+  @override
+  PropertyFactory createPropertyFactory() => SolutionProperties();
 
-An object can be refered using a syntax like `${state.address}`. In this case we're referring to the key `address` of the Screen's `state` Map.
+  @override
+  List<SolutionSpec> get solutions => [
+        SolutionSpec(
+          "Demo Solution",
+          filePath: "assets/solution.low",
+          widgets: SolutionWidgets(),
+          actions: SolutionActions(),
+          properties: SolutionProperties(),
+        ),
+      ];
 
-### What objects exist during evaluation
+  @override
+  getTheme() => ThemeData.dark(useMaterial3: true);
+}
 
-Some of the objects are:
+class _DemoAppState extends AppState with WidgetsBindingObserver {
+  @override
+  void initState() {
+    WidgetsBinding.instance.addObserver(this);
+    super.initState();
+  }
 
-* `env`: refers to the Model's `environment variables`, managed in the editor. E.g. `${env.api_url}`.
-
-* `global`: refers to a static Map accessible via `Lowder.globalVariables` where global key/value pairs can be stored, like the users profile or an access token. E.g. `${global.user.name}`.
-
-* `state`: refers to a Map each Screen has where its state is stored. E.g. `${state.email}`.
-
-* `media`: a Map containing some media properties like `isWeb`, `isMobile`, `isAndroid`, `portrait`, etc.
-
-* `entry`: available only when working with a List, where upon building each row, the `entry` object will be available referring to an element of the array of data. `${entry.firstName} ${entry.lastName}`.
-
-Feel free to set your own objects available during evaluation by overriding the method `getEvaluatorContext` of the `PropertyFactory`.
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+}
+```
 
 ## Registering new Widgets
 
@@ -93,7 +125,6 @@ class SolutionWidgets extends WidgetFactory with IWidgets {
     });
   }
 }
-
 ```
 
 ## Registering new Actions
@@ -148,7 +179,6 @@ class SolutionActions extends ActionFactory with IActions {
     return ActionResult(true, returnData: result);
   }
 }
-
 ```
 
 ## Registering new Properties
@@ -189,7 +219,7 @@ class SolutionProperties extends PropertyFactory with IProperties {
 }
 ```
 
-Now a Widget can use this property type:
+Now a Widget can use this property like this:
 ```dart
 registerWidget("DemoWidget", (params) {
     return Container(
@@ -206,3 +236,29 @@ registerWidget("DemoWidget", (params) {
     "borderSide": const EditorPropertyType("BorderSide"),
 });
 ```
+
+## String Evaluation
+
+A value of a property can be a reference to objects within an evaluation context.
+
+String evaluation occurs upon building a Widget or an Action, in which each of the Node's properties will be sanitized.
+
+### How to refer to an object
+
+An object can be refered using a syntax like `${state.address}`. In this case we're referring to the key `address` of the Screen's `state` Map.
+
+### What objects exist during evaluation
+
+Some of the objects are:
+
+* `env`: refers to the Model's `environment variables`, managed in the editor. E.g. `${env.api_url}`.
+
+* `global`: refers to a static Map accessible via `Lowder.globalVariables` where global key/value pairs can be stored, like the users profile or an access token. E.g. `${global.user.name}`.
+
+* `state`: refers to a Map each Screen has where its state is stored. E.g. `${state.email}`.
+
+* `media`: a Map containing some media properties like `isWeb`, `isMobile`, `isAndroid`, `portrait`, etc.
+
+* `entry`: available only when working with a List, where upon building each row, the `entry` object will be available referring to an element of the array of data. `${entry.firstName} ${entry.lastName}`.
+
+Feel free to make your own objects available during evaluation by overriding the method `getEvaluatorContext` of the `PropertyFactory`.
