@@ -253,7 +253,7 @@ Some of the objects are:
 
 * `env`: refers to the Model's `environment variables`, managed in the editor. E.g. `${env.api_url}`.
 
-* `global`: refers to a static Map accessible via `Lowder.globalVariables` where global key/value pairs can be stored, like the users profile or an access token. E.g. `${global.user.name}`.
+* `global`: refers to a static Map accessible via `Lowder.globalVariables` where global key/value pairs can be stored, like the user's profile or an access token. E.g. `${global.user.name}`.
 
 * `state`: refers to a Map each Screen has where its state is stored. E.g. `${state.email}`.
 

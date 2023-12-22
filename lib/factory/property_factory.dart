@@ -21,6 +21,8 @@ class PropertyFactory {
   /// Returns a result from a Property's [type] and [propValue].
   dynamic build(String type, dynamic propValue, {dynamic argument}) {
     if (!_builders.containsKey(type) || _builders[type] == null) {
+      Lowder.logError(
+          "[PropertyFactory.build] Property resolver for '$type' not found");
       return propValue;
     }
     final func = _builders[type]!;
@@ -245,12 +247,14 @@ class PropertyFactory {
     final mediaQueryData = MediaQueryData.fromView(
         WidgetsBinding.instance.platformDispatcher.views.single);
 
+    Lowder.globalVariables.addAll({
+      "languages": Solution.languages,
+      "language": Solution.language,
+    });
     final map = {};
     if (specContext != null) map.addAll(specContext);
     map.addAll({
       "null": null,
-      "languages": Solution.languages,
-      "language": Solution.language,
       "env": Solution.environmentVariables,
       "global": Lowder.globalVariables,
       "state": state,

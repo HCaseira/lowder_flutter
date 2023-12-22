@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../bloc/base_state.dart';
@@ -81,7 +80,10 @@ class LowderScreenState extends State<LowderScreen> {
   }
 
   Widget builder(BuildContext context, BaseState currentState) {
-    log("$name: Building Form from state ${currentState.runtimeType}.");
+    Lowder.logInfo(
+      "[Screen.builder] Building '$name' from state ${currentState.runtimeType}.",
+      context: Lowder.properties.getEvaluatorContext(null, state, null),
+    );
 
     if (currentState is ReloadState || currentState is ReloadAll) {
       _initialized = false;
@@ -108,8 +110,12 @@ class LowderScreenState extends State<LowderScreen> {
       final body = Lowder.widgets.buildWidget(context, bodySpec, state, null);
       return body;
     } catch (e, stack) {
-      log("Error building '$name' body from spec.",
-          error: e, stackTrace: stack);
+      Lowder.logError(
+        "[Screen.buildSpecBody] Error building '$name' body from spec.",
+        error: e,
+        stackTrace: stack,
+        context: Lowder.properties.getEvaluatorContext(null, state, null),
+      );
       return Container();
     }
   }

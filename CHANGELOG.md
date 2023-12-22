@@ -1,3 +1,12 @@
+## 0.1.5
+
+* Editor has now a console panel to display log data from itself, the Client and the http server.
+* Fixed first Screen render when no 'Landing Screen' is defined.
+* Fixed issue where creating or updating Actions on the Editor would not update the Client's model.
+* Fixed issue where creating or updating Requests on the Editor would not update the Client's model.
+* Fixed issue where creating or updating Language Resources on the Editor would not update the Client's model.
+* Fixed issue where creating or updating Environment Variables on the Editor would not update the Client's model.
+
 ## 0.1.4
 
 * Fixed an issue where an Action's value wasn't available on the next Actions.

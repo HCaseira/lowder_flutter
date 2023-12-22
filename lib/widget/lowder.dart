@@ -59,6 +59,9 @@ abstract class Lowder extends StatefulWidget {
 
   /// The instance of the [PropertyFactory].
   static PropertyFactory get properties => _properties;
+
+  /// Method that allows access ta a [Lowder] instance
+  /// as long as [BuildContext] contains a [Lowder] instance.
   static Lowder? of(BuildContext context) =>
       context.findAncestorWidgetOfExactType<Lowder>();
 
@@ -146,11 +149,13 @@ abstract class Lowder extends StatefulWidget {
   @protected
   Future<Map?> fetchSolutionMap(String path) async {
     try {
-      log("Getting asset '$path'");
+      Lowder.logInfo("[Lowder.fetchSolutionMap] Getting asset '$path'");
       var data = await rootBundle.loadString(path);
       return json.decodeWithReviver(data);
     } catch (e) {
-      log("Error loading file '$path' from assets.", error: e);
+      Lowder.logError(
+          "[Lowder.fetchSolutionMap] Error loading file '$path' from assets.",
+          error: e);
     }
     return null;
   }
@@ -188,18 +193,47 @@ abstract class Lowder extends StatefulWidget {
 
   @override
   AppState createState() => AppState();
+
+  /// Convenience method to log an error.
+  /// When in [Lowder.editorMode], the [message] will be sent to the Editor.
+  static void logError(String message,
+      {dynamic error, StackTrace? stackTrace, Map? context}) {
+    _log("error", message,
+        error: error, stackTrace: stackTrace, context: context);
+  }
+
+  /// Convenience method to log a warning.
+  /// When in [Lowder.editorMode], the [message] will be sent to the Editor.
+  static void logWarn(String message, {Map? context}) {
+    _log("warn", message, context: context);
+  }
+
+  /// Convenience method to log an information.
+  /// When in [Lowder.editorMode], the [message] will be sent to the Editor.
+  static void logInfo(String message, {Map? context}) {
+    _log("info", message, context: context);
+  }
+
+  static void _log(String type, String message,
+      {dynamic error, StackTrace? stackTrace, Map? context}) {
+    log(message, error: error, stackTrace: stackTrace);
+    if (Lowder.editorMode) {
+      EditorBloc.instance?.add(LogEvent(type, "${DateTime.now()} $message",
+          context: context, error: error, stackTrace: stackTrace));
+    }
+  }
 }
 
 class AppState extends State<Lowder> {
   @nonVirtual
   Future<bool> load() async {
-    log("Running init");
+    Lowder.logInfo("[Lowder.load] Running init");
     await widget.init();
-    log("Loading Solution");
+    Lowder.logInfo("[Lowder.load] Loading Solution");
     await widget.loadSolution();
-    log("Running postInit");
+    Lowder.logInfo("[Lowder.load] Running postInit");
     await widget.postInit();
-    log("Loading complete");
+    Lowder.logInfo("[Lowder.load] Loading complete");
     return true;
   }
 
@@ -212,8 +246,8 @@ class AppState extends State<Lowder> {
       BlocProvider<GlobalBloc>(create: (c) => widget.createBloc(), lazy: false)
     ];
     if (Lowder.editorMode) {
-      providers.add(BlocProvider<EditorBloc>(
-          create: (c) => EditorBloc(Lowder.editorServer), lazy: false));
+      providers.add(
+          BlocProvider<EditorBloc>(create: (c) => EditorBloc(), lazy: false));
     }
 
     var goHome = false;

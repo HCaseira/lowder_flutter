@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../bloc/editor_bloc.dart';
@@ -42,7 +40,8 @@ class WidgetFactory {
     var baseType = schema.baseType;
     while (baseType != null && baseType.isNotEmpty) {
       if (_schema[baseType] == null) {
-        log("Type $baseType not found.");
+        Lowder.logError(
+            "[WidgetFactory.getPropertySchema] Type '$baseType' not found.");
         break;
       }
       var baseTypeSchema = _schema[baseType]!;
@@ -117,9 +116,13 @@ class WidgetFactory {
 
     final buildParameters =
         BuildParameters(context, spec, state, parentContext);
-    return _widgetBuilders.containsKey(spec.type)
-        ? _widgetBuilders[spec.type]!(buildParameters)
-        : const SizedBox();
+
+    if (!_widgetBuilders.containsKey(spec.type)) {
+      Lowder.logError(
+          "[WidgetFactory.createWidget] Widget builder for type '${spec.type}' not found");
+      return const SizedBox();
+    }
+    return _widgetBuilders[spec.type]!(buildParameters);
   }
 
   /// Handles generic convenience properties from a [spec],

@@ -44,3 +44,14 @@ class ClientSelectWidgetEvent extends BaseEditorEvent {
   final String id;
   ClientSelectWidgetEvent(this.id) : super();
 }
+
+class LogEvent extends BaseEditorEvent {
+  final String type;
+  final String message;
+  final dynamic error;
+  final StackTrace? stackTrace;
+  final Map? context;
+
+  LogEvent(this.type, this.message,
+      {this.error, this.stackTrace, this.context});
+}

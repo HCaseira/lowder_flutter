@@ -17,12 +17,20 @@ abstract class BaseBloc extends Bloc<BaseEvent, BaseState> {
     PageLoadedState state;
     final func = Lowder.actions.getPageLoadResolver(event.action.type);
     if (func == null) {
-      Lowder.actions.logError(
-          "Unknown LoadPageAction type: ${event.action.type}",
-          originClass: runtimeType);
+      Lowder.logError(
+          "[$runtimeType.onLoadPageAction] Unknown LoadPageAction type: '${event.action.type}'");
       state = PageLoadedState(event.page, event.fullData, false);
     } else {
       state = await func(event);
+      Lowder.logInfo(
+          "[$runtimeType.onLoadPageAction] LoadPageAction '${event.action.type}' executed successfully",
+          context: {
+            "page": event.page,
+            "pageSize": event.pageSize,
+            "hasMore": state.hasMore,
+            "length": state.fullData.length,
+            "last": state.fullData.lastOrNull,
+          });
     }
     emit(state);
   }

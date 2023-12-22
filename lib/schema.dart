@@ -1,10 +1,10 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart';
 import 'model/node_spec.dart';
 import 'model/solution.dart';
 import 'util/extensions.dart';
+import 'widget/lowder.dart';
 
 class Schema {
   static Solution? _solution;
@@ -40,6 +40,10 @@ class Schema {
       }
     }
 
+    if (landingScreen.isEmpty && createdSolutions.isNotEmpty) {
+      landingScreen = createdSolutions.last.landingScreen;
+    }
+
     final solution = Solution.empty(name, environment,
         language: language, landingScreen: landingScreen);
     for (var createdSolution in createdSolutions) {
@@ -53,16 +57,20 @@ class Schema {
     final maps = <Map>[];
     for (var path in paths) {
       try {
-        log("Getting asset '$path'");
+        Lowder.logInfo(
+            "[Schema.loadSolutionsFromAssets] Getting asset '$path'");
         var data = await rootBundle.loadString(path);
         var solution = json.decodeWithReviver(data);
         maps.add(solution);
       } catch (e) {
-        log("Error loading file '$path' from assets.", error: e);
+        Lowder.logError(
+            "[Schema.loadSolutionsFromAssets] Error loading file '$path' from assets.",
+            error: e);
       }
     }
 
-    log("Building Solution from ${maps.length} maps");
+    Lowder.logInfo(
+        "[Schema.loadSolutionsFromAssets] Building Solution from ${maps.length} maps");
     loadSolutionsFromMaps(maps, environment, language: language);
   }
 
@@ -77,7 +85,9 @@ class Schema {
           maps.add(solution);
         }
       } catch (e) {
-        log("Error downloading file '$url'.", error: e);
+        Lowder.logError(
+            "[Schema.loadSolutionsFromUrls] Error downloading file '$url'.",
+            error: e);
       }
     }
     loadSolutionsFromMaps(maps, environment, language: language);

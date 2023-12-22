@@ -406,8 +406,10 @@ class BaseActions with IActions {
       try {
         BlocProvider.of<LocalBloc>(context.buildContext).add(EmitState(state));
       } catch (e, stack) {
-        Lowder.actions.logError("LocalBloc not found while emitting BlocState.",
-            error: e, stackTrace: stack);
+        Lowder.logError(
+            "[BaseActions.onBlocState] LocalBloc not found while emitting BlocState.",
+            error: e,
+            stackTrace: stack);
       }
     }
     return SilentActionResult(true);
@@ -552,8 +554,10 @@ class BaseActions with IActions {
       BlocProvider.of<LocalBloc>(context.buildContext)
           .add(EmitState(SetStateState(newState)));
     } catch (e, stack) {
-      Lowder.actions.logError("LocalBloc not found while emitting SetState.",
-          error: e, stackTrace: stack);
+      Lowder.logError(
+          "[BaseActions.onSetState] LocalBloc not found while emitting SetState.",
+          error: e,
+          stackTrace: stack);
     }
     return SilentActionResult(true, returnData: newState);
   }
@@ -595,8 +599,10 @@ class BaseActions with IActions {
       BlocProvider.of<LocalBloc>(context.buildContext)
           .add(EmitState(ReloadState()));
     } catch (e, stack) {
-      Lowder.actions.logError("LocalBloc not found while emitting Reload.",
-          error: e, stackTrace: stack);
+      Lowder.logError(
+          "[BaseActions.onReload] LocalBloc not found while emitting Reload.",
+          error: e,
+          stackTrace: stack);
     }
     return ActionResult(true);
   }

@@ -21,9 +21,8 @@ class EditorBloc extends Bloc<BaseEditorEvent, BaseState> {
   static EditorBloc? instance;
 
   bool active = true;
-  final String editorServer;
 
-  EditorBloc(this.editorServer) : super(InitialEditorState()) {
+  EditorBloc() : super(InitialEditorState()) {
     if (instance != null) {
       instance!.close();
     }
@@ -43,10 +42,11 @@ class EditorBloc extends Bloc<BaseEditorEvent, BaseState> {
     on<SelectEvent>((event, emit) => _selectEvent(event));
     on<ClientSelectWidgetEvent>(
         (event, emit) => emit(SelectWidgetState(event.id)));
+    on<LogEvent>(onLogEvent);
   }
 
   String getServerUrl() {
-    var serverUrl = editorServer;
+    var serverUrl = Lowder.editorServer;
     if (!serverUrl.endsWith("/")) {
       serverUrl += "/";
     }
@@ -55,12 +55,8 @@ class EditorBloc extends Bloc<BaseEditorEvent, BaseState> {
   }
 
   Future<void> _selectEvent(SelectEvent event) async {
-    var serverUrl = editorServer;
-    if (!serverUrl.endsWith("/")) {
-      serverUrl += "/";
-    }
-    serverUrl += "client?id=$clientId";
     try {
+      final serverUrl = getServerUrl();
       await http.post(Uri.parse(serverUrl),
           body: jsonEncode(EditorMessage("clientSelectWidget", event.id)));
     } on Exception catch (e) {
@@ -71,6 +67,24 @@ class EditorBloc extends Bloc<BaseEditorEvent, BaseState> {
   Future<void> onAppStartedEvent() async {
     await sendSchema();
     await _hotReloadThread();
+  }
+
+  Future<void> onLogEvent(LogEvent event, Emitter emit) async {
+    try {
+      final serverUrl = getServerUrl();
+      final body = jsonEncode(EditorMessage("log", {
+        "origin": "client",
+        "type": event.type,
+        "message": event.message,
+        "context": event.context,
+        "error": event.error?.toString(),
+        "stackTrace": event.stackTrace?.toString(),
+      }));
+      await http.post(Uri.parse(serverUrl), body: body);
+    } catch (e, stack) {
+      log("Error sending schema to Lowder Server: $e",
+          error: e, stackTrace: stack);
+    }
   }
 
   Future<void> sendSchema() async {

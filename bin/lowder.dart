@@ -36,8 +36,7 @@ class HttpServer {
     }
     if (!(await Directory(flutterWebPath).exists())) {
       logError("Path to Flutter Web build not found!");
-      logError(
-          "Probably there are error in your code. Fix them and try again.");
+      logError("Maybe there are errors in your code. Fix them and try again.");
       return;
     }
 
@@ -98,10 +97,10 @@ class HttpServer {
     if (data.isNotEmpty) {
       final paths = json.decode(data);
       for (var path in paths) {
-        log("Loading solution file: $path");
+        logInfo("Loading solution file: $path");
         var file = File(path);
         if (!await file.exists()) {
-          log("Solution file not found: $path");
+          logError("Solution file not found: $path");
           files.add({
             "path": path,
             "data": {},
@@ -126,7 +125,7 @@ class HttpServer {
     for (var solution in solutions) {
       var path = solution["path"];
       var data = solution["data"];
-      log("Saving solution file: $path");
+      logInfo("Saving solution file: $path");
       var file = File(path);
       if (await file.exists()) {
         await file.delete();
@@ -143,7 +142,7 @@ class HttpServer {
   }
 
   Future<bool> _buildFlutterWeb(String flutterPath, int port) async {
-    log("Building Flutter Web client from '$flutterPath'.");
+    logInfo("Building Flutter Web client from '$flutterPath'.");
     final result = await Process.run(
       "flutter",
       [
@@ -152,16 +151,34 @@ class HttpServer {
         "--dart-define=LOWDER_ENV=Dev",
         "--dart-define=LOWDER_EDITOR=true",
         "--dart-define=LOWDER_SERVER=http://localhost:$port/",
-        "--release",
+        "--profile",
         "--no-tree-shake-icons"
       ],
       workingDirectory: flutterPath,
       runInShell: true,
     );
 
-    log("Flutter client build completed with result: ${result.exitCode}.");
-    log("${result.stderr}");
-    log("${result.stdout}");
+    logInfo("Flutter client build completed with result: ${result.exitCode}.");
+    String? stderr;
+    if (result.stderr != null) {
+      stderr = "${result.stderr}";
+      if (stderr.startsWith("\n")) {
+        stderr = stderr.substring(1);
+      }
+    }
+    String? stdout;
+    if (result.stdout != null) {
+      stdout = "${result.stdout}";
+      if (stdout.startsWith("\n")) {
+        stdout = stdout.substring(1);
+      }
+    }
+
+    if (stderr != null && stderr.isNotEmpty) {
+      logError(stderr, stackTrace: stdout);
+    } else if (stdout != null && stdout.isNotEmpty) {
+      logInfo(stdout);
+    }
     return result.exitCode == 0;
   }
 
@@ -242,7 +259,26 @@ class HttpServer {
     stdout.writeln(message);
   }
 
-  logError(String message) {
+  logInfo(String message) {
+    stdout.writeln(message);
+    _sendLogToEditor("info", message);
+  }
+
+  logError(String message, {String? stackTrace}) {
     stderr.writeln(message);
+    _sendLogToEditor("error", message);
+  }
+
+  _sendLogToEditor(String type, String message, {String? stackTrace}) {
+    final logMessage = {
+      "dataType": "log",
+      "data": {
+        "origin": "server",
+        "type": type,
+        "message": "${DateTime.now()} [HttpServer] $message"
+      },
+      "stackTrace": stackTrace,
+    };
+    _toEditor.add(json.encode(logMessage));
   }
 }

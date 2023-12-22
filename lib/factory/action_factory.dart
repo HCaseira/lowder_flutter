@@ -126,8 +126,8 @@ class ActionFactory {
       return;
     }
     if (!buildContext.mounted) {
-      logError(
-          "[$runtimeType] Error: BuildContext is not mounted after preRun.");
+      Lowder.logError(
+          "[ActionFactory.run] BuildContext is not mounted after preRun.");
       return;
     }
 
@@ -137,8 +137,8 @@ class ActionFactory {
 
     while (currentAction != null) {
       if (!buildContext.mounted) {
-        logError(
-            "[$runtimeType] Error: BuildContext is not mounted while trying to execute Action ${currentAction.id}");
+        Lowder.logError(
+            "[ActionFactory.run] BuildContext is not mounted while trying to execute Action '${currentAction.type}' (${currentAction.id})");
         return;
       }
 
@@ -183,6 +183,9 @@ class ActionFactory {
 
     if (props["executeCondition"] != null &&
         !properties.evaluateCondition(props["executeCondition"])) {
+      Lowder.logWarn(
+          "[ActionFactory.preExecute] Execute condition not met for Action '${action.type}' (${action.id}).",
+          context: props["executeCondition"]);
       return false;
     }
 
@@ -195,6 +198,9 @@ class ActionFactory {
       );
     }
 
+    Lowder.logInfo(
+        "[ActionFactory.execute] Executing Action '${action.type}' (${action.id})",
+        context: evaluatorContext);
     return true;
   }
 
@@ -202,15 +208,15 @@ class ActionFactory {
   @nonVirtual
   Future<ActionResult> execute(NodeSpec action, ActionContext context) async {
     if (!context.buildContext.mounted) {
-      logError(
-          "[$runtimeType] Error: BuildContext is not mounted (${action.type})");
+      Lowder.logError(
+          "[ActionFactory.execute] BuildContext is not mounted (${action.type})");
       return ActionResult(false);
     }
 
     final resolver = getResolver(action.type);
     if (resolver == null) {
-      logError(
-          "[$runtimeType] Error: Action resolver for '${action.type}' not found");
+      Lowder.logError(
+          "[ActionFactory.execute] Action resolver for '${action.type}' not found");
       return ActionResult(false);
     }
 
@@ -223,9 +229,22 @@ class ActionFactory {
     late ActionResult result;
     try {
       result = await resolver(action, context);
+      Lowder.logInfo(
+          "[ActionFactory.execute] Action '${action.type}' executed successfully",
+          context: {
+            "returnData": result.returnData,
+            "next": result.nextAction == null
+                ? null
+                : {
+                    "id": result.nextAction?["_id"],
+                    "type": result.nextAction?["_type"],
+                  }
+          });
     } catch (e, stack) {
-      logError("[$runtimeType] Error executing action '${action.type}'",
-          stackTrace: stack, error: e);
+      Lowder.logError(
+          "[ActionFactory.execute] Error executing action '${action.type}'",
+          stackTrace: stack,
+          error: e);
       if ((await handleException(action, context, e)).retry) {
         return execute(action, context);
       }
@@ -243,12 +262,6 @@ class ActionFactory {
       final key = action.props["returnName"] ?? "value";
       context.actionContext[key] = result.returnData;
     }
-
-    // if (result.emitStates != null) {
-    //   for (var state in result.emitStates!) {
-    //     GlobalBloc.emitState(ActionState(state));
-    //   }
-    // }
 
     if (!result.success) {
       return null;
@@ -269,7 +282,6 @@ class ActionFactory {
   /// Exception handling when executing an [action]
   Future<RetryAction> handleException(
       NodeSpec action, ActionContext context, Object e) async {
-    if (kDebugMode) print("Error executing action ${action.type}: $e");
     if (e is SolutionException) {
       showErrorMessage(e.message);
     } else if (e is http.ClientException ||
@@ -368,15 +380,4 @@ class ActionFactory {
   /// Convenience method to display an error method to the user.
   void showErrorMessage(String message) =>
       widgets.showMessage(type: "error", message: message);
-
-  /// Convenience method to log an error.
-  /// When in [Lowder.editorMode], the [message] will be displayed to the user.
-  logError(String message,
-      {Object? error, StackTrace? stackTrace, Type? originClass}) {
-    log("[${originClass ?? runtimeType}] Error: $message",
-        error: error, stackTrace: stackTrace);
-    if (kDebugMode || Lowder.editorMode) {
-      showErrorMessage(message);
-    }
-  }
 }
