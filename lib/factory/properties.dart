@@ -260,7 +260,8 @@ class BaseProperties with IProperties {
             "left": Types.string,
             "operator": Types.kOperator,
             "right": Types.string,
-          }
+          },
+          "NullOrEmpty": {"value": Types.string, "not": Types.bool},
         });
 
     registerValueSpecType(Types.kFormatter.type, formatValue, {}, subTypes: {
@@ -269,11 +270,17 @@ class BaseProperties with IProperties {
             ["upper", "lower", "capitalize", "title", "none"]),
         "attributes": Types.json,
       },
+      "KFormatterDateTime": {
+        "format": Types.string,
+        "diffToNow": Types.bool,
+      },
       "KFormatterDate": {
         "format": Types.string,
+        "diffToNow": Types.bool,
       },
       "KFormatterTime": {
         "format": Types.string,
+        "diffToNow": Types.bool,
       },
       "KFormatterNumber": {
         "format": Types.string,
@@ -1680,14 +1687,23 @@ class BaseProperties with IProperties {
           }
           return Strings.get(value);
         case "KFormatterDateTime":
-          final format = spec["format"] ?? Strings.get("_date_time_format_");
-          return DateFormat(format).format(parseDateTime(value));
+          return Lowder.properties.formatDateTime(
+            parseDateTime(value),
+            parseBool(spec["diffToNow"]),
+            format: spec["format"],
+          );
         case "KFormatterDate":
-          final format = spec["format"] ?? Strings.get("_date_format_");
-          return DateFormat(format).format(parseDateTime(value));
+          return Lowder.properties.formatDate(
+            parseDateTime(value),
+            parseBool(spec["diffToNow"]),
+            format: spec["format"],
+          );
         case "KFormatterTime":
-          final format = spec["format"] ?? Strings.get("_time_format_");
-          return DateFormat(format).format(parseDateTime(value));
+          return Lowder.properties.formatTime(
+            parseDateTime(value),
+            parseBool(spec["diffToNow"]),
+            format: spec["format"],
+          );
         case "KFormatterNumber":
           final format = spec["format"] ?? Strings.get("_number_format_");
           return NumberFormat(format).format(parseDouble(value));

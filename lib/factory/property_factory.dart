@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 import '../model/solution.dart';
 import '../util/parser.dart';
 import '../util/strings.dart';
@@ -22,7 +23,7 @@ class PropertyFactory {
   dynamic build(String type, dynamic propValue, {dynamic argument}) {
     if (!_builders.containsKey(type) || _builders[type] == null) {
       Lowder.logError(
-          "[PropertyFactory.build] Property resolver for '$type' not found");
+          "[PropertyFactory] Property resolver for '$type' not found");
       return propValue;
     }
     final func = _builders[type]!;
@@ -88,6 +89,73 @@ class PropertyFactory {
     }
   }
 
+  /// Method to build a String representing a DateTime
+  String formatDateTime(DateTime date, bool diffToNow, {String? format}) {
+    if (!diffToNow) {
+      format ??= Strings.get("_date_time_format_");
+    }
+    if (format != null) {
+      return DateFormat(format).format(date.toLocal());
+    }
+
+    if (formatDate(date.toLocal(), true) == formatDate(DateTime.now(), true)) {
+      return formatTime(date.toLocal(), true);
+    } else {
+      return formatDate(date.toLocal(), true);
+    }
+
+    // var formattedDate = formatDate(date.toLocal(), diffToNow);
+    // var formattedTime = formatTime(date.toLocal(), false);
+    // if (formattedDate.isEmpty ||
+    //     formattedDate == Strings.getCapitalized("today")) {
+    //   return formattedTime;
+    // } else if (formattedTime.isEmpty) {
+    //   return formattedDate;
+    // } else {
+    //   return "$formattedDate, $formattedTime";
+    // }
+  }
+
+  /// Method to build a String representing the Date part of a DateTime
+  String formatDate(DateTime date, bool diffToNow, {String? format}) {
+    if (!diffToNow) {
+      format ??= Strings.get("_date_format_");
+    }
+    if (format != null) {
+      return DateFormat(format).format(date.toLocal());
+    }
+
+    if (diffToNow) {
+      final now = DateTime.now();
+      final date1 = DateTime(date.year, date.month, date.day);
+      final date2 = DateTime(now.year, now.month, now.day);
+      final diff = date2.difference(date1);
+      if (diff.inDays == 0) {
+        return Strings.getCapitalized("today");
+      } else if (diff.inDays == 1) {
+        return Strings.getCapitalized("yesterday");
+      } else if (diff.inDays == -1) {
+        return Strings.getCapitalized("tomorrow");
+      } else if (date1.year == date2.year) {
+        return DateFormat(Strings.get("_short_date_format_"))
+            .format(date.toLocal());
+      }
+    }
+    return DateFormat(Strings.get("_date_format_")).format(date.toLocal());
+  }
+
+  /// Method to build a String representing the Time part of a DateTime
+  String formatTime(DateTime date, bool diffToNow, {String? format}) {
+    if (!diffToNow) {
+      format ??= Strings.get("_time_format_");
+    }
+    if (format != null) {
+      return DateFormat(format).format(date.toLocal());
+    }
+
+    return DateFormat(Strings.get("_time_format_")).format(date.toLocal());
+  }
+
   /// Updates the content of a [Map] by evaluating it's values using [otherMap] as context.
   void evaluateMap(Map map, Map? otherMap) {
     if (otherMap == null) {
@@ -132,8 +200,15 @@ class PropertyFactory {
         return value;
       }
 
+      // A scenery of something like ${state.${env.nameKey}}
+      var nextStartIdx = value.indexOf("\${", startIdx + 2);
+      if (nextStartIdx >= 0 && nextStartIdx < endIdx) {
+        startIdx = nextStartIdx;
+        continue;
+      }
+
       var valueToResolve = value.substring(startIdx + 2, endIdx);
-      var resolvedPart = _evaluateStringPart(valueToResolve, evaluatorContext);
+      var resolvedPart = evaluateStringPart(valueToResolve, evaluatorContext);
       if (value.length == endIdx - startIdx + 1) {
         return resolvedPart;
       } else {
@@ -145,9 +220,30 @@ class PropertyFactory {
     return value;
   }
 
-  dynamic _evaluateStringPart(String value, Map evaluatorContext) {
+  dynamic evaluateStringPart(String value, Map evaluatorContext) {
+    // Check if is a function
+    final functionParts = value.split("(");
+    if (functionParts.length > 1) {
+      var func = evaluatorContext[functionParts.removeAt(0)];
+      if (func is Function) {
+        final argsString =
+            functionParts[0].substring(0, functionParts[0].length - 1);
+
+        if (argsString.isNotEmpty) {
+          final args = argsString.split(",");
+          if (args.length == 1) {
+            return func(args[0]);
+          } else {
+            return func(args);
+          }
+        }
+        return func();
+      }
+    }
+
     final parts = value.split(".");
     var evaluatedValue = evaluatorContext[parts.removeAt(0)];
+
     if (evaluatedValue == null || parts.isEmpty) {
       return evaluatedValue;
     }
@@ -161,7 +257,7 @@ class PropertyFactory {
         }
       } else if (evaluatedValue is List<dynamic>) {
         var arrayIdx = parseInt(part, defaultValue: -1);
-        if (arrayIdx < 0) {
+        if (arrayIdx < 0 || evaluatedValue.length <= arrayIdx) {
           return null;
         } else {
           evaluatedValue = evaluatedValue[arrayIdx];
@@ -227,18 +323,37 @@ class PropertyFactory {
 
   /// Evaluates an "OperatorCondition" Property.
   bool evaluateCondition(Map spec) {
-    if (spec["_type"] != "OperatorCondition") {
-      return true;
+    final type = spec["_type"] ?? "";
+    switch (type) {
+      case "NullOrEmpty":
+        final not = parseBool(spec["not"]);
+        bool result = false;
+        final value = spec["value"];
+        if (value == null) {
+          result = true;
+        } else if (value is List) {
+          result = value.isEmpty;
+        } else if (value is Map) {
+          result = value.isEmpty;
+        } else if (value is String) {
+          result = value.isEmpty;
+        }
+        Lowder.logInfo(
+            "[NullOrEmpty] '$value' is ${result ? "empty" : "not empty"}");
+        return not ? !result : result;
+      case "OperatorCondition":
+        var result =
+            evaluateOperator(spec["left"], spec["operator"], spec["right"]);
+        if (result && spec["and"] != null) {
+          result = evaluateCondition(spec["and"]);
+        }
+        if (!result && spec["or"] != null) {
+          result = evaluateCondition(spec["or"]);
+        }
+        return result;
+      default:
+        return true;
     }
-    var result =
-        evaluateOperator(spec["left"], spec["operator"], spec["right"]);
-    if (result && spec["and"] != null) {
-      result = evaluateCondition(spec["and"]);
-    }
-    if (!result && spec["or"] != null) {
-      result = evaluateCondition(spec["or"]);
-    }
-    return result;
   }
 
   /// Returns a Map with the evaluation context used when sanitizing properties of a [NodeSpec].

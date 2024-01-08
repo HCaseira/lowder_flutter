@@ -149,12 +149,11 @@ abstract class Lowder extends StatefulWidget {
   @protected
   Future<Map?> fetchSolutionMap(String path) async {
     try {
-      Lowder.logInfo("[Lowder.fetchSolutionMap] Getting asset '$path'");
+      Lowder.logInfo("[Lowder] Getting asset '$path'");
       var data = await rootBundle.loadString(path);
       return json.decodeWithReviver(data);
     } catch (e) {
-      Lowder.logError(
-          "[Lowder.fetchSolutionMap] Error loading file '$path' from assets.",
+      Lowder.logError("[Lowder] Error loading file '$path' from assets.",
           error: e);
     }
     return null;
@@ -177,7 +176,7 @@ abstract class Lowder extends StatefulWidget {
   /// Use it to do some background work like refreshing an access token or remotely fetch the schema file.
   /// When all animations and backgroung work is done, just pop it and Lowder will load the solution
   /// and render the landing screen.
-  Widget getInitialScreen(BuildContext context) => const SplashScreen();
+  Widget getInitialScreen(BuildContext context) => const LowderSplashScreen();
 
   @protected
   Widget buildApp(GlobalKey<NavigatorState> navigatorKey, Widget rootWidget) {
@@ -227,13 +226,13 @@ abstract class Lowder extends StatefulWidget {
 class AppState extends State<Lowder> {
   @nonVirtual
   Future<bool> load() async {
-    Lowder.logInfo("[Lowder.load] Running init");
+    Lowder.logInfo("[Lowder] Running init");
     await widget.init();
-    Lowder.logInfo("[Lowder.load] Loading Solution");
+    Lowder.logInfo("[Lowder] Loading Solution");
     await widget.loadSolution();
-    Lowder.logInfo("[Lowder.load] Running postInit");
+    Lowder.logInfo("[Lowder] Running postInit");
     await widget.postInit();
-    Lowder.logInfo("[Lowder.load] Loading complete");
+    Lowder.logInfo("[Lowder] Loading complete");
     return true;
   }
 

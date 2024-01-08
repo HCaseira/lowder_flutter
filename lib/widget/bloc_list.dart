@@ -528,10 +528,15 @@ class BlocListState extends State<BlocListBase> {
       },
     );
 
-    final globalBuilder = BlocBuilder<GlobalBloc, BaseState>(
-      buildWhen: (prev, next) =>
+    final globalBuilder = BlocListener<GlobalBloc, BaseState>(
+      listenWhen: (prev, next) =>
           prev != next && next is ReloadListState && next.listId == widget.id,
-      builder: (context, state) => listBuilder,
+      listener: (context, state) {
+        if (state is ReloadListState) {
+          widget.loadPage(page: 1);
+        }
+      },
+      child: listBuilder,
     );
 
     return BlocProvider(

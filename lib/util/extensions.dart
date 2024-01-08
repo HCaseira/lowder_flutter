@@ -80,7 +80,11 @@ extension JsonCodecExtensions on JsonCodec {
   String safeEncode(Object obj) {
     return json.encode(obj, toEncodable: (value) {
       if (value is DateTime) return value.toIso8601String();
-      return value.toJson();
+      try {
+        return value.toJson();
+      } catch (e) {
+        return null;
+      }
     });
   }
 }

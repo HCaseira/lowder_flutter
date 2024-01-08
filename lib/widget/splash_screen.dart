@@ -2,11 +2,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 /// A demo splash screen used as the first Widget the app renders.
-class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
+class LowderSplashScreen extends StatefulWidget {
+  const LowderSplashScreen({super.key});
 
   @override
-  SplashScreenState createState() => SplashScreenState();
+  LowderSplashScreenState createState() => LowderSplashScreenState();
 
   Color getColor1(BuildContext context) =>
       Theme.of(context).colorScheme.primary;
@@ -43,7 +43,7 @@ class SplashScreen extends StatefulWidget {
   }
 }
 
-class SplashScreenState extends State<SplashScreen> {
+class LowderSplashScreenState extends State<LowderSplashScreen> {
   int stage = 0;
 
   @override

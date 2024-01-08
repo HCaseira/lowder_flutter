@@ -207,11 +207,11 @@ class EnvironmentData {
   static EnvironmentData fromMap(Map? environmentData) {
     Map<String, Map<String, String>> map = {};
     if (environmentData != null) {
-      var environments = environmentData["environments"] as List;
-      var keys = environmentData["keys"] != null
+      final environments = environmentData["environments"] as List;
+      final keys = environmentData["keys"] != null
           ? environmentData["keys"] as List
           : [];
-      var values = environmentData["values"] != null
+      final values = environmentData["values"] != null
           ? environmentData["values"] as List<List>
           : [];
 
@@ -258,22 +258,22 @@ class StringResources {
   static StringResources fromMap(Map? stringResourcesData) {
     Map<String, Map<String, String>> map = {};
     if (stringResourcesData != null) {
-      var environments = stringResourcesData["languages"] as List;
-      var keys = stringResourcesData["keys"] != null
+      final entries = stringResourcesData["languages"] as List;
+      final keys = stringResourcesData["keys"] != null
           ? stringResourcesData["keys"] as List
           : [];
-      var values = stringResourcesData["values"] != null
+      final values = stringResourcesData["values"] != null
           ? stringResourcesData["values"] as List<List>
           : [];
 
-      for (var i = 0; i < environments.length; i++) {
-        Map<String, String> environmentMap = {};
+      for (var i = 0; i < entries.length; i++) {
+        Map<String, String> entriesMap = {};
         for (var j = 0; j < keys.length; j++) {
           var key = keys[j];
           var value = values[j][i] ?? "";
-          environmentMap[key] = value;
+          entriesMap[key] = value;
         }
-        map[environments[i]] = environmentMap;
+        map[entries[i]] = entriesMap;
       }
     }
     return StringResources(map);

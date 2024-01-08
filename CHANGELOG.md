@@ -1,3 +1,14 @@
+## 0.1.6
+
+* Fixed a typo preventing the use of BottomNavigationBar.
+* Fixed an error on the Editor when exposing a property from the Component itself.
+* Fixed issue when a BuildCondition for a Widget would return false, _quality of life_ Widgets, like Padding or Hero,  would still be applied.
+* Fixed issue where property evaluation was written to the original Model node, affecting the subsequent use of that Action.
+* Added 'page' and 'pageSize' vars to property evaluation when executing a LoadPageAction.
+* SplashScreen class renamed to LowderSplashScreen.
+* Added Widget CircularProgressIndicator.
+* Changed 'If' Action properties to support any condition instead of only an operator condition.
+
 ## 0.1.5
 
 * Editor has now a console panel to display log data from itself, the Client and the http server.

@@ -40,8 +40,7 @@ class WidgetFactory {
     var baseType = schema.baseType;
     while (baseType != null && baseType.isNotEmpty) {
       if (_schema[baseType] == null) {
-        Lowder.logError(
-            "[WidgetFactory.getPropertySchema] Type '$baseType' not found.");
+        Lowder.logError("[WidgetFactory] Type '$baseType' not found.");
         break;
       }
       var baseTypeSchema = _schema[baseType]!;
@@ -89,6 +88,9 @@ class WidgetFactory {
   Widget buildWidgetFromSpec(BuildContext context, WidgetNodeSpec spec,
       Map state, Map? parentContext) {
     var widget = createWidget(context, spec, state, parentContext);
+    if (widget is NoWidget) {
+      return widget;
+    }
     return postBuild(context, widget, spec);
   }
 
@@ -110,19 +112,18 @@ class WidgetFactory {
 
     if (!EditorBloc.editMode && spec.props["buildCondition"] != null) {
       if (!properties.evaluateCondition(spec.props["buildCondition"])) {
-        return const Visibility(visible: false, child: SizedBox());
+        return const NoWidget();
       }
     }
 
-    final buildParameters =
-        BuildParameters(context, spec, state, parentContext);
-
     if (!_widgetBuilders.containsKey(spec.type)) {
       Lowder.logError(
-          "[WidgetFactory.createWidget] Widget builder for type '${spec.type}' not found");
+          "[WidgetFactory] Widget builder for type '${spec.type}' not found");
       return const SizedBox();
     }
-    return _widgetBuilders[spec.type]!(buildParameters);
+
+    final params = BuildParameters(context, spec, state, parentContext);
+    return _widgetBuilders[spec.type]!(params);
   }
 
   /// Handles generic convenience properties from a [spec],
@@ -557,4 +558,9 @@ class BuildParameters {
   /// Convenience method to resolve the value of a property.
   dynamic buildProp(String key, {dynamic argument}) =>
       spec.buildProp(key, argument: argument);
+}
+
+/// Dummy Widget returned when a BuildCondition is false
+class NoWidget extends SizedBox {
+  const NoWidget({super.key});
 }

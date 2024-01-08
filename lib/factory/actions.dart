@@ -178,6 +178,7 @@ class BaseActions with IActions {
         properties: {
           "jumpToScreen": Types.screen,
           "replacePrevious": Types.bool,
+          "replaceAll": Types.bool,
           "state": Types.json,
           "transition": Types.routeTransitionBuilder,
           "transitionDuration": Types.int
@@ -226,9 +227,7 @@ class BaseActions with IActions {
     registerSilentAction("KActionIf", onIf,
         baseType: EditorAction.terminationAction,
         properties: {
-          "left": Types.string,
-          "operator": Types.kOperator,
-          "right": Types.string
+          "condition": Types.kCondition
         },
         actions: {
           "onTrue": EditorActionType.action(),
@@ -407,7 +406,7 @@ class BaseActions with IActions {
         BlocProvider.of<LocalBloc>(context.buildContext).add(EmitState(state));
       } catch (e, stack) {
         Lowder.logError(
-            "[BaseActions.onBlocState] LocalBloc not found while emitting BlocState.",
+            "[BaseActions] LocalBloc not found while emitting BlocState.",
             error: e,
             stackTrace: stack);
       }
@@ -464,6 +463,12 @@ class BaseActions with IActions {
       SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
         final navigator = Lowder.actions.appNavigator;
         if (parseBool(props["replacePrevious"])) {
+          if (navigator.canPop()) {
+            navigator.pushReplacement(route).then(tailFunc);
+          } else {
+            navigator.push(route).then(tailFunc);
+          }
+        } else if (parseBool(props["replaceAll"])) {
           navigator.popUntil((route) => route.isFirst);
           if (!Lowder.editorMode) {
             navigator.pushReplacement(route).then(tailFunc);
@@ -555,7 +560,7 @@ class BaseActions with IActions {
           .add(EmitState(SetStateState(newState)));
     } catch (e, stack) {
       Lowder.logError(
-          "[BaseActions.onSetState] LocalBloc not found while emitting SetState.",
+          "[BaseActions] LocalBloc not found while emitting SetState.",
           error: e,
           stackTrace: stack);
     }
@@ -578,12 +583,18 @@ class BaseActions with IActions {
 
   Future<SilentActionResult> onIf(
       NodeSpec action, ActionContext context) async {
-    final props = action.props;
-    final actions = action.actions;
-    final result = Lowder.properties
-        .evaluateOperator(props["left"], props["operator"], props["right"]);
+    final condition = action.props["condition"];
+    if (condition == null) {
+      return SilentActionResult(true);
+    }
 
+    final actions = action.actions;
+    final result = Lowder.properties.evaluateCondition(condition);
     Map? nextAction = result ? actions["onTrue"] : actions["onFalse"];
+
+    // final props = action.props;
+    // final result = Lowder.properties
+    //     .evaluateOperator(props["left"], props["operator"], props["right"]);
 
     return SilentActionResult(true, nextAction: nextAction);
   }
@@ -600,7 +611,7 @@ class BaseActions with IActions {
           .add(EmitState(ReloadState()));
     } catch (e, stack) {
       Lowder.logError(
-          "[BaseActions.onReload] LocalBloc not found while emitting Reload.",
+          "[BaseActions] LocalBloc not found while emitting Reload.",
           error: e,
           stackTrace: stack);
     }
@@ -652,8 +663,8 @@ class BaseActions with IActions {
         final pathParameters = requestValue["pathParameters"];
         if (pathParameters != null && pathParameters is Map) {
           for (var propKey in pathParameters.keys) {
-            path =
-                path!.replaceAll("{$propKey}", pathParameters[propKey] ?? "");
+            path = path!
+                .replaceAll("{$propKey}", "${pathParameters[propKey] ?? ""}");
           }
         }
       }

@@ -72,7 +72,7 @@ class EditorBloc extends Bloc<BaseEditorEvent, BaseState> {
   Future<void> onLogEvent(LogEvent event, Emitter emit) async {
     try {
       final serverUrl = getServerUrl();
-      final body = jsonEncode(EditorMessage("log", {
+      final body = json.safeEncode(EditorMessage("log", {
         "origin": "client",
         "type": event.type,
         "message": event.message,
@@ -82,7 +82,7 @@ class EditorBloc extends Bloc<BaseEditorEvent, BaseState> {
       }));
       await http.post(Uri.parse(serverUrl), body: body);
     } catch (e, stack) {
-      log("Error sending schema to Lowder Server: $e",
+      Lowder.logError("[EditorBloc] Error sending log to Lowder Server: $e",
           error: e, stackTrace: stack);
     }
   }
@@ -94,7 +94,7 @@ class EditorBloc extends Bloc<BaseEditorEvent, BaseState> {
           jsonEncode(EditorMessage("clientSchema", Lowder.getSchema()));
       await http.post(Uri.parse(serverUrl), body: body);
     } catch (e, stack) {
-      log("Error sending schema to Lowder Server: $e",
+      Lowder.logError("[EditorBloc] Error sending schema to Lowder Server: $e",
           error: e, stackTrace: stack);
     }
   }

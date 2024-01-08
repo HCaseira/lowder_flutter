@@ -57,20 +57,17 @@ class Schema {
     final maps = <Map>[];
     for (var path in paths) {
       try {
-        Lowder.logInfo(
-            "[Schema.loadSolutionsFromAssets] Getting asset '$path'");
+        Lowder.logInfo("[Schema] Getting asset '$path'");
         var data = await rootBundle.loadString(path);
         var solution = json.decodeWithReviver(data);
         maps.add(solution);
       } catch (e) {
-        Lowder.logError(
-            "[Schema.loadSolutionsFromAssets] Error loading file '$path' from assets.",
+        Lowder.logError("[Schema] Error loading file '$path' from assets.",
             error: e);
       }
     }
 
-    Lowder.logInfo(
-        "[Schema.loadSolutionsFromAssets] Building Solution from ${maps.length} maps");
+    Lowder.logInfo("[Schema] Building Solution from ${maps.length} maps");
     loadSolutionsFromMaps(maps, environment, language: language);
   }
 
@@ -85,9 +82,7 @@ class Schema {
           maps.add(solution);
         }
       } catch (e) {
-        Lowder.logError(
-            "[Schema.loadSolutionsFromUrls] Error downloading file '$url'.",
-            error: e);
+        Lowder.logError("[Schema] Error downloading file '$url'.", error: e);
       }
     }
     loadSolutionsFromMaps(maps, environment, language: language);

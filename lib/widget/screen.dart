@@ -12,7 +12,11 @@ class LowderScreen extends StatefulWidget {
   final WidgetNodeSpec spec;
   final Map state;
 
-  LowderScreen(this.spec, this.state, {super.key});
+  LowderScreen(this.spec, this.state, {super.key}) {
+    if (spec.props["state"] is Map) {
+      state.addAll(spec.props["state"]);
+    }
+  }
 
   @override
   State<StatefulWidget> createState() => LowderScreenState();
@@ -81,7 +85,7 @@ class LowderScreenState extends State<LowderScreen> {
 
   Widget builder(BuildContext context, BaseState currentState) {
     Lowder.logInfo(
-      "[Screen.builder] Building '$name' from state ${currentState.runtimeType}.",
+      "[Screen] Building '$name' from state ${currentState.runtimeType}.",
       context: Lowder.properties.getEvaluatorContext(null, state, null),
     );
 
@@ -111,7 +115,7 @@ class LowderScreenState extends State<LowderScreen> {
       return body;
     } catch (e, stack) {
       Lowder.logError(
-        "[Screen.buildSpecBody] Error building '$name' body from spec.",
+        "[Screen] Error building '$name' body from spec.",
         error: e,
         stackTrace: stack,
         context: Lowder.properties.getEvaluatorContext(null, state, null),

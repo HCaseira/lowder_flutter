@@ -84,6 +84,9 @@ class BaseWidgets with IWidgets {
     registerWidget("Screen", (_) => const SizedBox(),
         baseType: null,
         abstract: true,
+        properties: {
+          "state": Types.json,
+        },
         widgets: {
           "body": EditorWidgetType.rootWidget(),
         },
@@ -192,8 +195,11 @@ class BaseWidgets with IWidgets {
           "foregroundColor": Types.color,
           "backgroundColor": Types.color,
           "surfaceTintColor": Types.color,
+          "systemUiOverlayStyle":
+              const EditorPropertyListType(["light", "dark"]),
           "shadowColor": Types.color,
-          "elevation": Types.int,
+          "elevation": Types.double,
+          "scrolledUnderElevation": Types.double,
           "toolbarHeight": Types.int,
           "toolbarOpacity": Types.double,
           "bottomOpacity": Types.double,
@@ -214,7 +220,10 @@ class BaseWidgets with IWidgets {
           "leadingIcon": Types.appBarLeadingIcon,
           "backgroundColor": Types.color,
           "foregroundColor": Types.color,
-          "elevation": Types.int,
+          "systemUiOverlayStyle":
+              const EditorPropertyListType(["light", "dark"]),
+          "elevation": Types.double,
+          "scrolledUnderElevation": Types.double,
           "collapsedHeight": Types.int,
           "expandedHeight": Types.int,
           "expandedTitleScale": Types.double,
@@ -235,6 +244,10 @@ class BaseWidgets with IWidgets {
           "actions": EditorWidgetType.widget(isArray: true),
           "bottom": EditorWidgetType.preferredSizeWidget(),
         });
+    registerWidget("PreferredSize", buildPreferredSize,
+        baseType: EditorWidget.preferredSizeWidget,
+        properties: {"size": Types.size},
+        widgets: {"child": EditorWidgetType.widget()});
     registerWidget("navigationRail", (params) => buildNavigationRail(params),
         properties: {
           "selectedIndex": Types.int,
@@ -332,7 +345,7 @@ class BaseWidgets with IWidgets {
           "children":
               EditorWidgetType("bottomNavigationBarItem", isArray: true),
         });
-    registerWidget("bottomNavigationBar", (_) => const SizedBox(),
+    registerWidget("bottomNavigationBarItem", (_) => const SizedBox(),
         baseType: "",
         properties: {
           "iconCode": Types.int,
@@ -343,6 +356,10 @@ class BaseWidgets with IWidgets {
         },
         actions: {
           "onTap": EditorActionType.action(),
+        },
+        widgets: {
+          "icon": EditorWidgetType.widget(),
+          "activeIcon": EditorWidgetType.widget(),
         });
 
     registerWidget("sizedBox", buildSizedBox, properties: {
@@ -721,6 +738,7 @@ class BaseWidgets with IWidgets {
       "autocorrect": Types.bool,
       "keyboardType": Types.textInputType,
       "textInputAction": Types.textInputAction,
+      "minLines": Types.int,
       "maxLines": Types.int,
       "required": Types.bool,
       "minLength": Types.int,
@@ -988,6 +1006,16 @@ class BaseWidgets with IWidgets {
       "child": EditorWidgetType.widget(),
     });
 
+    registerWidget("CircularProgressIndicator", buildCircularProgressIndicator,
+        properties: {
+          "color": Types.color,
+          "strokeWidth": Types.double,
+          "strokeAlign": Types.double
+        },
+        actions: {
+          "doWork": EditorActionType.action()
+        });
+
     registerWidget("BlocBuilder", buildBlocBuilder, properties: {
       "type": const EditorPropertyListType(["local", "global"]),
     }, widgets: {
@@ -996,12 +1024,25 @@ class BaseWidgets with IWidgets {
     });
     registerWidget("BuildState", (_) => const SizedBox(),
         baseType: null,
-        properties: {
-          "state": Types.string,
-        },
-        widgets: {
-          "child": EditorWidgetType.widget(),
-        });
+        properties: {"state": Types.string},
+        widgets: {"child": EditorWidgetType.widget()});
+
+    registerWidget("BlocConsumer", buildBlocBuilder, properties: {
+      "type": const EditorPropertyListType(["local", "global"]),
+    }, widgets: {
+      "child": EditorWidgetType.widget(),
+      "states": EditorWidgetType("BlocBuilderState", isArray: true),
+    });
+    registerWidget("BlocBuilderState", (_) => const SizedBox(),
+        abstract: true,
+        baseType: null,
+        properties: {"state": Types.string},
+        actions: {"listener": EditorActionType.action()});
+    registerWidget("StateBuilder", (_) => const SizedBox(),
+        baseType: "BlocBuilderState",
+        widgets: {"child": EditorWidgetType.widget()});
+    registerWidget("StateListener", (_) => const SizedBox(),
+        baseType: "BlocBuilderState");
   }
 
   @protected
@@ -1263,6 +1304,13 @@ class BaseWidgets with IWidgets {
     }
 
     final backgroundColor = tryParseColor(params.props["backgroundColor"]);
+    final systemUiOverlayStyleProp = params.props["systemUiOverlayStyle"];
+    final systemUiOverlayStyle = systemUiOverlayStyleProp == null
+        ? null
+        : systemUiOverlayStyleProp == "dark"
+            ? SystemUiOverlayStyle.dark
+            : SystemUiOverlayStyle.light;
+
     return AppBar(
       key: properties.getKey(params.id),
       foregroundColor: tryParseColor(params.props["foregroundColor"]),
@@ -1270,6 +1318,7 @@ class BaseWidgets with IWidgets {
       surfaceTintColor:
           tryParseColor(params.props["surfaceTintColor"]) ?? backgroundColor,
       shadowColor: tryParseColor(params.props["shadowColor"]),
+      systemOverlayStyle: systemUiOverlayStyle,
       leading: leading,
       title: title,
       automaticallyImplyLeading: parseBool(
@@ -1277,6 +1326,8 @@ class BaseWidgets with IWidgets {
           defaultValue: true),
       centerTitle: tryParseBool(params.props["centerTitle"]),
       elevation: tryParseDouble(params.props["elevation"]),
+      scrolledUnderElevation:
+          tryParseDouble(params.props["scrolledUnderElevation"]),
       bottom: bottom != null ? bottom as PreferredSizeWidget : null,
       bottomOpacity:
           parseDouble(params.props["bottomOpacity"], defaultValue: 1),
@@ -1327,13 +1378,23 @@ class BaseWidgets with IWidgets {
           params.widgets["background"], params.state, params.parentContext),
     );
 
+    final systemUiOverlayStyleProp = params.props["systemUiOverlayStyle"];
+    final systemUiOverlayStyle = systemUiOverlayStyleProp == null
+        ? null
+        : systemUiOverlayStyleProp == "dark"
+            ? SystemUiOverlayStyle.dark
+            : SystemUiOverlayStyle.light;
+
     return SliverAppBar(
       key: properties.getKey(params.id),
       backgroundColor: tryParseColor(params.props["backgroundColor"]),
       foregroundColor: tryParseColor(params.props["foregroundColor"]),
+      systemOverlayStyle: systemUiOverlayStyle,
       //title: title,
       //centerTitle: tryParseBool(params.props["centerTitle"]),
       elevation: tryParseDouble(params.props["elevation"]),
+      scrolledUnderElevation:
+          tryParseDouble(params.props["scrolledUnderElevation"]),
       leading: leading,
       bottom: bottom != null ? bottom as PreferredSizeWidget : null,
       //toolbarHeight: tryParseDouble(params.props["toolbarHeight"]),
@@ -1347,6 +1408,17 @@ class BaseWidgets with IWidgets {
           parseBool(params.props["floating"]),
       stretch: parseBool(params.props["stretch"]),
       flexibleSpace: flexible,
+    );
+  }
+
+  @protected
+  Widget buildPreferredSize(BuildParameters params) {
+    return PreferredSize(
+      key: properties.getKey(params.id),
+      preferredSize: params.buildProp("size") ?? Size.zero,
+      child: builder.tryBuildWidget(params.context, params.widgets["child"],
+              params.state, params.parentContext) ??
+          const SizedBox(),
     );
   }
 
@@ -1609,13 +1681,22 @@ class BaseWidgets with IWidgets {
 
     final items = <BottomNavigationBarItem>[];
     for (var child in children) {
+      final icon = child.widgets["icon"] != null
+          ? builder.buildWidget(params.context, child.widgets["icon"],
+              params.state, params.parentContext)
+          : Icon(IconData(parseInt(child.props["iconCode"]),
+              fontFamily: "MaterialIcons"));
+      final activeIcon = child.widgets["activeIcon"] != null
+          ? builder.buildWidget(params.context, child.widgets["activeIcon"],
+              params.state, params.parentContext)
+          : child.props["activeIconCode"] != null
+              ? Icon(IconData(parseInt(child.props["activeIconCode"]),
+                  fontFamily: "MaterialIcons"))
+              : null;
+
       items.add(BottomNavigationBarItem(
-        icon: Icon(IconData(parseInt(child.props["iconCode"]),
-            fontFamily: "MaterialIcons")),
-        activeIcon: child.props["activeIconCode"] != null
-            ? Icon(IconData(parseInt(child.props["activeIconCode"]),
-                fontFamily: "MaterialIcons"))
-            : null,
+        icon: icon,
+        activeIcon: activeIcon,
         label: properties.getText(child.props["label"], "label"),
         tooltip: child.props["tooltip"] != null
             ? properties.getText(child.props["tooltip"], "label")
@@ -3192,35 +3273,88 @@ class BaseWidgets with IWidgets {
   }
 
   @protected
+  Widget buildCircularProgressIndicator(BuildParameters params) {
+    final doWorkFunc = events.getFunction(params.context,
+        params.actions["doWork"], params.state, params.parentContext);
+
+    if (doWorkFunc != null) {
+      Future.delayed(const Duration(milliseconds: 500), doWorkFunc);
+    }
+    return CircularProgressIndicator(
+      key: properties.getKey(params.id),
+      color: tryParseColor(params.props["color"]),
+      strokeWidth: parseDouble(params.props["strokeWidth"], defaultValue: 4.0),
+      strokeAlign: parseDouble(params.props["strokeAlign"]),
+    );
+  }
+
+  @protected
   Widget buildBlocBuilder(BuildParameters params) {
     final children = params.widgets["states"] as List<Map>?;
     if (children == null || children.isEmpty) {
       return const SizedBox();
     }
 
-    final states = <String>[];
-    final map = <String, Map?>{};
+    final stateActions = <String>[];
+    final stateWidgets = <String>[];
+    final actionMap = <String, Map?>{};
+    final widgetMap = <String, Map?>{};
     for (var child in children) {
       final childProps = child["properties"] as Map? ?? {};
-      final childWidgets = child["widgets"] as Map? ?? {};
-
       final state = childProps["state"] as String? ?? "";
-      final widgetSpec = childWidgets["child"] as Map?;
+
       if (state.isNotEmpty) {
-        states.add(state);
-        map[state] = widgetSpec;
+        stateActions.add(state);
+        final childActions = child["actions"] as Map? ?? {};
+        actionMap[state] = childActions["listener"] as Map?;
+
+        if (child["_type"] != "StateListener") {
+          stateWidgets.add(state);
+          final childWidgets = child["widgets"] as Map? ?? {};
+          widgetMap[state] = childWidgets["child"] as Map?;
+        }
       }
     }
 
     final parentContext = params.parentContext ?? {};
     final type = params.props["type"] ?? "local";
     final defaultWidgetSpec = params.widgets["child"] as Map?;
+
+    listenWhen(BaseState prev, BaseState next) =>
+        prev != next &&
+        next is ActionState &&
+        stateActions.contains(next.state);
     buildWhen(BaseState prev, BaseState next) =>
-        prev != next && next is ActionState && states.contains(next.state);
+        prev != next &&
+        next is ActionState &&
+        stateWidgets.contains(next.state);
+
+    listener(BuildContext context, BaseState state) {
+      if (state is! ActionState) {
+        return;
+      }
+
+      final actionSpec = actionMap[state.state];
+      if (actionSpec == null) {
+        return;
+      }
+
+      final stateContext = parentContext.clone();
+      stateContext.addAll({"stateData": state.data});
+
+      final func = events.getFunction(
+          context, actionSpec.clone(), params.state, stateContext);
+      if (func != null) {
+        Lowder.logInfo(
+            "[BlocBuilder] Executing '${actionSpec["name"] ?? actionSpec["_type"]}' from state '${state.state}'");
+        func();
+      }
+    }
+
     stateBuilder(BuildContext context, BaseState state) {
       Map? widgetSpec;
       if (state is ActionState) {
-        widgetSpec = map[state.state];
+        widgetSpec = widgetMap[state.state];
       }
       widgetSpec ??= defaultWidgetSpec;
       if (widgetSpec == null) return const SizedBox();
@@ -3228,16 +3362,25 @@ class BaseWidgets with IWidgets {
       final stateContext = parentContext.clone();
       if (state is ActionState) {
         stateContext.addAll({"stateData": state.data});
+        Lowder.logInfo(
+            "[BlocBuilder] Building '${widgetSpec["name"] ?? widgetSpec["_type"]}' from state '${state.state}'");
       }
       params.state.remove(widgetSpec["_id"]);
+
       return builder.buildWidget(
-          params.context, widgetSpec.clone(), params.state, stateContext);
+          context, widgetSpec.clone(), params.state, stateContext);
     }
 
     return type == "global"
-        ? BlocBuilder<GlobalBloc, BaseState>(
-            buildWhen: buildWhen, builder: stateBuilder)
-        : BlocBuilder<LocalBloc, BaseState>(
-            buildWhen: buildWhen, builder: stateBuilder);
+        ? BlocConsumer<GlobalBloc, BaseState>(
+            listenWhen: listenWhen,
+            listener: listener,
+            buildWhen: buildWhen,
+            builder: stateBuilder)
+        : BlocConsumer<LocalBloc, BaseState>(
+            listenWhen: listenWhen,
+            listener: listener,
+            buildWhen: buildWhen,
+            builder: stateBuilder);
   }
 }

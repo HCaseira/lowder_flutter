@@ -103,7 +103,12 @@ class ActionFactory {
 
     NodeSpec action = NodeSpec.fromMap(actionSpec);
     final props = action.props;
-    final evaluatorContext = getEvaluatorContext(value, state, actionContext);
+    final actionCtx = <dynamic, dynamic>{
+      "page": page,
+      "pageSize": pageSize,
+    }..addAll(actionContext ?? {});
+
+    final evaluatorContext = getEvaluatorContext(value, state, actionCtx);
     properties.evaluateMap(props, evaluatorContext);
 
     if (props["executeCondition"] != null &&
@@ -127,18 +132,18 @@ class ActionFactory {
     }
     if (!buildContext.mounted) {
       Lowder.logError(
-          "[ActionFactory.run] BuildContext is not mounted after preRun.");
+          "[ActionFactory] BuildContext is not mounted after preRun.");
       return;
     }
 
     final runState = actionContext ?? {};
     var currentValue = eventValue;
-    NodeSpec? currentAction = action;
+    NodeSpec? currentAction = action.clone();
 
     while (currentAction != null) {
       if (!buildContext.mounted) {
         Lowder.logError(
-            "[ActionFactory.run] BuildContext is not mounted while trying to execute Action '${currentAction.type}' (${currentAction.id})");
+            "[ActionFactory] BuildContext is not mounted while trying to execute Action '${currentAction.type}' (${currentAction.id})");
         return;
       }
 
@@ -184,7 +189,7 @@ class ActionFactory {
     if (props["executeCondition"] != null &&
         !properties.evaluateCondition(props["executeCondition"])) {
       Lowder.logWarn(
-          "[ActionFactory.preExecute] Execute condition not met for Action '${action.type}' (${action.id}).",
+          "[ActionFactory] Execute condition not met for Action '${action.type}' (${action.id}).",
           context: props["executeCondition"]);
       return false;
     }
@@ -199,8 +204,10 @@ class ActionFactory {
     }
 
     Lowder.logInfo(
-        "[ActionFactory.execute] Executing Action '${action.type}' (${action.id})",
-        context: evaluatorContext);
+        "[ActionFactory] Executing Action '${action.type}' (${action.id})",
+        context: {}
+          ..addAll({"action": props})
+          ..addAll(evaluatorContext));
     return true;
   }
 
@@ -209,14 +216,14 @@ class ActionFactory {
   Future<ActionResult> execute(NodeSpec action, ActionContext context) async {
     if (!context.buildContext.mounted) {
       Lowder.logError(
-          "[ActionFactory.execute] BuildContext is not mounted (${action.type})");
+          "[ActionFactory] BuildContext is not mounted (${action.type})");
       return ActionResult(false);
     }
 
     final resolver = getResolver(action.type);
     if (resolver == null) {
       Lowder.logError(
-          "[ActionFactory.execute] Action resolver for '${action.type}' not found");
+          "[ActionFactory] Action resolver for '${action.type}' not found");
       return ActionResult(false);
     }
 
@@ -230,7 +237,7 @@ class ActionFactory {
     try {
       result = await resolver(action, context);
       Lowder.logInfo(
-          "[ActionFactory.execute] Action '${action.type}' executed successfully",
+          "[ActionFactory] Action '${action.type}' executed successfully",
           context: {
             "returnData": result.returnData,
             "next": result.nextAction == null
@@ -241,10 +248,8 @@ class ActionFactory {
                   }
           });
     } catch (e, stack) {
-      Lowder.logError(
-          "[ActionFactory.execute] Error executing action '${action.type}'",
-          stackTrace: stack,
-          error: e);
+      Lowder.logError("[ActionFactory] Error executing action '${action.type}'",
+          stackTrace: stack, error: e);
       if ((await handleException(action, context, e)).retry) {
         return execute(action, context);
       }
