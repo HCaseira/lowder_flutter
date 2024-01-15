@@ -10,9 +10,12 @@ import 'bloc_handler.dart';
 class LowderScreen extends StatefulWidget {
   final formKey = GlobalKey<FormState>();
   final WidgetNodeSpec spec;
-  final Map state;
+  final Map state = {};
 
-  LowderScreen(this.spec, this.state, {super.key}) {
+  LowderScreen(this.spec, Map initialState, {super.key}) {
+    // to avoid messing with the original object, copy it instead of using it as the screen state
+    // eg: passing a selected element of a list as the state of a detail screen
+    state.addAll(initialState);
     if (spec.props["state"] is Map) {
       state.addAll(spec.props["state"]);
     }

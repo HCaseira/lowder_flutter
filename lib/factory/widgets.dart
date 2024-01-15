@@ -620,12 +620,16 @@ class BaseWidgets with IWidgets {
       "indicatorPadding": Types.intArray,
       "indicatorSize": Types.tabBarIndicatorSize,
       "indicatorWeight": Types.double,
+      "initialIndex": Types.int,
       "isScrollable": Types.bool,
       "labelColor": Types.color,
       "labelPadding": Types.intArray,
       "labelStyle": Types.textStyle,
       "unselectedLabelColor": Types.color,
       "unselectedLabelStyle": Types.textStyle,
+      "dividerHeight": Types.double,
+      "dividerColor": Types.color,
+      "overlayColor": Types.color,
       "verticalDirection": Types.verticalDirection,
       "crossAxisAlignment": Types.crossAxisAlignment,
       "mainAxisAlignment": Types.mainAxisAlignment,
@@ -649,6 +653,9 @@ class BaseWidgets with IWidgets {
           "labelStyle": Types.textStyle,
           "unselectedLabelColor": Types.color,
           "unselectedLabelStyle": Types.textStyle,
+          "dividerHeight": Types.double,
+          "dividerColor": Types.color,
+          "overlayColor": Types.color,
         },
         widgets: {
           "tabs": EditorWidgetType.widget(isArray: true),
@@ -993,6 +1000,8 @@ class BaseWidgets with IWidgets {
       "alignment": Types.alignment,
       "fit": Types.boxFit,
       "provider": Types.imageProvider,
+    }, widgets: {
+      "fallback": EditorWidgetType.widget()
     });
     registerWidget("circleAvatar", buildCircleAvatar, properties: {
       "foregroundValue": Types.string,
@@ -1003,7 +1012,7 @@ class BaseWidgets with IWidgets {
       "backgroundColor": Types.color,
       "radius": Types.double,
     }, widgets: {
-      "child": EditorWidgetType.widget(),
+      "child": EditorWidgetType.widget()
     });
 
     registerWidget("CircularProgressIndicator", buildCircularProgressIndicator,
@@ -2789,6 +2798,7 @@ class BaseWidgets with IWidgets {
       }
     }
 
+    final overlayColor = tryParseColor(params.props["overlayColor"]);
     return DefaultTabController(
       key: properties.getKey(params.id),
       length: min(children.length, tabs.length),
@@ -2820,6 +2830,11 @@ class BaseWidgets with IWidgets {
             unselectedLabelColor:
                 tryParseColor(params.props["unselectedLabelColor"]),
             unselectedLabelStyle: params.buildProp("unselectedLabelStyle"),
+            dividerColor: tryParseColor(params.props["dividerColor"]),
+            dividerHeight: tryParseDouble(params.props["dividerHeight"]),
+            overlayColor: overlayColor != null
+                ? MaterialStatePropertyAll<Color>(overlayColor)
+                : null,
           ),
           Expanded(
               child: TabBarView(
@@ -2841,6 +2856,7 @@ class BaseWidgets with IWidgets {
       }
     }
 
+    final overlayColor = tryParseColor(params.props["overlayColor"]);
     return TabBar(
       key: properties.getKey(params.id),
       tabs: tabs,
@@ -2859,6 +2875,11 @@ class BaseWidgets with IWidgets {
       labelStyle: params.buildProp("labelStyle"),
       unselectedLabelColor: tryParseColor(params.props["unselectedLabelColor"]),
       unselectedLabelStyle: params.buildProp("unselectedLabelStyle"),
+      dividerColor: tryParseColor(params.props["dividerColor"]),
+      dividerHeight: tryParseDouble(params.props["dividerHeight"]),
+      overlayColor: overlayColor != null
+          ? MaterialStatePropertyAll<Color>(overlayColor)
+          : null,
     );
   }
 
@@ -3224,15 +3245,19 @@ class BaseWidgets with IWidgets {
   @protected
   Widget buildImage(BuildParameters params) {
     final props = params.props;
+    final fallbackSpec = params.widgets["fallback"];
     var imageProvider = params.buildProp("provider", argument: props["value"]);
     imageProvider ??= const AssetImage("assets/logo");
 
     return Image(
       key: properties.getKey(params.id),
       image: imageProvider,
-      // errorBuilder: (context, ex, stack) {
-      //   return Container();
-      // },
+      errorBuilder: fallbackSpec != null
+          ? (context, ex, stack) {
+              return builder.buildWidget(
+                  context, fallbackSpec, params.state, params.parentContext);
+            }
+          : null,
       color: tryParseColor(props["color"]),
       width: tryParseDouble(props["width"]),
       height: tryParseDouble(props["height"]),

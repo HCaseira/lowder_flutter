@@ -58,7 +58,7 @@ class WidgetFactory {
     );
   }
 
-  /// Builds a [LowderScreen] based on it's [spec].
+  /// Builds a [LowderScreen] based on its [spec].
   Widget buildScreen(BuildContext context, WidgetNodeSpec spec, {Map? state}) {
     state ??= {};
     return internalBuildScreen(context, spec, state);
@@ -94,21 +94,19 @@ class WidgetFactory {
     return postBuild(context, widget, spec);
   }
 
-  /// Builds a [LowderScreen] based on it's [spec].
+  /// Builds a [LowderScreen] based on its [spec].
   @protected
   Widget internalBuildScreen(
       BuildContext context, WidgetNodeSpec spec, Map screenState) {
+    preBuild(context, spec, screenState, null);
     return LowderScreen(spec, screenState);
   }
 
-  /// Creates a [Widget] based on it's [spec].
+  /// Creates a [Widget] based on its [spec].
   @protected
   Widget createWidget(BuildContext context, WidgetNodeSpec spec, Map state,
       Map? parentContext) {
-    final evaluatorContext = getEvaluatorContext(null, state, parentContext);
-
-    final template = getTemplate(spec.template);
-    mergeTemplateAndState(spec, template, state, evaluatorContext);
+    preBuild(context, spec, state, parentContext);
 
     if (!EditorBloc.editMode && spec.props["buildCondition"] != null) {
       if (!properties.evaluateCondition(spec.props["buildCondition"])) {
@@ -124,6 +122,15 @@ class WidgetFactory {
 
     final params = BuildParameters(context, spec, state, parentContext);
     return _widgetBuilders[spec.type]!(params);
+  }
+
+  /// Evaluates properties and applies the template.
+  @protected
+  void preBuild(BuildContext context, WidgetNodeSpec spec, Map state,
+      Map? parentContext) {
+    final evaluatorContext = getEvaluatorContext(null, state, parentContext);
+    final template = getTemplate(spec.template);
+    mergeTemplateAndState(spec, template, state, evaluatorContext);
   }
 
   /// Handles generic convenience properties from a [spec],
@@ -389,7 +396,7 @@ class WidgetFactory {
     // Use Template to set Property values, if not existing
     mergeMaps(spec.props, newTemplate);
 
-    // Set Widget's value via it's alias
+    // Set Widget's value via its alias
     var alias = spec.props["alias"] ?? spec.id;
     if (state.containsKey(alias)) {
       spec.props["value"] = state[alias];

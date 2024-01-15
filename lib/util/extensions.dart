@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:http/http.dart' as http;
 
 /// [http] extension with a [isSuccess] getter.
@@ -90,7 +91,12 @@ extension JsonCodecExtensions on JsonCodec {
 }
 
 /// [String] extension implementing formatting methods.
-extension StringCasingExtension on String {
+extension StringExtension on String {
+  static const _chars =
+      'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+  static String getRandomString(int length) =>
+      String.fromCharCodes(Iterable.generate(
+          length, (_) => _chars.codeUnitAt(Random().nextInt(_chars.length))));
   String toCapitalized() =>
       length > 0 ? '${this[0].toUpperCase()}${substring(1)}' : '';
   String toTitleCase() => replaceAll(RegExp(' +'), ' ')

@@ -92,7 +92,7 @@ class PropertyFactory {
   /// Method to build a String representing a DateTime
   String formatDateTime(DateTime date, bool diffToNow, {String? format}) {
     if (!diffToNow) {
-      format ??= Strings.get("_date_time_format_");
+      format ??= Strings.get("_date_time_format_", fallbackValue: null);
     }
     if (format != null) {
       return DateFormat(format).format(date.toLocal());
@@ -119,7 +119,7 @@ class PropertyFactory {
   /// Method to build a String representing the Date part of a DateTime
   String formatDate(DateTime date, bool diffToNow, {String? format}) {
     if (!diffToNow) {
-      format ??= Strings.get("_date_format_");
+      format ??= Strings.get("_date_format_", fallbackValue: null);
     }
     if (format != null) {
       return DateFormat(format).format(date.toLocal());
@@ -137,23 +137,26 @@ class PropertyFactory {
       } else if (diff.inDays == -1) {
         return Strings.getCapitalized("tomorrow");
       } else if (date1.year == date2.year) {
-        return DateFormat(Strings.get("_short_date_format_"))
+        return DateFormat(
+                Strings.get("_short_date_format_", fallbackValue: null))
             .format(date.toLocal());
       }
     }
-    return DateFormat(Strings.get("_date_format_")).format(date.toLocal());
+    return DateFormat(Strings.get("_date_format_", fallbackValue: null))
+        .format(date.toLocal());
   }
 
   /// Method to build a String representing the Time part of a DateTime
   String formatTime(DateTime date, bool diffToNow, {String? format}) {
     if (!diffToNow) {
-      format ??= Strings.get("_time_format_");
+      format ??= Strings.get("_time_format_", fallbackValue: null);
     }
     if (format != null) {
       return DateFormat(format).format(date.toLocal());
     }
 
-    return DateFormat(Strings.get("_time_format_")).format(date.toLocal());
+    return DateFormat(Strings.get("_time_format_", fallbackValue: null))
+        .format(date.toLocal());
   }
 
   /// Updates the content of a [Map] by evaluating it's values using [otherMap] as context.
@@ -237,7 +240,7 @@ class PropertyFactory {
             return func(args);
           }
         }
-        return func();
+        return func(null);
       }
     }
 
@@ -324,10 +327,11 @@ class PropertyFactory {
   /// Evaluates an "OperatorCondition" Property.
   bool evaluateCondition(Map spec) {
     final type = spec["_type"] ?? "";
+    bool result;
     switch (type) {
       case "NullOrEmpty":
         final not = parseBool(spec["not"]);
-        bool result = false;
+        result = false;
         final value = spec["value"];
         if (value == null) {
           result = true;
@@ -338,22 +342,24 @@ class PropertyFactory {
         } else if (value is String) {
           result = value.isEmpty;
         }
-        Lowder.logInfo(
-            "[NullOrEmpty] '$value' is ${result ? "empty" : "not empty"}");
-        return not ? !result : result;
+        result = not ? !result : result;
+        break;
       case "OperatorCondition":
-        var result =
+        result =
             evaluateOperator(spec["left"], spec["operator"], spec["right"]);
-        if (result && spec["and"] != null) {
-          result = evaluateCondition(spec["and"]);
-        }
-        if (!result && spec["or"] != null) {
-          result = evaluateCondition(spec["or"]);
-        }
-        return result;
+        break;
       default:
-        return true;
+        result = true;
+        break;
     }
+
+    if (result && spec["and"] != null) {
+      result = evaluateCondition(spec["and"]);
+    }
+    if (!result && spec["or"] != null) {
+      result = evaluateCondition(spec["or"]);
+    }
+    return result;
   }
 
   /// Returns a Map with the evaluation context used when sanitizing properties of a [NodeSpec].
@@ -363,17 +369,18 @@ class PropertyFactory {
         WidgetsBinding.instance.platformDispatcher.views.single);
 
     Lowder.globalVariables.addAll({
+      "now": DateTime.now(),
+      "utcNow": DateTime.now().toUtc(),
       "languages": Solution.languages,
       "language": Solution.language,
     });
     final map = {};
     if (specContext != null) map.addAll(specContext);
     map.addAll({
-      "null": null,
-      "env": Solution.environmentVariables,
-      "global": Lowder.globalVariables,
       "state": state,
       "value": value,
+      "global": Lowder.globalVariables,
+      "env": Solution.environmentVariables,
       "media": {
         "isWeb": kIsWeb,
         "isMobile": !kIsWeb && mediaQueryData.size.shortestSide < 600,
@@ -387,7 +394,8 @@ class PropertyFactory {
         "portrait": mediaQueryData.orientation == Orientation.portrait,
         "landscape": mediaQueryData.orientation == Orientation.landscape,
         // "version": Platform.version,
-      }
+      },
+      "null": null,
     });
     return map;
   }
