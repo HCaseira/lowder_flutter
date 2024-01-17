@@ -1796,7 +1796,7 @@ class BaseWidgets with IWidgets {
       constraints: params.buildProp("constraints"),
       decoration: decoration,
       clipBehavior: decoration != null ? Clip.antiAlias : Clip.none,
-      curve: params.buildProp("curve"),
+      curve: params.buildProp("curve") ?? Curves.linear,
       duration: Duration(
           milliseconds: parseInt(params.props["duration"], defaultValue: 500)),
       onEnd: onEnd,
@@ -2612,7 +2612,7 @@ class BaseWidgets with IWidgets {
       bottom: tryParseDouble(params.buildProp("bottom")),
       width: tryParseDouble(params.buildProp("width")),
       height: tryParseDouble(params.buildProp("height")),
-      curve: params.buildProp("curve"),
+      curve: params.buildProp("curve") ?? Curves.linear,
       duration: Duration(
           milliseconds: parseInt(params.props["duration"], defaultValue: 500)),
       onEnd: onEnd,

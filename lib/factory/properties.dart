@@ -24,7 +24,7 @@ mixin IProperties {
 
   @nonVirtual
   Map<String, dynamic> getSchema() {
-    var schema = <String, dynamic>{};
+    final schema = <String, dynamic>{};
     for (var key in _schema.keys) {
       schema[key] = _schema[key]!.toJson();
     }
@@ -507,6 +507,8 @@ class BaseProperties with IProperties {
       "fixedSize": Types.size,
       "minimumSize": Types.size,
       "maximumSize": Types.size,
+      "visualDensity": const EditorPropertyListType(
+          ["standard", "comfortable", "compact", "adaptivePlatformDensity"]),
     });
 
     registerSpecType(Types.loadingIndicator.type, getLoadingIndicator, {
@@ -937,7 +939,7 @@ class BaseProperties with IProperties {
     if (spec == null || spec.isEmpty) return null;
 
     List<BoxShadow>? shadowList;
-    var shadow = getBoxShadow(spec["boxShadow"]);
+    final shadow = getBoxShadow(spec["boxShadow"]);
     if (shadow != null) {
       shadowList = [shadow];
     }
@@ -1058,7 +1060,7 @@ class BaseProperties with IProperties {
   NotchedShape? getNotchedShape(Map? spec) {
     if (spec == null || spec.isEmpty) return null;
 
-    var type = spec["_type"] ?? "default";
+    final type = spec["_type"] ?? "default";
     switch (type) {
       case "CircularNotchedRectangle":
         return const CircularNotchedRectangle();
@@ -1088,8 +1090,8 @@ class BaseProperties with IProperties {
   Border? getBorder(Map? spec) {
     if (spec == null || spec.isEmpty) return null;
 
-    var type = spec["type"] ?? "all";
-    var border = getBorderSide(spec)!;
+    final type = spec["type"] ?? "all";
+    final border = getBorderSide(spec)!;
 
     switch (type) {
       case "vertical":
@@ -1124,8 +1126,8 @@ class BaseProperties with IProperties {
       return null;
     }
 
-    var type = spec["_type"] ?? "default";
-    var borderSide = BorderSide(
+    final type = spec["_type"] ?? "default";
+    final borderSide = BorderSide(
       color: parseColor(spec["color"], defaultColor: Colors.black),
       width: parseDouble(spec["width"], defaultValue: 1.0),
     );
@@ -1182,7 +1184,7 @@ class BaseProperties with IProperties {
       return Offset(parseDouble(value), parseDouble(value));
     }
 
-    var parts = value.split("|");
+    final parts = value.split(RegExp(r'[|\s]'));
     if (parts.length == 1) {
       return Offset(parseDouble(parts[0]), parseDouble(parts[0]));
     }
@@ -1206,6 +1208,7 @@ class BaseProperties with IProperties {
 
     final colors = <Color>[];
     var colorParts = (spec["colors"] as String).split("|");
+    final colorParts = (spec["colors"] as String).split(RegExp(r'[|\s]'));
     for (var part in colorParts) {
       var color = tryParseColor(part);
       if (color != null) {
@@ -1214,7 +1217,7 @@ class BaseProperties with IProperties {
     }
 
     List<double>? stops;
-    var stopParts = (spec["stops"] as String).split("|");
+    final stopParts = (spec["stops"] as String).split(RegExp(r'[|\s]'));
     if (stopParts.length == colors.length) {
       stops = <double>[];
       for (var part in stopParts) {
@@ -1222,7 +1225,7 @@ class BaseProperties with IProperties {
       }
     }
 
-    var type = spec["_type"] ?? "default";
+    final type = spec["_type"] ?? "default";
     switch (type) {
       case "SweepGradient":
         return SweepGradient(
@@ -1257,7 +1260,7 @@ class BaseProperties with IProperties {
       return BorderRadius.all(Radius.circular(parseDouble(value)));
     }
 
-    var parts = value.split("|");
+    final parts = value.split(RegExp(r'[|\s]'));
     if (parts.length == 4) {
       return BorderRadius.only(
         topLeft: Radius.circular(parseDouble(parts[0])),
@@ -1307,7 +1310,7 @@ class BaseProperties with IProperties {
       String? maskFilterValue = spec["maskFilter"];
       if (maskFilterValue != null) {
         maskFilter = {};
-        var filters = maskFilterValue.split("|");
+        final filters = maskFilterValue.split(RegExp(r'[|\s]'));
         for (var filter in filters) {
           var parts = filter.split(":");
           if (parts.length > 1) {
@@ -1423,14 +1426,14 @@ class BaseProperties with IProperties {
   ButtonStyle? getButtonStyle(Map? spec) {
     if (spec == null || spec.isEmpty) return null;
 
-    var padding = Lowder.properties.getInsets(spec["padding"]);
-    var textStyle = getTextStyle(spec["textStyle"]);
-    var backgroundColor = tryParseColor(spec["backgroundColor"]);
-    var foregroundColor = tryParseColor(spec["foregroundColor"]);
-    var overlayColor = tryParseColor(spec["overlayColor"]);
-    var fixedSize = getSize(spec["fixedSize"]);
-    var maximumSize = getSize(spec["maximumSize"]);
-    var minimumSize = getSize(spec["minimumSize"]);
+    final padding = Lowder.properties.getInsets(spec["padding"]);
+    final textStyle = getTextStyle(spec["textStyle"]);
+    final backgroundColor = tryParseColor(spec["backgroundColor"]);
+    final foregroundColor = tryParseColor(spec["foregroundColor"]);
+    final overlayColor = tryParseColor(spec["overlayColor"]);
+    final fixedSize = getSize(spec["fixedSize"]);
+    final maximumSize = getSize(spec["maximumSize"]);
+    final minimumSize = getSize(spec["minimumSize"]);
     BorderSide? borderSide;
     if (spec["side"] != null &&
         spec["side"]["color"] != null &&
@@ -1439,6 +1442,21 @@ class BaseProperties with IProperties {
         color: parseColor(spec["side"]["color"], defaultColor: Colors.black),
         width: parseDouble(spec["side"]["width"], defaultValue: 1.0),
       );
+    }
+    final VisualDensity visualDensity;
+    switch (spec["visualDensity"] ?? "") {
+      case "comfortable":
+        visualDensity = VisualDensity.comfortable;
+        break;
+      case "compact":
+        visualDensity = VisualDensity.compact;
+        break;
+      case "standard":
+        visualDensity = VisualDensity.standard;
+        break;
+      default:
+        visualDensity = VisualDensity.adaptivePlatformDensity;
+        break;
     }
 
     return ButtonStyle(
@@ -1472,16 +1490,14 @@ class BaseProperties with IProperties {
       minimumSize: minimumSize != null
           ? MaterialStateProperty.all<Size>(minimumSize)
           : null,
-      visualDensity: const VisualDensity(
-          vertical: VisualDensity.minimumDensity,
-          horizontal: VisualDensity.maximumDensity),
+      visualDensity: visualDensity,
     );
   }
 
   OutlinedBorder? getShapeBorder(Map? spec) {
     if (spec == null || spec.isEmpty) return null;
 
-    var borderRadius =
+    final borderRadius =
         getBorderRadius(spec["borderRadius"]) ?? BorderRadius.zero;
     BorderSide borderSide = BorderSide.none;
     if (spec["color"] != null && spec["width"] != null) {

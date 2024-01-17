@@ -87,7 +87,8 @@ class WidgetFactory {
   /// Executes a [Widget] build from a [spec].
   Widget buildWidgetFromSpec(BuildContext context, WidgetNodeSpec spec,
       Map state, Map? parentContext) {
-    var widget = createWidget(context, spec, state, parentContext);
+    preBuild(context, spec, state, parentContext);
+    final widget = createWidget(context, spec, state, parentContext);
     if (widget is NoWidget) {
       return widget;
     }
@@ -106,8 +107,6 @@ class WidgetFactory {
   @protected
   Widget createWidget(BuildContext context, WidgetNodeSpec spec, Map state,
       Map? parentContext) {
-    preBuild(context, spec, state, parentContext);
-
     if (!EditorBloc.editMode && spec.props["buildCondition"] != null) {
       if (!properties.evaluateCondition(spec.props["buildCondition"])) {
         return const NoWidget();
