@@ -1207,7 +1207,6 @@ class BaseProperties with IProperties {
     }
 
     final colors = <Color>[];
-    var colorParts = (spec["colors"] as String).split("|");
     final colorParts = (spec["colors"] as String).split(RegExp(r'[|\s]'));
     for (var part in colorParts) {
       var color = tryParseColor(part);
