@@ -216,9 +216,13 @@ abstract class Lowder extends StatefulWidget {
   static void _log(String type, String message,
       {dynamic error, StackTrace? stackTrace, Map? context}) {
     log(message, error: error, stackTrace: stackTrace);
-    if (Lowder.editorMode) {
-      EditorBloc.instance?.add(LogEvent(type, "${DateTime.now()} $message",
-          context: context, error: error, stackTrace: stackTrace));
+    try {
+      if (Lowder.editorMode) {
+        EditorBloc.instance?.add(LogEvent(type, "${DateTime.now()} $message",
+            context: context, error: error, stackTrace: stackTrace));
+      }
+    } catch (e) {
+      // Do nothing
     }
   }
 }
