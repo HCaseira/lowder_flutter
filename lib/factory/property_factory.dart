@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
+import 'package:logging/logging.dart';
 import '../model/solution.dart';
 import '../util/parser.dart';
 import '../util/strings.dart';
@@ -11,6 +12,7 @@ import 'properties.dart';
 
 /// Class that handles Property related operations.
 class PropertyFactory {
+  final log = Logger("PropertyFactory");
   final Map<String, Function> _builders = {};
 
   /// Schema loading
@@ -22,8 +24,7 @@ class PropertyFactory {
   /// Returns a result from a Property's [type] and [propValue].
   dynamic build(String type, dynamic propValue, {dynamic argument}) {
     if (!_builders.containsKey(type) || _builders[type] == null) {
-      Lowder.logError(
-          "[PropertyFactory] Property resolver for '$type' not found");
+      log.severe("Property resolver for '$type' not found");
       return propValue;
     }
     final func = _builders[type]!;

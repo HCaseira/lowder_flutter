@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart';
+import 'package:logging/logging.dart';
 import 'model/node_spec.dart';
 import 'model/solution.dart';
 import 'util/extensions.dart';
-import 'widget/lowder.dart';
 
 class Schema {
+  static final _log = Logger("Schema");
   static Solution? _solution;
 
   // static void loadSolutions(List<Solution> solutions) {
@@ -57,17 +58,16 @@ class Schema {
     final maps = <Map>[];
     for (var path in paths) {
       try {
-        Lowder.logInfo("[Schema] Getting asset '$path'");
+        _log.info("Getting asset '$path'");
         var data = await rootBundle.loadString(path);
         var solution = json.decodeWithReviver(data);
         maps.add(solution);
       } catch (e) {
-        Lowder.logError("[Schema] Error loading file '$path' from assets.",
-            error: e);
+        _log.severe("Error loading file '$path' from assets.", e);
       }
     }
 
-    Lowder.logInfo("[Schema] Building Solution from ${maps.length} maps");
+    _log.info("Building Solution from ${maps.length} maps");
     loadSolutionsFromMaps(maps, environment, language: language);
   }
 
@@ -82,7 +82,7 @@ class Schema {
           maps.add(solution);
         }
       } catch (e) {
-        Lowder.logError("[Schema] Error downloading file '$url'.", error: e);
+        _log.severe("Error downloading file '$url'.", e);
       }
     }
     loadSolutionsFromMaps(maps, environment, language: language);

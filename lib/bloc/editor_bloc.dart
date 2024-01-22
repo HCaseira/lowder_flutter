@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
+import 'package:logging/logging.dart';
 import 'package:uuid/uuid.dart';
 import '../model/editor_message.dart';
 import '../model/solution.dart';
@@ -20,6 +21,7 @@ class EditorBloc extends Bloc<BaseEditorEvent, BaseState> {
   static String clientId = const Uuid().v1();
   static EditorBloc? instance;
 
+  final _log = Logger("EditorBloc");
   bool active = true;
 
   EditorBloc() : super(InitialEditorState()) {
@@ -82,8 +84,7 @@ class EditorBloc extends Bloc<BaseEditorEvent, BaseState> {
       }));
       await http.post(Uri.parse(serverUrl), body: body);
     } catch (e, stack) {
-      Lowder.logError("[EditorBloc] Error sending log to Lowder Server: $e",
-          error: e, stackTrace: stack);
+      _log.severe("Error sending log to Editor: $e", e, stack);
     }
   }
 
@@ -94,8 +95,7 @@ class EditorBloc extends Bloc<BaseEditorEvent, BaseState> {
           jsonEncode(EditorMessage("clientSchema", Lowder.getSchema()));
       await http.post(Uri.parse(serverUrl), body: body);
     } catch (e, stack) {
-      Lowder.logError("[EditorBloc] Error sending schema to Lowder Server: $e",
-          error: e, stackTrace: stack);
+      _log.severe("Error sending schema to Lowder Server: $e", e, stack);
     }
   }
 

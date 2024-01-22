@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:convert';
-import 'dart:math';
+import 'dart:math' hide log;
 import 'package:http/http.dart' as http;
+import 'package:logging/logging.dart';
 
 /// [http] extension with a [isSuccess] getter.
 extension HttpExtensions on http.Response {
@@ -103,4 +105,64 @@ extension StringExtension on String {
       .split(' ')
       .map((str) => str.toCapitalized())
       .join(' ');
+}
+
+extension LoggerExtension on Logger {
+  void shoutWithContext(String message, Map? context,
+          [Object? error, StackTrace? stackTrace]) =>
+      log(
+        Level.SHOUT,
+        LogRecord(
+          Level.SHOUT,
+          message,
+          fullName,
+          error,
+          stackTrace,
+          Zone.current,
+          context,
+        ),
+      );
+
+  void severeWithContext(String message, Map? context,
+          [Object? error, StackTrace? stackTrace]) =>
+      log(
+        Level.SEVERE,
+        LogRecord(
+          Level.SEVERE,
+          message,
+          fullName,
+          error,
+          stackTrace,
+          Zone.current,
+          context,
+        ),
+      );
+
+  void warningWithContext(String message, Map? context,
+          [Object? error, StackTrace? stackTrace]) =>
+      log(
+        Level.WARNING,
+        LogRecord(
+          Level.WARNING,
+          message,
+          fullName,
+          error,
+          stackTrace,
+          Zone.current,
+          context,
+        ),
+      );
+
+  void infoWithContext(String message, Map? context) => log(
+        Level.INFO,
+        LogRecord(
+          Level.INFO,
+          message,
+          fullName,
+          null,
+          null,
+          Zone.current,
+          context,
+        ),
+      );
 }

@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:logging/logging.dart';
 import '../bloc/base_bloc.dart';
 import '../bloc/base_event.dart';
 import '../bloc/base_state.dart';
@@ -25,6 +25,7 @@ typedef ActionValueFunction<T> = void Function(T value);
 
 /// Class that handles Action related operations.
 class ActionFactory {
+  final log = Logger("ActionFactory");
   final Map<String, dynamic> _actionExecutors = {};
   final Map<String, PageLoadFunction> _pageLoadExecutors = {};
 
@@ -131,8 +132,7 @@ class ActionFactory {
       return;
     }
     if (!buildContext.mounted) {
-      Lowder.logError(
-          "[ActionFactory] BuildContext is not mounted after preRun.");
+      log.severe("BuildContext is not mounted after preRun.");
       return;
     }
 
@@ -142,8 +142,8 @@ class ActionFactory {
 
     while (currentAction != null) {
       if (!buildContext.mounted) {
-        Lowder.logError(
-            "[ActionFactory] BuildContext is not mounted while trying to execute Action '${currentAction.type}' (${currentAction.id})");
+        log.severe(
+            "BuildContext is not mounted while trying to execute Action '${currentAction.type}' (${currentAction.id})");
         return;
       }
 
@@ -172,7 +172,7 @@ class ActionFactory {
         return false;
       }
     } catch (e) {
-      log("[$runtimeType] Form not found.");
+      // log("[$runtimeType] Form not found.");
     }
     return true;
   }
@@ -188,9 +188,9 @@ class ActionFactory {
 
     if (props["executeCondition"] != null &&
         !properties.evaluateCondition(props["executeCondition"])) {
-      Lowder.logWarn(
-          "[ActionFactory] Execute condition not met for Action '${action.type}' (${action.id}).",
-          context: props["executeCondition"]);
+      log.warningWithContext(
+          "Execute condition not met for Action '${action.type}' (${action.id}).",
+          props["executeCondition"]);
       return false;
     }
 
@@ -203,9 +203,9 @@ class ActionFactory {
       );
     }
 
-    Lowder.logInfo(
-        "[ActionFactory] Executing Action '${action.type}' (${action.id})",
-        context: {}
+    log.infoWithContext(
+        "Executing Action '${action.type}' (${action.id})",
+        {}
           ..addAll({"action": props})
           ..addAll(evaluatorContext));
     return true;
@@ -215,15 +215,13 @@ class ActionFactory {
   @nonVirtual
   Future<ActionResult> execute(NodeSpec action, ActionContext context) async {
     if (!context.buildContext.mounted) {
-      Lowder.logError(
-          "[ActionFactory] BuildContext is not mounted (${action.type})");
+      log.severe("BuildContext is not mounted (${action.type})");
       return ActionResult(false);
     }
 
     final resolver = getResolver(action.type);
     if (resolver == null) {
-      Lowder.logError(
-          "[ActionFactory] Action resolver for '${action.type}' not found");
+      log.severe("Action resolver for '${action.type}' not found");
       return ActionResult(false);
     }
 
@@ -236,20 +234,17 @@ class ActionFactory {
     late ActionResult result;
     try {
       result = await resolver(action, context);
-      Lowder.logInfo(
-          "[ActionFactory] Action '${action.type}' executed successfully",
-          context: {
-            "returnData": result.returnData,
-            "next": result.nextAction == null
-                ? null
-                : {
-                    "id": result.nextAction?["_id"],
-                    "type": result.nextAction?["_type"],
-                  }
-          });
+      log.infoWithContext("Action '${action.type}' executed successfully", {
+        "returnData": result.returnData,
+        "next": result.nextAction == null
+            ? null
+            : {
+                "id": result.nextAction?["_id"],
+                "type": result.nextAction?["_type"],
+              }
+      });
     } catch (e, stack) {
-      Lowder.logError("[ActionFactory] Error executing action '${action.type}'",
-          stackTrace: stack, error: e);
+      log.severe("Error executing action '${action.type}'", e, stack);
       if ((await handleException(action, context, e)).retry) {
         return execute(action, context);
       }

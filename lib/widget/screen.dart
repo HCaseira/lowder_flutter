@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:logging/logging.dart';
+import 'package:lowder/util/extensions.dart';
 import '../bloc/base_state.dart';
 import '../model/node_spec.dart';
 import '../schema.dart';
@@ -8,6 +10,7 @@ import 'bloc_handler.dart';
 
 /// A Widget used render a `Screen` object from `model`.
 class LowderScreen extends StatefulWidget {
+  final log = Logger("Screen");
   final formKey = GlobalKey<FormState>();
   final WidgetNodeSpec spec;
   final Map state = {};
@@ -87,9 +90,9 @@ class LowderScreenState extends State<LowderScreen> {
   }
 
   Widget builder(BuildContext context, BaseState currentState) {
-    Lowder.logInfo(
-      "[Screen] Building '$name' from state ${currentState.runtimeType}.",
-      context: Lowder.properties.getEvaluatorContext(null, state, null),
+    widget.log.infoWithContext(
+      "Building '$name' from state ${currentState.runtimeType}.",
+      Lowder.properties.getEvaluatorContext(null, state, null),
     );
 
     if (currentState is ReloadState || currentState is ReloadAll) {
@@ -117,11 +120,11 @@ class LowderScreenState extends State<LowderScreen> {
       final body = Lowder.widgets.buildWidget(context, bodySpec, state, null);
       return body;
     } catch (e, stack) {
-      Lowder.logError(
-        "[Screen] Error building '$name' body from spec.",
-        error: e,
-        stackTrace: stack,
-        context: Lowder.properties.getEvaluatorContext(null, state, null),
+      widget.log.severeWithContext(
+        "Error building '$name' body from spec.",
+        Lowder.properties.getEvaluatorContext(null, state, null),
+        e,
+        stack,
       );
       return Container();
     }

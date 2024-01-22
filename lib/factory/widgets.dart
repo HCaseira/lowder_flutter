@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:logging/logging.dart';
 import '../bloc/base_bloc.dart';
 import '../bloc/base_state.dart';
 import '../bloc/editor_bloc.dart';
@@ -3320,6 +3321,7 @@ class BaseWidgets with IWidgets {
       return const SizedBox();
     }
 
+    final log = Logger("BlocBuilder");
     final stateActions = <String>[];
     final stateWidgets = <String>[];
     final actionMap = <String, Map?>{};
@@ -3370,8 +3372,8 @@ class BaseWidgets with IWidgets {
       final func = events.getFunction(
           context, actionSpec.clone(), params.state, stateContext);
       if (func != null) {
-        Lowder.logInfo(
-            "[BlocBuilder] Executing '${actionSpec["name"] ?? actionSpec["_type"]}' from state '${state.state}'");
+        log.info(
+            "Executing '${actionSpec["name"] ?? actionSpec["_type"]}' from state '${state.state}'");
         func();
       }
     }
@@ -3387,8 +3389,8 @@ class BaseWidgets with IWidgets {
       final stateContext = parentContext.clone();
       if (state is ActionState) {
         stateContext.addAll({"stateData": state.data});
-        Lowder.logInfo(
-            "[BlocBuilder] Building '${widgetSpec["name"] ?? widgetSpec["_type"]}' from state '${state.state}'");
+        log.info(
+            "Building '${widgetSpec["name"] ?? widgetSpec["_type"]}' from state '${state.state}'");
       }
       params.state.remove(widgetSpec["_id"]);
 

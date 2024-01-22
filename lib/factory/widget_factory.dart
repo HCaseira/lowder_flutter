@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:logging/logging.dart';
 import '../bloc/editor_bloc.dart';
 import '../model/editor_node.dart';
 import '../model/node_spec.dart';
@@ -17,6 +18,7 @@ import 'widgets.dart';
 /// Class that handles Widget related operations.
 class WidgetFactory {
   static DialogRoute? activityIndicatorRoute;
+  final log = Logger("WidgetFactory");
   final Map<String, EditorWidget> _schema = {};
   final Map<String, WidgetBuilderFunc> _widgetBuilders = {};
   ActionFactory get actions => Lowder.actions;
@@ -40,7 +42,7 @@ class WidgetFactory {
     var baseType = schema.baseType;
     while (baseType != null && baseType.isNotEmpty) {
       if (_schema[baseType] == null) {
-        Lowder.logError("[WidgetFactory] Type '$baseType' not found.");
+        log.severe("Type '$baseType' not found.");
         break;
       }
       var baseTypeSchema = _schema[baseType]!;
@@ -114,8 +116,7 @@ class WidgetFactory {
     }
 
     if (!_widgetBuilders.containsKey(spec.type)) {
-      Lowder.logError(
-          "[WidgetFactory] Widget builder for type '${spec.type}' not found");
+      log.severe("Widget builder for type '${spec.type}' not found");
       return const SizedBox();
     }
 

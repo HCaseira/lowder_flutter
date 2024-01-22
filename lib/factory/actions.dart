@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:logging/logging.dart';
 
 import '../bloc/base_bloc.dart';
 import '../bloc/base_event.dart';
@@ -143,6 +144,8 @@ class NoActions with IActions {
 
 /// The Lowder's Action preset.
 class BaseActions with IActions {
+  final log = Logger("LowderActions");
+
   @override
   void registerActions() {
     registerAction(
@@ -405,10 +408,7 @@ class BaseActions with IActions {
       try {
         BlocProvider.of<LocalBloc>(context.buildContext).add(EmitState(state));
       } catch (e, stack) {
-        Lowder.logError(
-            "[BaseActions] LocalBloc not found while emitting BlocState.",
-            error: e,
-            stackTrace: stack);
+        log.severe("LocalBloc not found while emitting BlocState.", e, stack);
       }
     }
     return SilentActionResult(true);
@@ -559,10 +559,7 @@ class BaseActions with IActions {
       BlocProvider.of<LocalBloc>(context.buildContext)
           .add(EmitState(SetStateState(newState)));
     } catch (e, stack) {
-      Lowder.logError(
-          "[BaseActions] LocalBloc not found while emitting SetState.",
-          error: e,
-          stackTrace: stack);
+      log.severe("LocalBloc not found while emitting SetState.", e, stack);
     }
     return SilentActionResult(true, returnData: newState);
   }
@@ -610,10 +607,7 @@ class BaseActions with IActions {
       BlocProvider.of<LocalBloc>(context.buildContext)
           .add(EmitState(ReloadState()));
     } catch (e, stack) {
-      Lowder.logError(
-          "[BaseActions] LocalBloc not found while emitting Reload.",
-          error: e,
-          stackTrace: stack);
+      log.severe("LocalBloc not found while emitting Reload.", e, stack);
     }
     return ActionResult(true);
   }

@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:logging/logging.dart';
 import '../bloc/base_bloc.dart';
 import '../bloc/base_state.dart';
 import '../bloc/editor_bloc.dart';
@@ -67,6 +68,7 @@ abstract class Lowder extends StatefulWidget {
 
   /// The name for the App.
   final String title;
+  late final Logger log;
 
   Lowder(
     this.title, {
@@ -75,6 +77,7 @@ abstract class Lowder extends StatefulWidget {
     bool editorMode = _envEditor,
     String editorServer = _envServer,
   }) {
+    log = Logger(title);
     _editorMode = editorMode;
     _editorServer = editorServer;
     _environment = environment;
@@ -149,12 +152,11 @@ abstract class Lowder extends StatefulWidget {
   @protected
   Future<Map?> fetchSolutionMap(String path) async {
     try {
-      Lowder.logInfo("[Lowder] Getting asset '$path'");
+      log.info("Getting asset '$path'");
       var data = await rootBundle.loadString(path);
       return json.decodeWithReviver(data);
     } catch (e) {
-      Lowder.logError("[Lowder] Error loading file '$path' from assets.",
-          error: e);
+      log.severe("Error loading file '$path' from assets.", e);
     }
     return null;
   }
@@ -193,50 +195,56 @@ abstract class Lowder extends StatefulWidget {
   @override
   AppState createState() => AppState();
 
-  /// Convenience method to log an error.
-  /// When in [Lowder.editorMode], the [message] will be sent to the Editor.
-  static void logError(String message,
-      {dynamic error, StackTrace? stackTrace, Map? context}) {
-    _log("error", message,
-        error: error, stackTrace: stackTrace, context: context);
-  }
-
-  /// Convenience method to log a warning.
-  /// When in [Lowder.editorMode], the [message] will be sent to the Editor.
-  static void logWarn(String message, {Map? context}) {
-    _log("warn", message, context: context);
-  }
-
-  /// Convenience method to log an information.
-  /// When in [Lowder.editorMode], the [message] will be sent to the Editor.
-  static void logInfo(String message, {Map? context}) {
-    _log("info", message, context: context);
-  }
-
-  static void _log(String type, String message,
-      {dynamic error, StackTrace? stackTrace, Map? context}) {
-    log(message, error: error, stackTrace: stackTrace);
-    try {
-      if (Lowder.editorMode) {
-        EditorBloc.instance?.add(LogEvent(type, "${DateTime.now()} $message",
-            context: context, error: error, stackTrace: stackTrace));
+  /// Method called upon [Logger]'s 'onRecord'.
+  /// When in editor mode, logs will be sent to the Editor.
+  Future<void> onNewLog(LogRecord logRecord) async {
+    if (editorMode) {
+      if (logRecord.object is LogRecord) {
+        // Created via extension methods 'infoWithContext', 'warningWithContext', etc.
+        logRecord = logRecord.object as LogRecord;
       }
-    } catch (e) {
-      // Do nothing
+
+      Map? context = {};
+      if (logRecord.object is Map) {
+        for (var key in (logRecord.object as Map).keys) {
+          var val = (logRecord.object as Map)[key];
+          if (val is! Function && key != "null") {
+            context[key] = val;
+          }
+        }
+      }
+
+      try {
+        EditorBloc.instance?.add(LogEvent(
+          logRecord.level.name,
+          "${logRecord.time} [${logRecord.loggerName}] ${logRecord.message}",
+          context: context,
+          error: logRecord.error,
+          stackTrace: logRecord.stackTrace,
+        ));
+      } catch (e) {
+        // Do nothing.
+      }
     }
   }
 }
 
 class AppState extends State<Lowder> {
+  @override
+  void initState() {
+    super.initState();
+    Logger.root.onRecord.listen(widget.onNewLog);
+  }
+
   @nonVirtual
   Future<bool> load() async {
-    Lowder.logInfo("[Lowder] Running init");
+    widget.log.info("Running init");
     await widget.init();
-    Lowder.logInfo("[Lowder] Loading Solution");
+    widget.log.info("Loading Solution");
     await widget.loadSolution();
-    Lowder.logInfo("[Lowder] Running postInit");
+    widget.log.info("Running postInit");
     await widget.postInit();
-    Lowder.logInfo("[Lowder] Loading complete");
+    widget.log.info("Loading complete");
     return true;
   }
 
