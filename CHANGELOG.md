@@ -4,10 +4,14 @@
 * Fixed an error on the Editor when exposing a property from the Component itself.
 * Fixed issue when a BuildCondition for a Widget would return false, _quality of life_ Widgets, like Padding or Hero,  would still be applied.
 * Fixed issue where property evaluation was written to the original Model node, affecting the subsequent use of that Action.
+* Fixed issue preventing Request cloning.
 * Added 'page' and 'pageSize' vars to property evaluation when executing a LoadPageAction.
 * SplashScreen class renamed to LowderSplashScreen.
 * Added Widget CircularProgressIndicator.
+* Added Widget SingleChildScrollView.
 * Changed 'If' Action properties to support any condition instead of only an operator condition.
+* Added a Widget panel to the Editor with all available Widgets, and drag and drop functionality.
+* Logging refactor.
 
 ## 0.1.5
 

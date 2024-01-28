@@ -145,6 +145,9 @@
             "body": {
               "_id": "25ba83a9-3630-4ef9-ad94-fc7784278366",
               "_type": "card",
+              "properties": {
+                "margin": "10"
+              },
               "widgets": {
                 "child": {
                   "_id": "a61890a1-4261-4cac-a7d2-09affdee4770",

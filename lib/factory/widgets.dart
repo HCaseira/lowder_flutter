@@ -58,6 +58,7 @@ mixin IWidgets {
     Map<String, EditorWidgetType>? widgets,
     Map<String, EditorActionType>? actions,
     Map<String, EditorPropertyType>? properties,
+    List<String>? tags,
   }) {
     _widgetBuilders[name] = builder;
     _schema[name] = EditorWidget(
@@ -66,6 +67,7 @@ mixin IWidgets {
       widgets: widgets,
       actions: actions,
       properties: properties,
+      tags: tags,
     );
   }
 }
@@ -141,11 +143,14 @@ class BaseWidgets with IWidgets {
           "borderRadius": Types.intArray,
           "elevation": Types.double,
           "color": Types.color,
-          "shadowColor": Types.color,
+          "shadowColor": Types.color
         },
         widgets: {
-          "child": EditorWidgetType.widget(),
-        });
+          "child": EditorWidgetType.widget()
+        },
+        tags: [
+          "structure & navigation"
+        ]);
     registerWidget("scaffold", buildScaffold,
         baseType: EditorWidget.rootWidget,
         properties: {
@@ -154,7 +159,7 @@ class BaseWidgets with IWidgets {
           "extendBody": Types.bool,
           "extendBodyBehindAppBar": Types.bool,
           "resizeToAvoidBottomInset": Types.bool,
-          "floatingActionButtonLocation": Types.floatingActionButtonLocation,
+          "floatingActionButtonLocation": Types.floatingActionButtonLocation
         },
         widgets: {
           "appBar": EditorWidgetType.preferredSizeWidget(),
@@ -164,8 +169,12 @@ class BaseWidgets with IWidgets {
           "bottomSheet": EditorWidgetType.widget(),
           "bottomNavigationBar": EditorWidgetType.widget(),
           "floatingActionButton": EditorWidgetType.widget(),
-          "persistentFooterButtons": EditorWidgetType.widget(isArray: true),
-        });
+          "persistentFooterButtons": EditorWidgetType.widget(isArray: true)
+        },
+        tags: [
+          "common",
+          "structure & navigation"
+        ]);
     registerWidget("sliverScaffold", buildSliverScaffold,
         baseType: EditorWidget.rootWidget,
         properties: {
@@ -184,8 +193,12 @@ class BaseWidgets with IWidgets {
           "bottomSheet": EditorWidgetType.widget(),
           "bottomNavigationBar": EditorWidgetType.widget(),
           "floatingActionButton": EditorWidgetType.widget(),
-          "persistentFooterButtons": EditorWidgetType.widget(isArray: true),
-        });
+          "persistentFooterButtons": EditorWidgetType.widget(isArray: true)
+        },
+        tags: [
+          "sliver",
+          "structure & navigation"
+        ]);
 
     registerWidget("appBar", buildAppBar,
         baseType: EditorWidget.preferredSizeWidget,
@@ -204,14 +217,18 @@ class BaseWidgets with IWidgets {
           "toolbarHeight": Types.int,
           "toolbarOpacity": Types.double,
           "bottomOpacity": Types.double,
-          "automaticallyImplyLeading": Types.bool,
+          "automaticallyImplyLeading": Types.bool
         },
         widgets: {
           "leading": EditorWidgetType.widget(),
           "titleWidget": EditorWidgetType.widget(),
           "actions": EditorWidgetType.widget(isArray: true),
-          "bottom": EditorWidgetType.preferredSizeWidget(),
-        });
+          "bottom": EditorWidgetType.preferredSizeWidget()
+        },
+        tags: [
+          "common",
+          "structure & navigation"
+        ]);
     registerWidget("sliverAppBar", buildSliverAppBar,
         baseType: "",
         properties: {
@@ -233,18 +250,22 @@ class BaseWidgets with IWidgets {
           "floating": Types.bool,
           "pinned": Types.bool,
           "snap": Types.bool,
-          "stretch": Types.bool,
+          "stretch": Types.bool
         },
         actions: {
-          "onStretchTrigger": EditorActionType.action(),
+          "onStretchTrigger": EditorActionType.action()
         },
         widgets: {
           "leading": EditorWidgetType.widget(),
           "titleWidget": EditorWidgetType.widget(),
           "background": EditorWidgetType.widget(),
           "actions": EditorWidgetType.widget(isArray: true),
-          "bottom": EditorWidgetType.preferredSizeWidget(),
-        });
+          "bottom": EditorWidgetType.preferredSizeWidget()
+        },
+        tags: [
+          "sliver",
+          "structure & navigation"
+        ]);
     registerWidget("PreferredSize", buildPreferredSize,
         baseType: EditorWidget.preferredSizeWidget,
         properties: {"size": Types.size},
@@ -271,8 +292,11 @@ class BaseWidgets with IWidgets {
               EditorWidgetType("NavigationRailDestination", isArray: true),
           "leading": EditorWidgetType.widget(),
           "trailing": EditorWidgetType.widget(),
-          "toggle": EditorWidgetType.widget(),
-        });
+          "toggle": EditorWidgetType.widget()
+        },
+        tags: [
+          "structure & navigation"
+        ]);
     registerWidget("NavigationRailDestination", (_) => const SizedBox(),
         abstract: true,
         baseType: null,
@@ -281,31 +305,34 @@ class BaseWidgets with IWidgets {
           "iconCode": Types.int,
           "selectedIconCode": Types.int,
           "padding": Types.intArray,
-          "buildCondition": Types.kCondition,
-        });
+          "buildCondition": Types.kCondition
+        },
+        tags: [
+          "structure & navigation"
+        ]);
     registerWidget("ActionDestination", (_) => const SizedBox(),
         baseType: "NavigationRailDestination",
-        actions: {
-          "onTap": EditorActionType.action(),
-        });
+        actions: {"onTap": EditorActionType.action()});
     registerWidget("ScreenDestination", (_) => const SizedBox(),
         baseType: "NavigationRailDestination",
-        properties: {
-          "screen": Types.screen,
-        });
+        properties: {"screen": Types.screen});
     registerWidget("drawer", buildDrawer, properties: {
       "backgroundColor": Types.color,
       "elevation": Types.double,
       "shape": Types.shapeBorder
     }, widgets: {
       "child": EditorWidgetType.widget()
-    });
+    }, tags: [
+      "structure & navigation"
+    ]);
     registerWidget("drawerHeader", buildDrawerHeader, properties: {
       "padding": Types.intArray,
       "decoration": Types.boxDecoration
     }, widgets: {
       "child": EditorWidgetType.widget()
-    });
+    }, tags: [
+      "structure & navigation"
+    ]);
     registerWidget("userDrawerHeader", buildUserDrawerHeader, properties: {
       "accountName": Types.string,
       "accountEmail": Types.string,
@@ -319,15 +346,19 @@ class BaseWidgets with IWidgets {
       "accountNameWidget": EditorWidgetType.widget(),
       "accountEmailWidget": EditorWidgetType.widget(),
       "accountPictureWidget": EditorWidgetType.widget()
-    });
+    }, tags: [
+      "structure & navigation"
+    ]);
     registerWidget("bottomAppBar", buildBottomAppBar, properties: {
       "color": Types.color,
       "elevation": Types.int,
       "notchMargin": Types.int,
-      "shape": Types.notchedShape,
+      "shape": Types.notchedShape
     }, widgets: {
       "child": EditorWidgetType.widget()
-    });
+    }, tags: [
+      "structure & navigation"
+    ]);
     registerWidget("bottomNavigationBar", buildBottomNavigationBar,
         properties: {
           "startIndex": Types.int,
@@ -343,9 +374,11 @@ class BaseWidgets with IWidgets {
           "unselectedItemColor": Types.color
         },
         widgets: {
-          "children":
-              EditorWidgetType("bottomNavigationBarItem", isArray: true),
-        });
+          "children": EditorWidgetType("bottomNavigationBarItem", isArray: true)
+        },
+        tags: [
+          "structure & navigation"
+        ]);
     registerWidget("bottomNavigationBarItem", (_) => const SizedBox(),
         baseType: "",
         properties: {
@@ -353,26 +386,26 @@ class BaseWidgets with IWidgets {
           "activeIconCode": Types.int,
           "label": Types.string,
           "tooltip": Types.string,
-          "backgroundColor": Types.color,
+          "backgroundColor": Types.color
         },
         actions: {
-          "onTap": EditorActionType.action(),
+          "onTap": EditorActionType.action()
         },
         widgets: {
           "icon": EditorWidgetType.widget(),
-          "activeIcon": EditorWidgetType.widget(),
-        });
+          "activeIcon": EditorWidgetType.widget()
+        },
+        tags: [
+          "structure & navigation"
+        ]);
 
-    registerWidget("sizedBox", buildSizedBox, properties: {
-      "width": Types.int,
-      "height": Types.int,
-    });
-    registerWidget("center", buildCenter, properties: {
-      "widthFactor": Types.double,
-      "heightFactor": Types.int,
-    }, widgets: {
-      "child": EditorWidgetType.widget()
-    });
+    registerWidget("sizedBox", buildSizedBox,
+        properties: {"width": Types.int, "height": Types.int},
+        tags: ["layout", "decoration", "common"]);
+    registerWidget("center", buildCenter,
+        properties: {"widthFactor": Types.double, "heightFactor": Types.int},
+        widgets: {"child": EditorWidgetType.widget()},
+        tags: ["layout"]);
     registerWidget("container", buildContainer, properties: {
       "width": Types.int,
       "height": Types.int,
@@ -382,25 +415,28 @@ class BaseWidgets with IWidgets {
       "decoration": Types.boxDecoration
     }, widgets: {
       "child": EditorWidgetType.widget()
-    });
-    registerWidget(
-      "AnimatedContainer",
-      buildAnimatedContainer,
-      properties: {
-        "width": Types.int,
-        "height": Types.int,
-        "padding": Types.intArray,
-        "alignment": Types.alignment,
-        "constraints": Types.boxConstraints,
-        "decoration": Types.boxDecoration,
-        "duration": Types.int,
-        "curve": Types.curve,
-      },
-      actions: {
-        "onEnd": EditorActionType.action(),
-      },
-      widgets: {"child": EditorWidgetType.widget()},
-    );
+    }, tags: [
+      "layout",
+      "decoration"
+    ]);
+    registerWidget("AnimatedContainer", buildAnimatedContainer, properties: {
+      "width": Types.int,
+      "height": Types.int,
+      "padding": Types.intArray,
+      "alignment": Types.alignment,
+      "constraints": Types.boxConstraints,
+      "decoration": Types.boxDecoration,
+      "duration": Types.int,
+      "curve": Types.curve,
+    }, actions: {
+      "onEnd": EditorActionType.action(),
+    }, widgets: {
+      "child": EditorWidgetType.widget()
+    }, tags: [
+      "animation",
+      "layout",
+      "decoration"
+    ]);
     registerWidget("card", buildCard, properties: {
       "color": Types.color,
       "surfaceTintColor": Types.color,
@@ -410,27 +446,26 @@ class BaseWidgets with IWidgets {
       "margin": Types.intArray
     }, widgets: {
       "child": EditorWidgetType.widget()
-    });
-    registerWidget("stack", buildStack, properties: {
-      "alignment": Types.alignment,
+    }, tags: [
+      "decoration",
+      "common"
+    ]);
+    registerWidget("stack", buildStack,
+        properties: {"alignment": Types.alignment},
+        widgets: {"children": EditorWidgetType.widget(isArray: true)},
+        tags: ["layout"]);
+    registerWidget("Positioned", buildPositioned, properties: {
+      "left": Types.double,
+      "top": Types.double,
+      "right": Types.double,
+      "bottom": Types.double,
+      "width": Types.double,
+      "height": Types.double
     }, widgets: {
-      "children": EditorWidgetType.widget(isArray: true),
-    });
-    registerWidget(
-      "Positioned",
-      buildPositioned,
-      properties: {
-        "left": Types.double,
-        "top": Types.double,
-        "right": Types.double,
-        "bottom": Types.double,
-        "width": Types.double,
-        "height": Types.double,
-      },
-      widgets: {
-        "child": EditorWidgetType.widget(),
-      },
-    );
+      "child": EditorWidgetType.widget()
+    }, tags: [
+      "layout"
+    ]);
     registerWidget("AnimatedPositioned", buildAnimatedPositioned, properties: {
       "left": Types.double,
       "top": Types.double,
@@ -439,12 +474,15 @@ class BaseWidgets with IWidgets {
       "width": Types.double,
       "height": Types.double,
       "duration": Types.int,
-      "curve": Types.curve,
+      "curve": Types.curve
     }, actions: {
-      "onEnd": EditorActionType.action(),
+      "onEnd": EditorActionType.action()
     }, widgets: {
-      "child": EditorWidgetType.widget(),
-    });
+      "child": EditorWidgetType.widget()
+    }, tags: [
+      "animation",
+      "layout"
+    ]);
 
     final rowProperties = EditorWidget(properties: {
       "verticalDirection": Types.verticalDirection,
@@ -452,16 +490,18 @@ class BaseWidgets with IWidgets {
       "mainAxisAlignment": Types.mainAxisAlignment,
       "mainAxisSize": Types.mainAxisSize
     }, widgets: {
-      "children": EditorWidgetType.widget(isArray: true),
+      "children": EditorWidgetType.widget(isArray: true)
     });
     registerWidget("row", buildRow,
         properties: rowProperties.properties,
         actions: rowProperties.actions,
-        widgets: rowProperties.widgets);
+        widgets: rowProperties.widgets,
+        tags: ["common", "layout"]);
     registerWidget("column", buildColumn,
         properties: rowProperties.properties,
         actions: rowProperties.actions,
-        widgets: rowProperties.widgets);
+        widgets: rowProperties.widgets,
+        tags: ["common", "layout"]);
     registerWidget("wrap", buildWrap, properties: {
       "direction": Types.axis,
       "alignment": Types.mainAxisAlignment,
@@ -470,18 +510,35 @@ class BaseWidgets with IWidgets {
       "runSpacing": Types.double,
       "verticalDirection": Types.verticalDirection,
       "crossAxisAlignment":
-          const EditorPropertyListType(["start", "center", "end"]),
+          const EditorPropertyListType(["start", "center", "end"])
     }, widgets: {
-      "children": EditorWidgetType.widget(isArray: true),
-    });
+      "children": EditorWidgetType.widget(isArray: true)
+    }, tags: [
+      "layout"
+    ]);
 
+    registerWidget("SingleChildScrollView", buildSingleChildScrollView,
+        properties: {
+          "padding": Types.intArray,
+          "reverse": Types.bool,
+          "scrollDirection": Types.axis
+        },
+        widgets: {
+          "child": EditorWidgetType.widget()
+        },
+        tags: [
+          "common",
+          "scrolling"
+        ]);
     registerWidget("scrollView", buildScrollView, properties: {
       "padding": Types.intArray,
       "reverse": Types.bool,
       "scrollDirection": Types.axis
     }, widgets: {
-      "children": EditorWidgetType.widget(isArray: true),
-    });
+      "children": EditorWidgetType.widget(isArray: true)
+    }, tags: [
+      "scrolling"
+    ]);
 
     final blocListProps = {
       "loadingIndicator": Types.loadingIndicator,
@@ -505,20 +562,14 @@ class BaseWidgets with IWidgets {
       "primary": Types.bool,
     };
     registerWidget("listView", buildListView,
-        properties: {
-          ...listViewProps,
-          ...blocListProps,
-        },
+        properties: {...listViewProps, ...blocListProps},
         actions: blocListActions,
-        widgets: {
-          ...blocListWidgets,
-          "separator": EditorWidgetType.widget(),
-        });
+        widgets: {...blocListWidgets, "separator": EditorWidgetType.widget()},
+        tags: ["common", "data list"]);
     registerWidget("staticListView", buildStaticListView,
         properties: listViewProps,
-        widgets: {
-          "children": EditorWidgetType.widget(isArray: true),
-        });
+        widgets: {"children": EditorWidgetType.widget(isArray: true)},
+        tags: ["layout", "scrolling"]);
 
     final gridViewProps = {
       "crossAxisCount": Types.int,
@@ -537,12 +588,12 @@ class BaseWidgets with IWidgets {
           ...blocListProps,
         },
         actions: blocListActions,
-        widgets: blocListWidgets);
+        widgets: blocListWidgets,
+        tags: ["data list"]);
     registerWidget("staticGridView", buildStaticGridView,
         properties: gridViewProps,
-        widgets: {
-          "children": EditorWidgetType.widget(isArray: true),
-        });
+        widgets: {"children": EditorWidgetType.widget(isArray: true)},
+        tags: ["layout", "scrolling"]);
 
     final pageViewProps = {
       "initialPage": Types.int,
@@ -554,37 +605,34 @@ class BaseWidgets with IWidgets {
       "keepPage": Types.bool,
     };
     registerWidget("pageView", buildPageView,
-        properties: {
-          ...pageViewProps,
-          ...blocListProps,
-        },
+        properties: {...pageViewProps, ...blocListProps},
         actions: {
           ...blocListActions,
-          "onPageChanged": EditorActionType.action(),
+          "onPageChanged": EditorActionType.action()
         },
-        widgets: blocListWidgets);
+        widgets: blocListWidgets,
+        tags: ["data list"]);
     registerWidget("staticPageView", buildStaticPageView,
         properties: pageViewProps,
-        widgets: {
-          "children": EditorWidgetType.widget(isArray: true),
-        },
-        actions: {
-          "onPageChanged": EditorActionType.action(),
-        });
+        widgets: {"children": EditorWidgetType.widget(isArray: true)},
+        actions: {"onPageChanged": EditorActionType.action()},
+        tags: ["layout", "scrolling"]);
 
     registerWidget("tableView", buildTable, properties: {
       "border": Types.tableBorder,
       "verticalAlignment": Types.tableVerticalAlignment,
       "rowDecoration": Types.boxDecoration,
       "rowOddDecoration": Types.boxDecoration,
-      "shrinkWrap": Types.bool,
+      "shrinkWrap": Types.bool
     }, actions: {
       "loadPage": EditorActionType.listAction(),
-      "onSelect": EditorActionType.action(),
+      "onSelect": EditorActionType.action()
     }, widgets: {
       "children": EditorWidgetType.widget(isArray: true),
-      "noEntriesWidget": EditorWidgetType.widget(),
-    });
+      "noEntriesWidget": EditorWidgetType.widget()
+    }, tags: [
+      "data list"
+    ]);
     registerWidget("dataTableView", buildDataTable, properties: {
       "alias": Types.string,
       "selectionType": const EditorPropertyListType(["single", "multiple"]),
@@ -604,15 +652,17 @@ class BaseWidgets with IWidgets {
       "dataTextStyle": Types.textStyle,
       "rowColor": Types.color,
       "rowOddColor": Types.color,
-      "shrinkWrap": Types.bool,
+      "shrinkWrap": Types.bool
     }, actions: {
       "loadPage": EditorActionType.listAction(),
-      "onSelect": EditorActionType.action(),
+      "onSelect": EditorActionType.action()
     }, widgets: {
       "columns": EditorWidgetType.widget(isArray: true),
       "children": EditorWidgetType.widget(isArray: true),
-      "noEntriesWidget": EditorWidgetType.widget(),
-    });
+      "noEntriesWidget": EditorWidgetType.widget()
+    }, tags: [
+      "data list"
+    ]);
 
     registerWidget("tabView", buildTabView, properties: {
       "padding": Types.intArray,
@@ -634,11 +684,13 @@ class BaseWidgets with IWidgets {
       "verticalDirection": Types.verticalDirection,
       "crossAxisAlignment": Types.crossAxisAlignment,
       "mainAxisAlignment": Types.mainAxisAlignment,
-      "mainAxisSize": Types.mainAxisSize,
+      "mainAxisSize": Types.mainAxisSize
     }, widgets: {
       "tabs": EditorWidgetType.widget(isArray: true),
-      "children": EditorWidgetType.widget(isArray: true),
-    });
+      "children": EditorWidgetType.widget(isArray: true)
+    }, tags: [
+      "structure & navigation"
+    ]);
     registerWidget("tabBar", buildTabBar,
         baseType: EditorWidget.preferredSizeWidget,
         properties: {
@@ -656,14 +708,17 @@ class BaseWidgets with IWidgets {
           "unselectedLabelStyle": Types.textStyle,
           "dividerHeight": Types.double,
           "dividerColor": Types.color,
-          "overlayColor": Types.color,
+          "overlayColor": Types.color
         },
         widgets: {
-          "tabs": EditorWidgetType.widget(isArray: true),
-        });
-    registerWidget("tabBarView", buildTabBarView, widgets: {
-      "children": EditorWidgetType.widget(isArray: true),
-    });
+          "tabs": EditorWidgetType.widget(isArray: true)
+        },
+        tags: [
+          "structure & navigation"
+        ]);
+    registerWidget("tabBarView", buildTabBarView,
+        widgets: {"children": EditorWidgetType.widget(isArray: true)},
+        tags: ["structure & navigation"]);
 
     registerWidget("listTile", buildListTile, properties: {
       "iconCode": Types.int,
@@ -686,12 +741,14 @@ class BaseWidgets with IWidgets {
       "title": EditorWidgetType.widget(),
       "subtitle": EditorWidgetType.widget(),
       "trailing": EditorWidgetType.widget()
-    });
-    registerWidget("expanded", buildExpanded, properties: {
-      "flex": Types.int,
-    }, widgets: {
-      "child": EditorWidgetType.widget(),
-    });
+    }, tags: [
+      "layout",
+      "action"
+    ]);
+    registerWidget("expanded", buildExpanded,
+        properties: {"flex": Types.int},
+        widgets: {"child": EditorWidgetType.widget()},
+        tags: ["layout"]);
     registerWidget("inkWell", buildInkWell, properties: {
       "borderRadius": Types.intArray,
       "customBorder": Types.shapeBorder,
@@ -708,16 +765,20 @@ class BaseWidgets with IWidgets {
       "onTapUp": EditorActionType.action(),
     }, widgets: {
       "child": EditorWidgetType.widget(),
-    });
+    }, tags: [
+      "action"
+    ]);
 
     registerWidget("richText", buildRichText, properties: {
       "textAlign": Types.textAlign,
       "maxLines": Types.int,
       "softWrap": Types.bool,
-      "overflow": Types.textOverflow,
+      "overflow": Types.textOverflow
     }, widgets: {
-      "children": EditorWidgetType("TextSpan", isArray: true),
-    });
+      "children": EditorWidgetType("TextSpan", isArray: true)
+    }, tags: [
+      "text"
+    ]);
     registerWidget("TextSpan", (_) => const SizedBox(),
         baseType: "",
         properties: {
@@ -726,7 +787,10 @@ class BaseWidgets with IWidgets {
         },
         actions: {
           "onTap": EditorActionType.action(),
-        });
+        },
+        tags: [
+          "text"
+        ]);
     registerWidget("text", buildText, properties: {
       "alias": Types.string,
       "value": Types.string,
@@ -737,7 +801,10 @@ class BaseWidgets with IWidgets {
       "overflow": Types.textOverflow,
       "style": Types.textStyle,
       "textAlign": Types.textAlign
-    });
+    }, tags: [
+      "common",
+      "text"
+    ]);
     final textFormFieldProperties = EditorWidget(properties: {
       "value": Types.string,
       "alias": Types.string,
@@ -784,7 +851,8 @@ class BaseWidgets with IWidgets {
     registerWidget("textFormField", buildTextFormField,
         properties: textFormFieldProperties.properties,
         widgets: textFormFieldProperties.widgets,
-        actions: textFormFieldProperties.actions);
+        actions: textFormFieldProperties.actions,
+        tags: ["common", "input"]);
     registerWidget("datePicker", buildDatePicker,
         baseType: "textFormField",
         properties: {
@@ -793,7 +861,10 @@ class BaseWidgets with IWidgets {
           "lastDate": Types.string,
           "mode": const EditorPropertyListType(["dateTime", "date", "time"]),
           "label": Types.string,
-        });
+        },
+        tags: [
+          "input"
+        ]);
     registerWidget("select", buildSelect,
         baseType: "textFormField",
         properties: {
@@ -811,7 +882,11 @@ class BaseWidgets with IWidgets {
           "dialogHeader": EditorWidgetType.widget(),
           "dialogList": EditorWidgetType.widget(),
           "dialogListTile": EditorWidgetType.widget(),
-        });
+        },
+        tags: [
+          "input",
+          "data list"
+        ]);
     final boolInputProperties = EditorWidget(properties: {
       "value": Types.bool,
       "alias": Types.string,
@@ -838,7 +913,8 @@ class BaseWidgets with IWidgets {
           "triState": Types.bool,
         }..addAll(boolInputProperties.properties!),
         actions: boolInputProperties.actions,
-        widgets: boolInputProperties.widgets);
+        widgets: boolInputProperties.widgets,
+        tags: ["input"]);
     registerWidget("switch", buildSwitch,
         properties: {
           "activeTrackColor": Types.color,
@@ -846,29 +922,27 @@ class BaseWidgets with IWidgets {
           "inactiveTrackColor": Types.color,
         }..addAll(boolInputProperties.properties!),
         actions: boolInputProperties.actions,
-        widgets: boolInputProperties.widgets);
+        widgets: boolInputProperties.widgets,
+        tags: ["input"]);
 
-    registerWidget(
-      "slider",
-      buildSlider,
-      properties: {
-        "alias": Types.string,
-        "value": Types.double,
-        "min": Types.double,
-        "max": Types.double,
-        "divisions": Types.int,
-        "thumbColor": Types.color,
-        "activeColor": Types.color,
-        "inactiveColor": Types.color,
-        "secondaryTrackValue": Types.double,
-        "secondaryActiveColor": Types.color,
-        "label": Types.string,
-        "enabled": Types.bool,
-      },
-      actions: {
-        "onChanged": EditorActionType.action(),
-      },
-    );
+    registerWidget("slider", buildSlider, properties: {
+      "alias": Types.string,
+      "value": Types.double,
+      "min": Types.double,
+      "max": Types.double,
+      "divisions": Types.int,
+      "thumbColor": Types.color,
+      "activeColor": Types.color,
+      "inactiveColor": Types.color,
+      "secondaryTrackValue": Types.double,
+      "secondaryActiveColor": Types.color,
+      "label": Types.string,
+      "enabled": Types.bool
+    }, actions: {
+      "onChanged": EditorActionType.action()
+    }, tags: [
+      "input"
+    ]);
 
     final buttonProperties = EditorWidget(properties: {
       "text": Types.string,
@@ -881,15 +955,18 @@ class BaseWidgets with IWidgets {
     registerWidget("textButton", buildTextButton,
         properties: buttonProperties.properties,
         actions: buttonProperties.actions,
-        widgets: buttonProperties.widgets);
+        widgets: buttonProperties.widgets,
+        tags: ["button", "action"]);
     registerWidget("elevatedButton", buildElevatedButton,
         properties: buttonProperties.properties,
         actions: buttonProperties.actions,
-        widgets: buttonProperties.widgets);
+        widgets: buttonProperties.widgets,
+        tags: ["common", "button", "action"]);
     registerWidget("outlinedButton", buildOutlinedButton,
         properties: buttonProperties.properties,
         actions: buttonProperties.actions,
-        widgets: buttonProperties.widgets);
+        widgets: buttonProperties.widgets,
+        tags: ["button", "action"]);
     registerWidget("iconButton", buildIconButton, properties: {
       "iconCode": Types.int,
       "iconSize": Types.double,
@@ -907,7 +984,10 @@ class BaseWidgets with IWidgets {
       "onPressed": EditorActionType.action()
     }, widgets: {
       "icon": EditorWidgetType.widget()
-    });
+    }, tags: [
+      "button",
+      "action"
+    ]);
     registerWidget("floatingActionButton", buildFloatingActionButton,
         properties: {
           "iconCode": Types.int,
@@ -930,7 +1010,11 @@ class BaseWidgets with IWidgets {
         },
         widgets: {
           "child": EditorWidgetType.widget()
-        });
+        },
+        tags: [
+          "button",
+          "action"
+        ]);
 
     registerWidget("dropdownButton", buildDropdownButton, properties: {
       "value": Types.string,
@@ -951,7 +1035,7 @@ class BaseWidgets with IWidgets {
       "alignment": Types.alignment,
       "decoration": Types.inputDecoration,
       "iconSize": Types.double,
-      "menuMaxHeight": Types.double,
+      "menuMaxHeight": Types.double
     }, actions: {
       "onChanged": EditorActionType.action()
     }, widgets: {
@@ -959,8 +1043,10 @@ class BaseWidgets with IWidgets {
       "icon": EditorWidgetType.widget(),
       "label": EditorWidgetType.widget(),
       "prefix": EditorWidgetType.widget(),
-      "suffix": EditorWidgetType.widget(),
-    });
+      "suffix": EditorWidgetType.widget()
+    }, tags: [
+      "button"
+    ]);
     registerWidget("popupMenuButton", buildPopupMenuButton, properties: {
       "values": Types.json,
       "nameKey": Types.string,
@@ -973,25 +1059,30 @@ class BaseWidgets with IWidgets {
       "enabled": Types.bool,
       "offset": Types.doubleArray,
       "elevation": Types.double,
-      "iconSize": Types.double,
+      "iconSize": Types.double
     }, actions: {
       "onSelected": EditorActionType.action()
     }, widgets: {
       "icon": EditorWidgetType.widget(),
-      "child": EditorWidgetType.widget(),
-    });
+      "child": EditorWidgetType.widget()
+    }, tags: [
+      "button"
+    ]);
 
-    registerWidget("Hero", buildHero, properties: {
-      "tag": Types.string,
-    }, widgets: {
-      "child": EditorWidgetType.widget(),
-    });
+    registerWidget("Hero", buildHero,
+        properties: {"tag": Types.string},
+        widgets: {"child": EditorWidgetType.widget()},
+        tags: ["animation"]);
     registerWidget("icon", buildIcon, properties: {
       "iconCode": Types.int,
       "color": Types.color,
       "size": Types.double,
-      "semanticLabel": Types.string,
-    });
+      "semanticLabel": Types.string
+    }, tags: [
+      "asset",
+      "common",
+      "decoration"
+    ]);
     registerWidget("image", buildImage, properties: {
       "value": Types.string,
       "alias": Types.string,
@@ -1003,7 +1094,11 @@ class BaseWidgets with IWidgets {
       "provider": Types.imageProvider,
     }, widgets: {
       "fallback": EditorWidgetType.widget()
-    });
+    }, tags: [
+      "asset",
+      "common",
+      "decoration"
+    ]);
     registerWidget("circleAvatar", buildCircleAvatar, properties: {
       "foregroundValue": Types.string,
       "foregroundProvider": Types.imageProvider,
@@ -1011,10 +1106,12 @@ class BaseWidgets with IWidgets {
       "backgroundProvider": Types.imageProvider,
       "foregroundColor": Types.color,
       "backgroundColor": Types.color,
-      "radius": Types.double,
+      "radius": Types.double
     }, widgets: {
       "child": EditorWidgetType.widget()
-    });
+    }, tags: [
+      "asset"
+    ]);
 
     registerWidget("CircularProgressIndicator", buildCircularProgressIndicator,
         properties: {
@@ -2651,8 +2748,21 @@ class BaseWidgets with IWidgets {
   }
 
   @protected
+  Widget buildSingleChildScrollView(BuildParameters params) {
+    final child = builder.tryBuildWidget(params.context,
+        params.widgets["child"], params.state, params.parentContext);
+    return SingleChildScrollView(
+      key: properties.getKey(params.id),
+      padding: properties.getInsets(params.props["padding"]),
+      reverse: parseBool(params.props["reverse"]),
+      scrollDirection: params.buildProp("scrollDirection") ?? Axis.vertical,
+      child: child,
+    );
+  }
+
+  @protected
   Widget buildScrollView(BuildParameters params) {
-    var children = <Widget>[];
+    final children = <Widget>[];
     if (params.widgets["children"] != null) {
       for (Map childSpec in params.widgets["children"] as List<Map>) {
         children.add(builder.buildWidget(

@@ -76,6 +76,7 @@ class EditorWidget extends EditorNode {
 
   final Map<String, EditorWidgetType>? widgets;
   final Map<String, EditorActionType>? actions;
+  final List<String>? tags;
 
   EditorWidget({
     super.abstract = false,
@@ -83,6 +84,7 @@ class EditorWidget extends EditorNode {
     this.widgets,
     this.actions,
     super.properties,
+    this.tags,
   });
 
   @override
@@ -101,6 +103,9 @@ class EditorWidget extends EditorNode {
       for (var key in widgets!.keys) {
         props[key] = widgets![key]!.getValueType();
       }
+    }
+    if (tags != null && tags!.isNotEmpty) {
+      map["tags"] = tags;
     }
     return map;
   }
