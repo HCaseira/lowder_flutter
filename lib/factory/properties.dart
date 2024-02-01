@@ -1472,6 +1472,9 @@ class BaseProperties with IProperties {
       backgroundColor: backgroundColor != null
           ? MaterialStateProperty.all<Color>(backgroundColor)
           : null,
+      surfaceTintColor: backgroundColor != null
+          ? MaterialStateProperty.all<Color>(backgroundColor)
+          : null,
       overlayColor: overlayColor != null
           ? MaterialStateProperty.all<Color>(overlayColor)
           : null,

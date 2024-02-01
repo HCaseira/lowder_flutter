@@ -1123,6 +1123,19 @@ class BaseWidgets with IWidgets {
           "doWork": EditorActionType.action()
         });
 
+    registerWidget("Badge", buildBadge, properties: {
+      "label": Types.string,
+      "alignment": Types.alignment,
+      "padding": Types.intArray,
+      "textStyle": Types.textStyle,
+      "textColor": Types.color,
+      "backgroundColor": Types.color,
+      "isLabelVisible": Types.kCondition,
+    }, widgets: {
+      "label": EditorWidgetType.widget(),
+      "child": EditorWidgetType.widget()
+    });
+
     registerWidget("BlocBuilder", buildBlocBuilder, properties: {
       "type": const EditorPropertyListType(["local", "global"]),
     }, widgets: {
@@ -2038,8 +2051,10 @@ class BaseWidgets with IWidgets {
   @protected
   Widget buildRichText(BuildParameters params) {
     final spanParts = <TextSpan>[];
+    final evaluatorContext = Lowder.properties
+        .getEvaluatorContext(null, params.state, params.parentContext);
     for (var child in params.widgets["children"]) {
-      properties.evaluateMap(child, params.parentContext);
+      properties.evaluateMap(child, evaluatorContext);
       spanParts.add(buildTextSpan(params.context, WidgetNodeSpec.fromMap(child),
           params.state, params.parentContext));
     }
@@ -3421,6 +3436,28 @@ class BaseWidgets with IWidgets {
       color: tryParseColor(params.props["color"]),
       strokeWidth: parseDouble(params.props["strokeWidth"], defaultValue: 4.0),
       strokeAlign: parseDouble(params.props["strokeAlign"]),
+    );
+  }
+
+  @protected
+  Widget buildBadge(BuildParameters params) {
+    final props = params.props;
+
+    Widget? label = builder.tryBuildWidget(params.context,
+        params.widgets["label"], params.state, params.parentContext);
+    label ??= Text("${props["label"]}");
+
+    return Badge(
+      key: properties.getKey(params.id),
+      alignment: params.buildProp("alignment"),
+      padding: properties.getInsets(props["padding"]),
+      textStyle: params.buildProp("textStyle"),
+      textColor: tryParseColor(props["textColor"]),
+      backgroundColor: tryParseColor(props["backgroundColor"]),
+      isLabelVisible: properties.evaluateCondition(props["isLabelVisible"]),
+      label: label,
+      child: builder.tryBuildWidget(params.context, params.widgets["child"],
+          params.state, params.parentContext),
     );
   }
 

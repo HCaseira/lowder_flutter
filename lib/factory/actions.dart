@@ -314,7 +314,6 @@ class BaseActions with IActions {
     }
 
     final result = await onRest(event.action, event.context);
-
     if (result.success) {
       var responseData = result.returnData;
       if (responseData is Map) {
@@ -389,8 +388,12 @@ class BaseActions with IActions {
     }
 
     if (response.isSuccess) {
+      log.infoWithContext(
+          "Success calling [${spec["method"]}] $uri", {"body": response.body});
       return Lowder.actions.onHttpSuccess(response, action, context);
     }
+    log.info(
+        "Failure calling [${spec["method"]}] $uri: ${response.statusCode}");
     return HttpActionResult(false);
   }
 
@@ -443,7 +446,7 @@ class BaseActions with IActions {
           transitionsBuilder: transition,
           transitionDuration: Duration(
               milliseconds:
-                  parseInt(props["transitionDuration"], defaultValue: 300)),
+                  parseInt(props["transitionDuration"], defaultValue: 200)),
         );
       }
 
