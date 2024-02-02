@@ -116,9 +116,25 @@ class BlocGrid extends BlocListBase {
 
 /// A PageView Widget using a `ListBloc` to handle page loads.
 class BlocPageView extends BlocListBase {
-  BlocPageView(super.spec, super.state, super.evaluatorContext, {super.key});
+  late final PageController pageController;
+
+  BlocPageView(super.spec, super.state, super.evaluatorContext, {super.key}) {
+    pageController = PageController(
+      initialPage: parseInt(props["initialPage"]),
+      viewportFraction:
+          parseDouble(props["viewportFraction"], defaultValue: 1.0),
+      keepPage: parseBool(props["keepPage"], defaultValue: true),
+    );
+  }
 
   Map? get childSpec => widgets["child"];
+
+  void onPageChanged(int page, int count) {
+    if (mutable.lastState.hasMore && page == count - 1) {
+      mutable.loadingPage = true;
+      loadPage();
+    }
+  }
 
   @override
   Widget buildList(BuildContext context) {
@@ -140,17 +156,9 @@ class BlocPageView extends BlocListBase {
       padEnds: parseBool(props["padEnds"], defaultValue: true),
       scrollDirection: spec.buildProp("scrollDirection") ?? Axis.horizontal,
       reverse: parseBool(props["reverse"]),
-      controller: PageController(
-        initialPage: parseInt(props["initialPage"]),
-        viewportFraction:
-            parseDouble(props["viewportFraction"], defaultValue: 1.0),
-        keepPage: parseBool(props["keepPage"], defaultValue: true),
-      ),
+      controller: pageController,
       onPageChanged: (idx) {
-        if (mutable.lastState.hasMore && idx == count - 1) {
-          mutable.loadingPage = true;
-          loadPage();
-        }
+        onPageChanged(idx, count);
         if (pageChangeFunction != null) {
           pageChangeFunction(idx);
         }
