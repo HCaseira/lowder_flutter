@@ -418,6 +418,10 @@ abstract class BlocListBase extends StatefulWidget {
   Map get actions => spec.actions;
   Map get widgets => spec.widgets;
   Map? get loadPageSpec => actions["loadPage"];
+  ListBloc get bloc {
+    mutable.bloc ??= createBloc();
+    return mutable.bloc!;
+  }
 
   @override
   State<StatefulWidget> createState() {
@@ -444,7 +448,7 @@ abstract class BlocListBase extends StatefulWidget {
 
     Lowder.actions.executePageLoadAction(
       mutable.blocContext!,
-      mutable.bloc!,
+      bloc,
       page,
       50,
       data,
@@ -503,12 +507,6 @@ abstract class BlocListBase extends StatefulWidget {
 }
 
 class BlocListState extends State<BlocListBase> {
-  ListBloc createBloc() {
-    final bloc = widget.createBloc();
-    widget.mutable.bloc = bloc;
-    return bloc;
-  }
-
   @override
   Widget build(BuildContext context) {
     if (widget.widgets.isEmpty || widget.loadPageSpec == null) {
@@ -548,7 +546,7 @@ class BlocListState extends State<BlocListBase> {
     );
 
     return BlocProvider(
-        create: (context) => createBloc(), child: globalBuilder);
+        create: (context) => widget.bloc, lazy: false, child: globalBuilder);
   }
 
   @override
