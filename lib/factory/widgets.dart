@@ -88,6 +88,7 @@ class BaseWidgets with IWidgets {
         baseType: null,
         abstract: true,
         properties: {
+          "routeName": Types.string,
           "state": Types.json,
         },
         widgets: {
@@ -3445,7 +3446,7 @@ class BaseWidgets with IWidgets {
 
     Widget? label = builder.tryBuildWidget(params.context,
         params.widgets["label"], params.state, params.parentContext);
-    label ??= Text("${props["label"]}");
+    label ??= Text("${props["label"] ?? ""}");
 
     return Badge(
       key: properties.getKey(params.id),
@@ -3454,7 +3455,9 @@ class BaseWidgets with IWidgets {
       textStyle: params.buildProp("textStyle"),
       textColor: tryParseColor(props["textColor"]),
       backgroundColor: tryParseColor(props["backgroundColor"]),
-      isLabelVisible: properties.evaluateCondition(props["isLabelVisible"]),
+      isLabelVisible: props["isLabelVisible"] != null
+          ? properties.evaluateCondition(props["isLabelVisible"])
+          : true,
       label: label,
       child: builder.tryBuildWidget(params.context, params.widgets["child"],
           params.state, params.parentContext),

@@ -1,3 +1,9 @@
+## 0.1.7
+
+* New "routeName" property on Screens to allow navigating to a Screen via a name instead of an id.
+* Added Badge Widget.
+* Several minor fixes and improvements.
+
 ## 0.1.6
 
 * Fixed a typo preventing the use of BottomNavigationBar.

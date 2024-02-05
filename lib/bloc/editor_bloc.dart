@@ -30,6 +30,7 @@ class EditorBloc extends Bloc<BaseEditorEvent, BaseState> {
     }
     instance = this;
     on<AppStartedEvent>((event, emit) => onAppStartedEvent());
+    on<ScreenInitEvent>(onScreenInitEvent);
     on<LoadScreenEvent>(
         (event, emit) => emit(LoadScreenState(event.screenId, event.state)));
     on<LoadComponentEvent>(
@@ -71,6 +72,19 @@ class EditorBloc extends Bloc<BaseEditorEvent, BaseState> {
     await _hotReloadThread();
   }
 
+  Future<void> onScreenInitEvent(ScreenInitEvent event, Emitter emit) async {
+    try {
+      final serverUrl = getServerUrl();
+      final body = json.safeEncode(EditorMessage("screenInit", {
+        "id": event.screenId,
+        "state": event.state,
+      }));
+      await http.post(Uri.parse(serverUrl), body: body);
+    } catch (e, stack) {
+      _log.severe("Error sending ScreenInit to Editor: $e", e, stack);
+    }
+  }
+
   Future<void> onLogEvent(LogEvent event, Emitter emit) async {
     try {
       final serverUrl = getServerUrl();
@@ -85,6 +99,18 @@ class EditorBloc extends Bloc<BaseEditorEvent, BaseState> {
       await http.post(Uri.parse(serverUrl), body: body);
     } catch (e, stack) {
       _log.severe("Error sending log to Editor: $e", e, stack);
+    }
+  }
+
+  Future<void> sendGlobalKeys() async {
+    try {
+      final serverUrl = getServerUrl();
+      final body = json.safeEncode(EditorMessage("globalVars", {
+        "keys": Lowder.globalVariables.keys.toList(),
+      }));
+      await http.post(Uri.parse(serverUrl), body: body);
+    } catch (e, stack) {
+      _log.severe("Error sending GlobalKeys to Editor: $e", e, stack);
     }
   }
 
@@ -122,9 +148,12 @@ class EditorBloc extends Bloc<BaseEditorEvent, BaseState> {
               if (selectedNode != null) {
                 var node = Schema.getScreen(selectedNode);
                 if (node != null) {
-                  final screenState = message.data["state"] != null
-                      ? json.decodeWithReviver(message.data["state"])
-                      : null;
+                  final dataState = message.data["state"];
+                  final screenState = dataState is String
+                      ? json.decodeWithReviver(dataState)
+                      : dataState is Map
+                          ? dataState
+                          : null;
                   add(LoadScreenEvent(selectedNode, screenState));
                 } else {
                   node = Schema.getComponent(selectedNode);
@@ -153,10 +182,14 @@ class EditorBloc extends Bloc<BaseEditorEvent, BaseState> {
               add(RequestUpdatedEvent(message.data["_id"]));
               break;
             case "loadScreen":
-              final screenState = message.data["state"] != null
-                  ? json.decodeWithReviver(message.data["state"])
-                  : null;
+              final dataState = message.data["state"];
+              final screenState = dataState is String
+                  ? json.decodeWithReviver(dataState)
+                  : dataState is Map
+                      ? dataState
+                      : null;
               add(LoadScreenEvent(message.data["id"], screenState));
+              sendGlobalKeys();
               break;
             case "loadComponent":
               add(LoadComponentEvent(message.data));
@@ -190,5 +223,9 @@ class EditorBloc extends Bloc<BaseEditorEvent, BaseState> {
   Future<void> close() async {
     instance = null;
     return super.close();
+  }
+
+  static void addEvent(BaseEditorEvent event) {
+    instance?.add(event);
   }
 }

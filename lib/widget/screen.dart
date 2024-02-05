@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:lowder/util/extensions.dart';
 import '../bloc/base_state.dart';
+import '../bloc/editor_bloc.dart';
+import '../bloc/editor_event.dart';
 import '../model/node_spec.dart';
 import '../schema.dart';
 import 'lowder.dart';
@@ -21,6 +23,9 @@ class LowderScreen extends StatefulWidget {
     state.addAll(initialState);
     if (spec.props["state"] is Map) {
       state.addAll(spec.props["state"]);
+    }
+    if (Lowder.editorMode && initialState.isNotEmpty) {
+      EditorBloc.addEvent(ScreenInitEvent(spec.id, state));
     }
   }
 

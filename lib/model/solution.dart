@@ -132,6 +132,10 @@ class Solution {
     for (var screen in screens) {
       final node = WidgetNodeSpec.fromMap(screen);
       screenMap[node.id] = node;
+      final routeName = node.props["routeName"] as String?;
+      if (routeName != null && routeName.isNotEmpty) {
+        screenMap[routeName] = node;
+      }
     }
     for (var template in templates) {
       final node = WidgetNodeSpec.fromMap(template);

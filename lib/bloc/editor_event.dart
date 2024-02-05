@@ -5,6 +5,12 @@ class AppStartedEvent extends BaseEditorEvent {
   AppStartedEvent() : super();
 }
 
+class ScreenInitEvent extends BaseEditorEvent {
+  final String screenId;
+  final Map state;
+  ScreenInitEvent(this.screenId, this.state) : super();
+}
+
 class ScreenUpdatedEvent extends BaseEditorEvent {
   final String screenId;
   ScreenUpdatedEvent(this.screenId) : super();

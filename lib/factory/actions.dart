@@ -180,6 +180,7 @@ class BaseActions with IActions {
         baseType: EditorAction.terminationAction,
         properties: {
           "jumpToScreen": Types.screen,
+          "jumpToRoute": Types.string,
           "replacePrevious": Types.bool,
           "replaceAll": Types.bool,
           "state": Types.json,
@@ -201,6 +202,7 @@ class BaseActions with IActions {
         baseType: EditorAction.terminationAction,
         properties: {
           "jumpToScreen": Types.screen,
+          "jumpToRoute": Types.string,
           "state": Types.json,
           "barrierDismissible": Types.bool,
           "barrierColor": Types.color,
@@ -429,7 +431,8 @@ class BaseActions with IActions {
   Future<SilentActionResult> onNavigate(
       NodeSpec action, ActionContext context) async {
     final props = action.props;
-    final screen = Schema.getScreen(props["jumpToScreen"]);
+    final screen =
+        Schema.getScreen(props["jumpToScreen"] ?? props["jumpToRoute"]);
     final screenState = props["state"];
 
     if (screen != null) {
@@ -510,7 +513,8 @@ class BaseActions with IActions {
   Future<SilentActionResult> onShowDialog(
       NodeSpec action, ActionContext context) async {
     final props = action.props;
-    final screen = Schema.getScreen(props["jumpToScreen"]);
+    final screen =
+        Schema.getScreen(props["jumpToScreen"] ?? props["jumpToRoute"]);
     final screenState = props["state"];
     if (screen == null) {
       return SilentActionResult(false);
