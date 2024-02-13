@@ -264,6 +264,13 @@ class ActionFactory {
     }
 
     if (!result.success) {
+      if (action.actions["onFailure"] is Map) {
+        return NodeSpec.fromMap(action.actions["onFailure"]);
+      }
+
+      if (result.failureMessage != null && result.failureMessage!.isNotEmpty) {
+        showErrorMessage(result.failureMessage!);
+      }
       return null;
     }
 

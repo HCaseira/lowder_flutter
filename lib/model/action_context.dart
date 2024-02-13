@@ -28,8 +28,10 @@ class ActionResult {
   final bool success;
   final dynamic returnData;
   final Map? nextAction;
+  final String? failureMessage;
 
-  ActionResult(this.success, {this.returnData, this.nextAction});
+  ActionResult(this.success,
+      {this.returnData, this.nextAction, this.failureMessage});
 }
 
 /// An [ActionResult] variation, indicating ActionFactory that an 'action indicator' should not be displayed.

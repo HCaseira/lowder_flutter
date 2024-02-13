@@ -157,23 +157,22 @@ class BaseActions with IActions {
           "silent": Types.bool,
           "confirmation": const EditorPropertyType("KConfirmMessage"),
           "executeCondition": Types.kCondition
+        },
+        actions: {
+          "onFailure": EditorActionType.action()
         });
     registerAction(EditorAction.action, (_, __) => ActionResult(false),
         abstract: true,
         baseType: EditorAction.terminationAction,
-        properties: {
-          "returnName": Types.string,
-        },
-        actions: {
-          "nextAction": EditorActionType.action(),
-        });
+        properties: {"returnName": Types.string},
+        actions: {"nextAction": EditorActionType.action()});
 
     registerSilentAction("KActionMessage", onMessage,
         baseType: EditorAction.terminationAction,
         properties: {
           "type": const EditorPropertyListType(
               ["success", "warning", "error", "info"]),
-          "message": Types.string,
+          "message": Types.string
         });
 
     registerSilentAction("KActionNavigate", onNavigate,
@@ -220,15 +219,12 @@ class BaseActions with IActions {
     registerSilentAction("BlocState", onBlocState, properties: {
       "name": Types.string,
       "type": const EditorPropertyListType(["local", "global"]),
-      "data": Types.json,
+      "data": Types.json
     });
-    registerSilentAction("KActionSetState", onSetState, properties: {
-      "newState": Types.json,
-    });
-    registerSilentAction("KActionSetGlobalVar", onSetGlobalVar, properties: {
-      "key": Types.string,
-      "value": Types.string,
-    });
+    registerSilentAction("KActionSetState", onSetState,
+        properties: {"newState": Types.json});
+    registerSilentAction("KActionSetGlobalVar", onSetGlobalVar,
+        properties: {"key": Types.string, "value": Types.string});
     registerSilentAction("KActionIf", onIf,
         baseType: EditorAction.terminationAction,
         properties: {
@@ -239,16 +235,15 @@ class BaseActions with IActions {
           "onFalse": EditorActionType.action()
         });
 
-    registerHttpAction("KActionRequest", onRequest, properties: {
-      "request": Types.request,
-    });
+    registerHttpAction("KActionRequest", onRequest,
+        properties: {"request": Types.request});
     registerHttpAction("KActionRest", onRest, properties: {
       "url": Types.string,
       "path": Types.string,
       "method": const EditorPropertyListType(
           ["get", "post", "put", "delete", "patch"]),
       "queryArgs": Types.json,
-      "body": Types.json,
+      "body": Types.json
     });
 
     registerAction("KActionReload", onReload);
@@ -269,7 +264,7 @@ class BaseActions with IActions {
         properties: {
           "request": Types.request,
           "arrayKey": Types.string,
-          "isPaged": Types.bool,
+          "isPaged": Types.bool
         });
     registerLoadPageAction("KListActionRest", onLoadPageRest, properties: {
       "url": Types.string,
@@ -279,17 +274,12 @@ class BaseActions with IActions {
       "queryArgs": Types.json,
       "body": Types.json,
       "arrayKey": Types.string,
-      "isPaged": Types.bool,
+      "isPaged": Types.bool
     });
-    registerLoadPageAction("KListActionData", handleStaticData, properties: {
-      "data": Types.json,
-      "shuffle": Types.bool,
-    });
+    registerLoadPageAction("KListActionData", handleStaticData,
+        properties: {"data": Types.json, "shuffle": Types.bool});
     registerAction("ReloadList", onReloadList,
-        baseType: EditorAction.action,
-        properties: {
-          "listId": Types.string,
-        });
+        baseType: EditorAction.action, properties: {"listId": Types.string});
   }
 
   Future<PageLoadedState> onLoadPageRequest(LoadPageActionEvent event) async {

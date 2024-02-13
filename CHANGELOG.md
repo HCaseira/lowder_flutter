@@ -1,3 +1,9 @@
+## 0.1.8
+
+* Editor has now a search panel.
+* Actions can now have an "onFailure" Action.
+* ActionResult can now have an "failureMessage".
+
 ## 0.1.7
 
 * New "routeName" property on Screens to allow navigating to a Screen via a name instead of an id.
