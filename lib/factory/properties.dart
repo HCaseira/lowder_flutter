@@ -1703,7 +1703,7 @@ class BaseProperties with IProperties {
           } else if (spec["transform"] == "title") {
             return Strings.getTitle(value, attributes: attributes);
           }
-          return Strings.get(value);
+          return Strings.get(value, attributes: attributes);
         case "KFormatterDateTime":
           return Lowder.properties.formatDateTime(
             parseDateTime(value),

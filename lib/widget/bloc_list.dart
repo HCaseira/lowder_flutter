@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:logging/logging.dart';
 import '../bloc/base_bloc.dart';
 import '../bloc/base_state.dart';
 import '../bloc/editor_bloc.dart';
@@ -31,7 +32,7 @@ class BlocList extends BlocListBase {
         .tryBuildWidget(context, widgets["separator"], state, null);
 
     return ListView(
-      key: Lowder.properties.getKey(id),
+      key: Key("${id}_list"),
       padding: Lowder.properties.getInsets(spec.props["padding"]),
       shrinkWrap: parseBool(props["shrinkWrap"]),
       reverse: parseBool(props["reverse"]),
@@ -83,7 +84,7 @@ class BlocGrid extends BlocListBase {
     }
 
     return GridView.count(
-      key: Lowder.properties.getKey(id),
+      key: Key("${id}_list"),
       controller: controller,
       crossAxisCount: spec.buildProp("crossAxisCount") ?? 1,
       mainAxisSpacing: parseDouble(props["mainAxisSpacing"]),
@@ -151,7 +152,7 @@ class BlocPageView extends BlocListBase {
     }
 
     return PageView(
-      key: Lowder.properties.getKey(id),
+      key: Key("${id}_list"),
       pageSnapping: parseBool(props["pageSnapping"], defaultValue: true),
       padEnds: parseBool(props["padEnds"], defaultValue: true),
       scrollDirection: spec.buildProp("scrollDirection") ?? Axis.horizontal,
@@ -201,7 +202,7 @@ class BlocTable extends BlocListBase {
     }
 
     final table = Table(
-      key: Lowder.properties.getKey(id),
+      key: Key("${id}_list"),
       border: spec.buildProp("border"),
       textBaseline: spec.buildProp("textBaseline"),
       defaultVerticalAlignment:
@@ -276,7 +277,7 @@ class BlocDataTable extends BlocListBase {
     final headingRowColor = tryParseColor(props["headingRowColor"]);
 
     return DataTable(
-      key: Lowder.properties.getKey(id),
+      key: Key("${id}_list"),
       showCheckboxColumn: selectable,
       decoration: spec.buildProp("decoration"),
       border: spec.buildProp("border"),
@@ -403,10 +404,11 @@ class BlocDataTable extends BlocListBase {
 
 /// The base class for using `ListBloc` to handle page loads.
 abstract class BlocListBase extends StatefulWidget {
+  static final Map<String, KListMutable> _listState = {};
+  final log = Logger("BlocList ${StringExtension.getRandomString(4)}");
   final Map state;
   final Map? evaluatorContext;
   final WidgetNodeSpec spec;
-  final mutable = KListMutable();
   final controller = ScrollController();
 
   BlocListBase(this.spec, this.state, this.evaluatorContext, {super.key}) {
@@ -418,6 +420,16 @@ abstract class BlocListBase extends StatefulWidget {
   Map get actions => spec.actions;
   Map get widgets => spec.widgets;
   Map? get loadPageSpec => actions["loadPage"];
+
+  KListMutable get mutable {
+    // For aesthetic  reasons, keep a static reference to the list state so when a setState occurs,
+    // the rebuild will be smoother.
+    if (!_listState.containsKey(id)) {
+      _listState[id] = KListMutable();
+    }
+    return _listState[id]!;
+  }
+
   ListBloc get bloc {
     mutable.bloc ??= createBloc();
     return mutable.bloc!;
@@ -443,6 +455,12 @@ abstract class BlocListBase extends StatefulWidget {
   }
 
   loadPage({int? page}) {
+    if (mutable.blocContext == null) {
+      log.warning(
+          "Context not yet initialized while loading page '$page' on '${spec.name ?? spec.id}'.");
+      return;
+    }
+
     page ??= mutable.lastState.page + 1;
     final data = page == 1 ? [] : mutable.lastState.fullData;
 
@@ -472,8 +490,8 @@ abstract class BlocListBase extends StatefulWidget {
       stateClone.addAll(entry);
     }
 
-    return Lowder.widgets.buildWidget(
-        context, specClone, stateClone, {"entry": entry, "parent": state});
+    return Lowder.widgets.buildWidget(context, specClone, stateClone,
+        {"entry": entry, "idx": i, "parent": state});
   }
 
   Widget getLoadingIndicator() {
@@ -504,6 +522,12 @@ abstract class BlocListBase extends StatefulWidget {
     }
     return noEntriesWidget;
   }
+
+  void dispose() {
+    controller.removeListener(scrollListener);
+    mutable.dispose();
+    _listState.remove(id);
+  }
 }
 
 class BlocListState extends State<BlocListBase> {
@@ -514,31 +538,39 @@ class BlocListState extends State<BlocListBase> {
     }
 
     final listBuilder = BlocBuilder<ListBloc, BaseState>(
+      key: Key("${widget.id}_blocBuilder"),
       buildWhen: (prev, next) {
         return prev != next &&
             (next is InitialState || next is PageLoadedState);
       },
       builder: (context, state) {
-        if (state is InitialState) {
-          widget.mutable.blocContext = context;
-          widget.loadPage(page: 1);
-        } else if (state is PageLoadedState) {
-          widget.mutable.loadingPage = false;
+        final mutable = widget.mutable;
+        mutable.blocContext = context;
+        if (state is PageLoadedState) {
+          mutable.loadingPage = false;
           if (state.fullData.isEmpty) {
             return widget.getNoEntriesWidget(context);
           }
-          widget.mutable.lastState = state;
+          mutable.lastState = state;
           return widget.buildList(context);
+        } else if (state is InitialState) {
+          widget.loadPage(page: 1);
+          if (mutable.lastState.fullData.isNotEmpty) {
+            return widget.buildList(context);
+          }
         }
         return widget.getLoadingIndicator();
       },
     );
 
     final globalBuilder = BlocListener<GlobalBloc, BaseState>(
+      key: Key("${widget.id}_global"),
       listenWhen: (prev, next) =>
           prev != next && next is ReloadListState && next.listId == widget.id,
       listener: (context, state) {
         if (state is ReloadListState) {
+          widget.log
+              .info("Reloading List '${widget.spec.name ?? widget.spec.id}'.");
           widget.loadPage(page: 1);
         }
       },
@@ -546,12 +578,16 @@ class BlocListState extends State<BlocListBase> {
     );
 
     return BlocProvider(
-        create: (context) => widget.bloc, lazy: false, child: globalBuilder);
+      key: Key("${widget.id}_blocProvider"),
+      create: (context) => widget.bloc,
+      lazy: false,
+      child: globalBuilder,
+    );
   }
 
   @override
   void dispose() {
-    widget.controller.removeListener(widget.scrollListener);
+    widget.dispose();
     super.dispose();
   }
 }
@@ -561,4 +597,10 @@ class KListMutable {
   BuildContext? blocContext;
   bool loadingPage = false;
   PageLoadedState lastState = PageLoadedState(0, [], true);
+
+  void dispose() {
+    bloc = null;
+    blocContext = null;
+    lastState = PageLoadedState(0, [], true);
+  }
 }

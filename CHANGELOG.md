@@ -1,3 +1,8 @@
+## 0.1.9
+
+* Editor's console panel improvements.
+* Improved BlocList's behavior upon executing a "SetValue" Action.
+
 ## 0.1.8
 
 * Editor has now a search panel.

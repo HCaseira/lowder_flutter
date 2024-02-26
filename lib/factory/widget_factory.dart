@@ -258,6 +258,7 @@ class WidgetFactory {
       {String type = "info",
       String? message,
       Map? props,
+      GestureTapCallback? onTap,
       BuildContext? context}) async {
     if (message == null || message.isEmpty) {
       return;
@@ -284,8 +285,19 @@ class WidgetFactory {
         break;
     }
 
+    context ??= appContext;
+    final widget = GestureDetector(
+      onTap: () {
+        appNavigator.pop();
+        if (onTap != null) {
+          onTap();
+        }
+      },
+      child: Text(properties.getText(message, "errorMessage")),
+    );
+
     showGeneralDialog(
-      context: context ?? appContext,
+      context: context,
       barrierLabel: "",
       barrierDismissible: true,
       barrierColor: Colors.transparent,
@@ -293,7 +305,7 @@ class WidgetFactory {
       pageBuilder: (context, anim1, anim2) {
         return SafeArea(
             child: AlertDialog(
-          content: Text(properties.getText(message, "errorMessage")),
+          content: widget,
           contentTextStyle: TextStyle(color: textColor, fontSize: 15),
           contentPadding: const EdgeInsets.fromLTRB(24, 14, 24, 14),
           alignment: Alignment.topCenter,

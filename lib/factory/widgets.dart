@@ -2073,12 +2073,17 @@ class BaseWidgets with IWidgets {
   @protected
   TextSpan buildTextSpan(BuildContext context, WidgetNodeSpec spec, Map state,
       Map? parentContext) {
+    TapGestureRecognizer? tapRecognizer;
+    final onTap = events.getFunction(
+        context, spec.actions["onTap"], state, parentContext);
+    if (onTap != null) {
+      tapRecognizer = TapGestureRecognizer()..onTap = onTap;
+    }
+
     return TextSpan(
-      text: Strings.get(spec.props["value"]),
+      text: Strings.get(spec.props["value"] ?? ""),
       style: spec.buildProp("style"),
-      recognizer: TapGestureRecognizer()
-        ..onTap = events.getFunction(
-            context, spec.actions["onTap"], state, parentContext),
+      recognizer: tapRecognizer,
     );
   }
 
@@ -2797,27 +2802,52 @@ class BaseWidgets with IWidgets {
 
   @protected
   Widget buildListView(BuildParameters params) {
-    return BlocList(params.spec, params.state, params.parentContext);
+    return BlocList(
+      params.spec,
+      params.state,
+      params.parentContext,
+      key: properties.getKey(params.id),
+    );
   }
 
   @protected
   Widget buildGridView(BuildParameters params) {
-    return BlocGrid(params.spec, params.state, params.parentContext);
+    return BlocGrid(
+      params.spec,
+      params.state,
+      params.parentContext,
+      key: properties.getKey(params.id),
+    );
   }
 
   @protected
   Widget buildPageView(BuildParameters params) {
-    return BlocPageView(params.spec, params.state, params.parentContext);
+    return BlocPageView(
+      params.spec,
+      params.state,
+      params.parentContext,
+      key: properties.getKey(params.id),
+    );
   }
 
   @protected
   Widget buildTable(BuildParameters params) {
-    return BlocTable(params.spec, params.state, params.parentContext);
+    return BlocTable(
+      params.spec,
+      params.state,
+      params.parentContext,
+      key: properties.getKey(params.id),
+    );
   }
 
   @protected
   Widget buildDataTable(BuildParameters params) {
-    return BlocDataTable(params.spec, params.state, params.parentContext);
+    return BlocDataTable(
+      params.spec,
+      params.state,
+      params.parentContext,
+      key: properties.getKey(params.id),
+    );
   }
 
   @protected

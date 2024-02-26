@@ -193,10 +193,16 @@ class HttpServer {
       pollCount++;
     }
 
-    final data = _toEditor.removeAt(0);
+    final data = [];
+    var count = _toEditor.length;
+    while (count > 0) {
+      data.add(_toEditor.removeAt(0));
+      count--;
+    }
+
     headers['content-type'] = 'application/json; charset=utf-8';
     //log("Sending data to Editor: $data");
-    return Response.ok(data, headers: headers);
+    return Response.ok("[${data.join(",")}]", headers: headers);
   }
 
   Future<Response> _editorPost(Request request) async {
