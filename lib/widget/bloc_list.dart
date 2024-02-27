@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
@@ -405,7 +407,7 @@ class BlocDataTable extends BlocListBase {
 /// The base class for using `ListBloc` to handle page loads.
 abstract class BlocListBase extends StatefulWidget {
   static final Map<String, KListMutable> _listState = {};
-  final log = Logger("BlocList ${StringExtension.getRandomString(4)}");
+  final log = Logger("BlocList");
   final Map state;
   final Map? evaluatorContext;
   final WidgetNodeSpec spec;
@@ -422,16 +424,20 @@ abstract class BlocListBase extends StatefulWidget {
   Map? get loadPageSpec => actions["loadPage"];
 
   KListMutable get mutable {
-    // For aesthetic  reasons, keep a static reference to the list state so when a setState occurs,
-    // the rebuild will be smoother.
+    // Upon setState ocurrencies, multiple instances of the same list may exist.
+    // We're keeping a static reference to the List's state so the transition between
+    // instances can be smoother.
     if (!_listState.containsKey(id)) {
       _listState[id] = KListMutable();
     }
+    _listState[id]!.timer?.cancel();
     return _listState[id]!;
   }
 
   ListBloc get bloc {
-    mutable.bloc ??= createBloc();
+    if (mutable.bloc == null || mutable.bloc!.isClosed) {
+      mutable.bloc = createBloc();
+    }
     return mutable.bloc!;
   }
 
@@ -525,8 +531,13 @@ abstract class BlocListBase extends StatefulWidget {
 
   void dispose() {
     controller.removeListener(scrollListener);
-    mutable.dispose();
-    _listState.remove(id);
+    // Upon setState ocurrencies, multiple instances of the same list may exist.
+    // We're delaying the disposal so a new instance can cancel it and use the same state
+    // so the transition between instances can be smoother.
+    mutable.timer = Timer(const Duration(milliseconds: 100), () {
+      mutable.dispose();
+      _listState.remove(id);
+    });
   }
 }
 
@@ -539,6 +550,7 @@ class BlocListState extends State<BlocListBase> {
 
     final listBuilder = BlocBuilder<ListBloc, BaseState>(
       key: Key("${widget.id}_blocBuilder"),
+      bloc: widget.bloc,
       buildWhen: (prev, next) {
         return prev != next &&
             (next is InitialState || next is PageLoadedState);
@@ -597,10 +609,12 @@ class KListMutable {
   BuildContext? blocContext;
   bool loadingPage = false;
   PageLoadedState lastState = PageLoadedState(0, [], true);
+  Timer? timer;
 
   void dispose() {
     bloc = null;
     blocContext = null;
     lastState = PageLoadedState(0, [], true);
+    timer = null;
   }
 }
