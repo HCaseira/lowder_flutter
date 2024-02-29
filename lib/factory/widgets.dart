@@ -87,22 +87,13 @@ class BaseWidgets with IWidgets {
     registerWidget("Screen", (_) => const SizedBox(),
         baseType: null,
         abstract: true,
-        properties: {
-          "routeName": Types.string,
-          "state": Types.json,
-        },
-        widgets: {
-          "body": EditorWidgetType.rootWidget(),
-        },
-        actions: {
-          "onEnter": EditorActionType.action(),
-        });
+        properties: {"routeName": Types.string, "state": Types.json},
+        widgets: {"body": EditorWidgetType.rootWidget()},
+        actions: {"onEnter": EditorActionType.action()});
     registerWidget("RootWidget", (_) => const SizedBox(),
         baseType: null,
         abstract: true,
-        properties: {
-          "template": const EditorPropertyType("KTemplate"),
-        });
+        properties: {"template": const EditorPropertyType("KTemplate")});
     registerWidget("PreferredSizeWidget", (_) => const SizedBox(),
         baseType: null,
         abstract: true,
@@ -110,7 +101,7 @@ class BaseWidgets with IWidgets {
           "template": const EditorPropertyType("KTemplate"),
           "heroTag": Types.string,
           "safeArea": Types.bool,
-          "buildCondition": Types.kCondition,
+          "buildCondition": Types.kCondition
         });
     registerWidget("Widget", (_) => const SizedBox(),
         baseType: null,
@@ -123,7 +114,7 @@ class BaseWidgets with IWidgets {
           "margin": Types.intArray,
           "heroTag": Types.string,
           "safeArea": Types.safeArea,
-          "buildCondition": Types.kCondition,
+          "buildCondition": Types.kCondition
         });
 
     final componentProperties = {
@@ -181,11 +172,13 @@ class BaseWidgets with IWidgets {
         properties: {
           "tabController": Types.tabController,
           "backgroundColor": Types.color,
+          "shrinkWrap": Types.bool,
           "reverse": Types.bool,
           "scrollDirection": Types.axis,
           "extendBody": Types.bool,
           "extendBodyBehindAppBar": Types.bool,
-          "floatingActionButtonLocation": Types.floatingActionButtonLocation
+          "floatingActionButtonLocation": Types.floatingActionButtonLocation,
+          "keyboardDismissBehavior": Types.keyboardDismissBehavior
         },
         widgets: {
           "appBar": EditorWidgetType("sliverAppBar"),
@@ -522,7 +515,8 @@ class BaseWidgets with IWidgets {
         properties: {
           "padding": Types.intArray,
           "reverse": Types.bool,
-          "scrollDirection": Types.axis
+          "scrollDirection": Types.axis,
+          "keyboardDismissBehavior": Types.keyboardDismissBehavior
         },
         widgets: {
           "child": EditorWidgetType.widget()
@@ -534,7 +528,8 @@ class BaseWidgets with IWidgets {
     registerWidget("scrollView", buildScrollView, properties: {
       "padding": Types.intArray,
       "reverse": Types.bool,
-      "scrollDirection": Types.axis
+      "scrollDirection": Types.axis,
+      "keyboardDismissBehavior": Types.keyboardDismissBehavior
     }, widgets: {
       "children": EditorWidgetType.widget(isArray: true)
     }, tags: [
@@ -561,6 +556,7 @@ class BaseWidgets with IWidgets {
       "reverse": Types.bool,
       "scrollDirection": Types.axis,
       "primary": Types.bool,
+      "keyboardDismissBehavior": Types.keyboardDismissBehavior
     };
     registerWidget("listView", buildListView,
         properties: {...listViewProps, ...blocListProps},
@@ -582,6 +578,7 @@ class BaseWidgets with IWidgets {
       "shrinkWrap": Types.bool,
       "padding": Types.intArray,
       "primary": Types.bool,
+      "keyboardDismissBehavior": Types.keyboardDismissBehavior
     };
     registerWidget("gridView", buildGridView,
         properties: {
@@ -980,6 +977,7 @@ class BaseWidgets with IWidgets {
       "disabledColor": Types.color,
       "padding": Types.intArray,
       "alignment": Types.alignment,
+      "style": Types.buttonStyle,
       "constraints": Types.boxConstraints,
     }, actions: {
       "onPressed": EditorActionType.action()
@@ -1365,7 +1363,10 @@ class BaseWidgets with IWidgets {
     final scrollView = CustomScrollView(
       key: properties.getKey(params.id),
       reverse: parseBool(params.props["reverse"]),
+      shrinkWrap: parseBool(params.props["shrinkWrap"]),
       scrollDirection: params.buildProp("scrollDirection") ?? Axis.vertical,
+      keyboardDismissBehavior: params.buildProp("keyboardDismissBehavior") ??
+          ScrollViewKeyboardDismissBehavior.manual,
       slivers: [
         if (appBar != null) appBar,
         SliverList(delegate: SliverChildListDelegate(children)),
@@ -2777,6 +2778,8 @@ class BaseWidgets with IWidgets {
       padding: properties.getInsets(params.props["padding"]),
       reverse: parseBool(params.props["reverse"]),
       scrollDirection: params.buildProp("scrollDirection") ?? Axis.vertical,
+      keyboardDismissBehavior: params.buildProp("keyboardDismissBehavior") ??
+          ScrollViewKeyboardDismissBehavior.manual,
       child: child,
     );
   }
@@ -2796,6 +2799,8 @@ class BaseWidgets with IWidgets {
       padding: properties.getInsets(params.props["padding"]),
       reverse: parseBool(params.props["reverse"]),
       scrollDirection: params.buildProp("scrollDirection") ?? Axis.vertical,
+      keyboardDismissBehavior: params.buildProp("keyboardDismissBehavior") ??
+          ScrollViewKeyboardDismissBehavior.manual,
       children: children,
     );
   }
@@ -2870,6 +2875,8 @@ class BaseWidgets with IWidgets {
       reverse: parseBool(props["reverse"]),
       primary: tryParseBool(props["primary"]),
       scrollDirection: spec.buildProp("scrollDirection") ?? Axis.vertical,
+      keyboardDismissBehavior: spec.buildProp("keyboardDismissBehavior") ??
+          ScrollViewKeyboardDismissBehavior.manual,
       semanticChildCount: children.length,
       children: children,
     );
@@ -2900,6 +2907,8 @@ class BaseWidgets with IWidgets {
       shrinkWrap: parseBool(props["shrinkWrap"]),
       padding: Lowder.properties.getInsets(spec.props["padding"]),
       primary: tryParseBool(props["primary"]),
+      keyboardDismissBehavior: params.buildProp("keyboardDismissBehavior") ??
+          ScrollViewKeyboardDismissBehavior.manual,
       semanticChildCount: children.length,
       children: children,
     );
@@ -3327,6 +3336,7 @@ class BaseWidgets with IWidgets {
       splashColor: tryParseColor(params.props["splashColor"]),
       highlightColor: tryParseColor(params.props["highlightColor"]),
       disabledColor: tryParseColor(params.props["disabledColor"]),
+      style: params.buildProp("style"),
       constraints: params.buildProp("constraints"),
       onPressed: events.getFunction(params.context, params.actions["onPressed"],
           params.state, params.parentContext),

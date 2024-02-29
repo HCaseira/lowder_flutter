@@ -42,6 +42,8 @@ class BlocList extends BlocListBase {
       controller: controller,
       scrollDirection: axis,
       semanticChildCount: count,
+      keyboardDismissBehavior: spec.buildProp("keyboardDismissBehavior") ??
+          ScrollViewKeyboardDismissBehavior.manual,
       children: List.generate(count, (i) {
         if (mutable.lastState.hasMore && i == count - 1) {
           return getLoadingIndicator();
@@ -98,6 +100,8 @@ class BlocGrid extends BlocListBase {
       shrinkWrap: parseBool(props["shrinkWrap"]),
       padding: Lowder.properties.getInsets(spec.props["padding"]),
       primary: tryParseBool(props["primary"]),
+      keyboardDismissBehavior: spec.buildProp("keyboardDismissBehavior") ??
+          ScrollViewKeyboardDismissBehavior.manual,
       semanticChildCount: count,
       children: List.generate(count, (i) {
         if (mutable.lastState.hasMore && i == count - 1) {

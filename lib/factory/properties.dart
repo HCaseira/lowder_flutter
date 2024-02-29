@@ -562,6 +562,9 @@ class BaseProperties with IProperties {
       "elasticOut",
       "elasticInOut",
     ]);
+
+    registerListType(Types.keyboardDismissBehavior.type,
+        getKeyboardDismissBehavior, ["onDrag", "manual"]);
   }
 
   MaterialType? getMaterialType(String? type) {
@@ -1827,6 +1830,21 @@ class BaseProperties with IProperties {
         return Curves.elasticOut;
       case "elasticInOut":
         return Curves.elasticInOut;
+      default:
+        return null;
+    }
+  }
+
+  ScrollViewKeyboardDismissBehavior? getKeyboardDismissBehavior(String? value) {
+    if (value == null || value.isEmpty) {
+      return null;
+    }
+
+    switch (value) {
+      case "onDrag":
+        return ScrollViewKeyboardDismissBehavior.onDrag;
+      case "manual":
+        return ScrollViewKeyboardDismissBehavior.manual;
       default:
         return null;
     }

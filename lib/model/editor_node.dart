@@ -317,4 +317,6 @@ abstract class Types {
   static const shadow = EditorPropertyType("Shadow");
   static const boxShadow = EditorPropertyType("BoxShadow");
   static const curve = EditorPropertyType("Curve");
+  static const keyboardDismissBehavior =
+      EditorPropertyType("KeyboardDismissBehavior");
 }
