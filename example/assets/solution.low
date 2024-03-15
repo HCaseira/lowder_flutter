@@ -170,27 +170,14 @@
                         }
                       },
                       {
-                        "_id": "cb6b650c-69ef-43fa-8fae-28cb8130dcc3",
-                        "_type": "sizedBox",
-                        "properties": {
-                          "height": "10"
-                        }
-                      },
-                      {
                         "_id": "9dd98b56-1656-4e87-bdb5-048085a96109",
                         "_type": "container",
                         "properties": {
                           "decoration": {
                             "color": "#1c1b1f"
                           },
-                          "height": "1"
-                        }
-                      },
-                      {
-                        "_id": "426b04c7-dbae-42c1-8c4c-8b65931c3353",
-                        "_type": "sizedBox",
-                        "properties": {
-                          "height": "10"
+                          "height": "1",
+                          "margin": "10 0"
                         }
                       },
                       {

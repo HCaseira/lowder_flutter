@@ -1,3 +1,7 @@
+## 0.1.10
+
+* Fixed issue in the Editor, where the selected context option (state, env, global, etc) was not displayed.
+
 ## 0.1.9
 
 * Editor's console panel improvements.
