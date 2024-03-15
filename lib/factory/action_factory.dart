@@ -310,30 +310,40 @@ class ActionFactory {
 
   /// Method used to make Http calls.
   /// Conveniently placed in this class to facilitate overrides.
-  Future<http.Response> httpCall(Uri uri, String method,
+  Future<HttpResponse> httpCall(Uri uri, String method,
       {Object? body, Map<String, String>? headers, Encoding? encoding}) async {
+    http.Response response;
     switch (method) {
       case "post":
-        return await http.post(uri,
+        response = await http.post(uri,
             body: body, headers: headers, encoding: encoding);
+        break;
       case "put":
-        return await http.put(uri,
+        response = await http.put(uri,
             body: body, headers: headers, encoding: encoding);
+        break;
       case "patch":
-        return await http.patch(uri,
+        response = await http.patch(uri,
             body: body, headers: headers, encoding: encoding);
+        break;
       case "delete":
-        return await http.delete(uri,
+        response = await http.delete(uri,
             body: body, headers: headers, encoding: encoding);
+        break;
       default:
-        return await http.get(uri, headers: headers);
+        response = await http.get(uri, headers: headers);
+        break;
     }
+    return HttpResponse(response.statusCode, response.body,
+        reasonPhrase: response.reasonPhrase,
+        headers: response.headers,
+        extra: {"response": response});
   }
 
   /// Method used to handle Http errors.
   /// Conveniently placed in this class to facilitate overrides.
   Future<RetryAction> onHttpError(
-      http.Response response, NodeSpec action, ActionContext context) async {
+      HttpResponse response, NodeSpec action, ActionContext context) async {
     if (response.statusCode == 401) {
       showErrorMessage("invalid_session_message");
     } else {
@@ -345,7 +355,7 @@ class ActionFactory {
   /// Method used to handle a successful Http call.
   /// Conveniently placed in this class to facilitate overrides.
   HttpActionResult onHttpSuccess(
-      http.Response response, NodeSpec action, ActionContext context) {
+      HttpResponse response, NodeSpec action, ActionContext context) {
     final data = (response.headers[HttpHeaders.contentTypeHeader] ?? "")
             .contains("application/json")
         ? json.decodeWithReviver(response.body)
@@ -387,4 +397,18 @@ class ActionFactory {
   /// Convenience method to display an error method to the user.
   void showErrorMessage(String message) =>
       widgets.showMessage(type: "error", message: message);
+}
+
+/// Utility class to abstract the http client's response object.
+class HttpResponse {
+  final int statusCode;
+  final String? reasonPhrase;
+  final String body;
+  final Map<String, String> headers;
+  final Map<String, dynamic>? extra;
+
+  HttpResponse(this.statusCode, this.body,
+      {this.reasonPhrase, this.headers = const {}, this.extra});
+
+  bool get isSuccess => (statusCode ~/ 100) == 2;
 }

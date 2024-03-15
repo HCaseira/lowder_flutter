@@ -111,7 +111,7 @@ class BaseWidgets with IWidgets {
           "decorator": const EditorPropertyType("Decorator"),
           "wrapExpanded": Types.bool,
           "visible": Types.bool,
-          "margin": Types.intArray,
+          "margin": Types.edgeInsets,
           "heroTag": Types.string,
           "safeArea": Types.safeArea,
           "buildCondition": Types.kCondition
@@ -228,7 +228,7 @@ class BaseWidgets with IWidgets {
         properties: {
           "title": Types.string,
           "centerTitle": Types.bool,
-          "titlePadding": Types.intArray,
+          "titlePadding": Types.edgeInsets,
           "leadingIcon": Types.appBarLeadingIcon,
           "backgroundColor": Types.color,
           "foregroundColor": Types.color,
@@ -298,7 +298,7 @@ class BaseWidgets with IWidgets {
           "label": Types.string,
           "iconCode": Types.int,
           "selectedIconCode": Types.int,
-          "padding": Types.intArray,
+          "padding": Types.edgeInsets,
           "buildCondition": Types.kCondition
         },
         tags: [
@@ -320,7 +320,7 @@ class BaseWidgets with IWidgets {
       "structure & navigation"
     ]);
     registerWidget("drawerHeader", buildDrawerHeader, properties: {
-      "padding": Types.intArray,
+      "padding": Types.edgeInsets,
       "decoration": Types.boxDecoration
     }, widgets: {
       "child": EditorWidgetType.widget()
@@ -403,7 +403,7 @@ class BaseWidgets with IWidgets {
     registerWidget("container", buildContainer, properties: {
       "width": Types.int,
       "height": Types.int,
-      "padding": Types.intArray,
+      "padding": Types.edgeInsets,
       "alignment": Types.alignment,
       "constraints": Types.boxConstraints,
       "decoration": Types.boxDecoration
@@ -416,7 +416,7 @@ class BaseWidgets with IWidgets {
     registerWidget("AnimatedContainer", buildAnimatedContainer, properties: {
       "width": Types.int,
       "height": Types.int,
-      "padding": Types.intArray,
+      "padding": Types.edgeInsets,
       "alignment": Types.alignment,
       "constraints": Types.boxConstraints,
       "decoration": Types.boxDecoration,
@@ -437,7 +437,7 @@ class BaseWidgets with IWidgets {
       "shadowColor": Types.color,
       "elevation": Types.double,
       "shape": Types.shapeBorder,
-      "margin": Types.intArray
+      "margin": Types.edgeInsets
     }, widgets: {
       "child": EditorWidgetType.widget()
     }, tags: [
@@ -513,7 +513,7 @@ class BaseWidgets with IWidgets {
 
     registerWidget("SingleChildScrollView", buildSingleChildScrollView,
         properties: {
-          "padding": Types.intArray,
+          "padding": Types.edgeInsets,
           "reverse": Types.bool,
           "scrollDirection": Types.axis,
           "keyboardDismissBehavior": Types.keyboardDismissBehavior
@@ -526,7 +526,7 @@ class BaseWidgets with IWidgets {
           "scrolling"
         ]);
     registerWidget("scrollView", buildScrollView, properties: {
-      "padding": Types.intArray,
+      "padding": Types.edgeInsets,
       "reverse": Types.bool,
       "scrollDirection": Types.axis,
       "keyboardDismissBehavior": Types.keyboardDismissBehavior
@@ -551,7 +551,7 @@ class BaseWidgets with IWidgets {
     };
 
     final listViewProps = {
-      "padding": Types.intArray,
+      "padding": Types.edgeInsets,
       "shrinkWrap": Types.bool,
       "reverse": Types.bool,
       "scrollDirection": Types.axis,
@@ -576,7 +576,7 @@ class BaseWidgets with IWidgets {
       "scrollDirection": Types.axis,
       "reverse": Types.bool,
       "shrinkWrap": Types.bool,
-      "padding": Types.intArray,
+      "padding": Types.edgeInsets,
       "primary": Types.bool,
       "keyboardDismissBehavior": Types.keyboardDismissBehavior
     };
@@ -663,16 +663,16 @@ class BaseWidgets with IWidgets {
     ]);
 
     registerWidget("tabView", buildTabView, properties: {
-      "padding": Types.intArray,
+      "padding": Types.edgeInsets,
       "indicator": Types.boxDecoration,
       "indicatorColor": Types.color,
-      "indicatorPadding": Types.intArray,
+      "indicatorPadding": Types.edgeInsets,
       "indicatorSize": Types.tabBarIndicatorSize,
       "indicatorWeight": Types.double,
       "initialIndex": Types.int,
       "isScrollable": Types.bool,
       "labelColor": Types.color,
-      "labelPadding": Types.intArray,
+      "labelPadding": Types.edgeInsets,
       "labelStyle": Types.textStyle,
       "unselectedLabelColor": Types.color,
       "unselectedLabelStyle": Types.textStyle,
@@ -692,15 +692,15 @@ class BaseWidgets with IWidgets {
     registerWidget("tabBar", buildTabBar,
         baseType: EditorWidget.preferredSizeWidget,
         properties: {
-          "padding": Types.intArray,
+          "padding": Types.edgeInsets,
           "indicator": Types.boxDecoration,
           "indicatorColor": Types.color,
-          "indicatorPadding": Types.intArray,
+          "indicatorPadding": Types.edgeInsets,
           "indicatorSize": Types.tabBarIndicatorSize,
           "indicatorWeight": Types.double,
           "isScrollable": Types.bool,
           "labelColor": Types.color,
-          "labelPadding": Types.intArray,
+          "labelPadding": Types.edgeInsets,
           "labelStyle": Types.textStyle,
           "unselectedLabelColor": Types.color,
           "unselectedLabelStyle": Types.textStyle,
@@ -724,7 +724,7 @@ class BaseWidgets with IWidgets {
       "subValue": Types.string,
       "enabled": Types.bool,
       "listTileStyle": const EditorPropertyListType(["drawer", "list"]),
-      "contentPadding": Types.intArray,
+      "contentPadding": Types.edgeInsets,
       "horizontalTitleGap": Types.double,
       "shape": Types.shapeBorder,
       "iconColor": Types.color,
@@ -891,7 +891,7 @@ class BaseWidgets with IWidgets {
       "enabled": Types.bool,
       "required": Types.bool,
       "requiredMessage": Types.string,
-      "contentPadding": Types.intArray,
+      "contentPadding": Types.edgeInsets,
       "activeColor": Types.color,
       "hoverColor": Types.color,
       "title": Types.string,
@@ -975,7 +975,7 @@ class BaseWidgets with IWidgets {
       "splashColor": Types.color,
       "highlightColor": Types.color,
       "disabledColor": Types.color,
-      "padding": Types.intArray,
+      "padding": Types.edgeInsets,
       "alignment": Types.alignment,
       "style": Types.buttonStyle,
       "constraints": Types.boxConstraints,
@@ -1054,7 +1054,7 @@ class BaseWidgets with IWidgets {
       "color": Types.color,
       "tooltip": Types.string,
       "shape": Types.shapeBorder,
-      "padding": Types.intArray,
+      "padding": Types.edgeInsets,
       "enabled": Types.bool,
       "offset": Types.doubleArray,
       "elevation": Types.double,
@@ -1125,7 +1125,7 @@ class BaseWidgets with IWidgets {
     registerWidget("Badge", buildBadge, properties: {
       "label": Types.string,
       "alignment": Types.alignment,
-      "padding": Types.intArray,
+      "padding": Types.edgeInsets,
       "textStyle": Types.textStyle,
       "textColor": Types.color,
       "backgroundColor": Types.color,
@@ -1489,7 +1489,7 @@ class BaseWidgets with IWidgets {
     final flexible = FlexibleSpaceBar(
       title: title,
       centerTitle: tryParseBool(params.props["centerTitle"]),
-      titlePadding: properties.getInsets(params.props["titlePadding"]),
+      titlePadding: params.buildProp("titlePadding"),
       expandedTitleScale:
           parseDouble(params.props["expandedTitleScale"], defaultValue: 1.5),
       collapseMode: params.buildProp("collapseMode") ?? CollapseMode.parallax,
@@ -1589,6 +1589,7 @@ class BaseWidgets with IWidgets {
                 navigator.push(builder.buildRoute(screen));
               }
             });
+            SchedulerBinding.instance.ensureVisualUpdate();
           });
         } else {
           var specActions = spec["actions"] ?? {};
@@ -1601,7 +1602,7 @@ class BaseWidgets with IWidgets {
           selectedIcon:
               Icon(IconData(selectedIconCode, fontFamily: "MaterialIcons")),
           label: Text(properties.getText(label, "menu")),
-          padding: properties.getInsets(specProps["padding"]),
+          padding: params.buildProp("padding"),
         ));
       }
     }
@@ -1701,7 +1702,7 @@ class BaseWidgets with IWidgets {
   Widget buildDrawerHeader(BuildParameters params) {
     return DrawerHeader(
       key: properties.getKey(params.id),
-      padding: properties.getInsets(params.props["padding"]) ??
+      padding: params.buildProp("padding") ??
           const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
       decoration: params.buildProp("decoration"),
       child: builder.tryBuildWidget(params.context, params.widgets["child"],
@@ -1883,7 +1884,7 @@ class BaseWidgets with IWidgets {
       key: properties.getKey(params.id),
       width: tryParseDouble(params.props["width"]),
       height: tryParseDouble(params.props["height"]),
-      padding: properties.getInsets(params.props["padding"]),
+      padding: params.buildProp("padding"),
       alignment: params.buildProp("alignment"),
       constraints: params.buildProp("constraints"),
       decoration: decoration,
@@ -1904,7 +1905,7 @@ class BaseWidgets with IWidgets {
       key: properties.getKey(params.id),
       width: tryParseDouble(params.props["width"]),
       height: tryParseDouble(params.props["height"]),
-      padding: properties.getInsets(params.props["padding"]),
+      padding: params.buildProp("padding"),
       alignment: params.buildProp("alignment"),
       constraints: params.buildProp("constraints"),
       decoration: decoration,
@@ -2035,7 +2036,7 @@ class BaseWidgets with IWidgets {
       subtitle: subtitle,
       trailing: builder.tryBuildWidget(params.context,
           params.widgets["trailing"], params.state, params.parentContext),
-      contentPadding: properties.getInsets(params.props["contentPadding"]),
+      contentPadding: params.buildProp("contentPadding"),
       horizontalTitleGap: tryParseDouble(params.props["horizontalTitleGap"]),
       style: listTileStyle,
       iconColor: tryParseColor(params.props["iconColor"]),
@@ -2534,7 +2535,7 @@ class BaseWidgets with IWidgets {
               : subtitle,
           secondary: builder.tryBuildWidget(params.context,
               params.widgets["secondary"], params.state, params.parentContext),
-          contentPadding: properties.getInsets(params.props["contentPadding"]),
+          contentPadding: params.buildProp("contentPadding"),
           onChanged: enabled
               ? (val) {
                   state.didChange(val);
@@ -2605,7 +2606,7 @@ class BaseWidgets with IWidgets {
               : subtitle,
           secondary: builder.tryBuildWidget(params.context,
               params.widgets["secondary"], params.state, params.parentContext),
-          contentPadding: properties.getInsets(params.props["contentPadding"]),
+          contentPadding: params.buildProp("contentPadding"),
           onChanged: enabled
               ? (val) {
                   state.didChange(val);
@@ -2775,7 +2776,7 @@ class BaseWidgets with IWidgets {
         params.widgets["child"], params.state, params.parentContext);
     return SingleChildScrollView(
       key: properties.getKey(params.id),
-      padding: properties.getInsets(params.props["padding"]),
+      padding: params.buildProp("padding"),
       reverse: parseBool(params.props["reverse"]),
       scrollDirection: params.buildProp("scrollDirection") ?? Axis.vertical,
       keyboardDismissBehavior: params.buildProp("keyboardDismissBehavior") ??
@@ -2796,7 +2797,7 @@ class BaseWidgets with IWidgets {
 
     return ListView(
       key: properties.getKey(params.id),
-      padding: properties.getInsets(params.props["padding"]),
+      padding: params.buildProp("padding"),
       reverse: parseBool(params.props["reverse"]),
       scrollDirection: params.buildProp("scrollDirection") ?? Axis.vertical,
       keyboardDismissBehavior: params.buildProp("keyboardDismissBehavior") ??
@@ -2870,7 +2871,7 @@ class BaseWidgets with IWidgets {
 
     return ListView(
       key: properties.getKey(params.id),
-      padding: Lowder.properties.getInsets(spec.props["padding"]),
+      padding: spec.buildProp("padding"),
       shrinkWrap: parseBool(props["shrinkWrap"]),
       reverse: parseBool(props["reverse"]),
       primary: tryParseBool(props["primary"]),
@@ -2905,7 +2906,7 @@ class BaseWidgets with IWidgets {
       scrollDirection: spec.buildProp("scrollDirection") ?? Axis.vertical,
       reverse: parseBool(props["reverse"]),
       shrinkWrap: parseBool(props["shrinkWrap"]),
-      padding: Lowder.properties.getInsets(spec.props["padding"]),
+      padding: spec.buildProp("padding"),
       primary: tryParseBool(props["primary"]),
       keyboardDismissBehavior: params.buildProp("keyboardDismissBehavior") ??
           ScrollViewKeyboardDismissBehavior.manual,
@@ -2980,18 +2981,17 @@ class BaseWidgets with IWidgets {
         children: [
           TabBar(
             tabs: tabs,
-            padding: properties.getInsets(params.props["padding"]),
+            padding: params.buildProp("padding"),
             indicator: params.buildProp("indicator"),
             indicatorColor: tryParseColor(params.props["indicatorColor"]),
             indicatorPadding:
-                properties.getInsets(params.props["indicatorPadding"]) ??
-                    EdgeInsets.zero,
+                params.buildProp("indicatorPadding") ?? EdgeInsets.zero,
             indicatorSize: params.buildProp("indicatorSize"),
             indicatorWeight:
                 parseDouble(params.props["indicatorWeight"], defaultValue: 2.0),
             isScrollable: parseBool(params.props["isScrollable"]),
             labelColor: tryParseColor(params.props["labelColor"]),
-            labelPadding: properties.getInsets(params.props["labelPadding"]),
+            labelPadding: params.buildProp("labelPadding"),
             labelStyle: params.buildProp("labelStyle"),
             unselectedLabelColor:
                 tryParseColor(params.props["unselectedLabelColor"]),
@@ -3026,18 +3026,16 @@ class BaseWidgets with IWidgets {
     return TabBar(
       key: properties.getKey(params.id),
       tabs: tabs,
-      padding: properties.getInsets(params.props["padding"]),
+      padding: params.buildProp("padding"),
       indicator: params.buildProp("indicator"),
       indicatorColor: tryParseColor(params.props["indicatorColor"]),
-      indicatorPadding:
-          properties.getInsets(params.props["indicatorPadding"]) ??
-              EdgeInsets.zero,
+      indicatorPadding: params.buildProp("indicatorPadding") ?? EdgeInsets.zero,
       indicatorSize: params.buildProp("indicatorSize"),
       indicatorWeight:
           parseDouble(params.props["indicatorWeight"], defaultValue: 2.0),
       isScrollable: parseBool(params.props["isScrollable"]),
       labelColor: tryParseColor(params.props["labelColor"]),
-      labelPadding: properties.getInsets(params.props["labelPadding"]),
+      labelPadding: params.buildProp("labelPadding"),
       labelStyle: params.buildProp("labelStyle"),
       unselectedLabelColor: tryParseColor(params.props["unselectedLabelColor"]),
       unselectedLabelStyle: params.buildProp("unselectedLabelStyle"),
@@ -3258,8 +3256,7 @@ class BaseWidgets with IWidgets {
           ? properties.getText(params.props["tooltip"], "label")
           : null,
       shape: params.buildProp("shape"),
-      padding: properties.getInsets(params.props["padding"]) ??
-          const EdgeInsets.all(8.0),
+      padding: params.buildProp("padding") ?? const EdgeInsets.all(8.0),
       enabled: parseBool(params.props["enabled"], defaultValue: true),
       offset: params.buildProp("offset") ?? Offset.zero,
       elevation: tryParseDouble(params.props["elevation"]),
@@ -3324,8 +3321,7 @@ class BaseWidgets with IWidgets {
       key: properties.getKey(params.id),
       icon: icon,
       alignment: params.buildProp("alignment") ?? AlignmentDirectional.center,
-      padding: properties.getInsets(params.props["padding"]) ??
-          const EdgeInsets.all(8.0),
+      padding: params.buildProp("padding") ?? const EdgeInsets.all(8.0),
       iconSize: parseDouble(params.props["iconSize"], defaultValue: 24.0),
       tooltip: params.props["tooltip"] != null
           ? properties.getText(params.props["tooltip"], "label")
@@ -3491,7 +3487,7 @@ class BaseWidgets with IWidgets {
     return Badge(
       key: properties.getKey(params.id),
       alignment: params.buildProp("alignment"),
-      padding: properties.getInsets(props["padding"]),
+      padding: params.buildProp("padding"),
       textStyle: params.buildProp("textStyle"),
       textColor: tryParseColor(props["textColor"]),
       backgroundColor: tryParseColor(props["backgroundColor"]),
@@ -3584,8 +3580,12 @@ class BaseWidgets with IWidgets {
       }
       params.state.remove(widgetSpec["_id"]);
 
-      return builder.buildWidget(
-          context, widgetSpec.clone(), params.state, stateContext);
+      // Returning a dummy Builder with an unique key to force a repaint.
+      return Builder(
+        key: UniqueKey(),
+        builder: (context) => builder.buildWidget(
+            context, widgetSpec!.clone(), params.state, stateContext),
+      );
     }
 
     return type == "global"

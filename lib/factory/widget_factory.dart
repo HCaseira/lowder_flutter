@@ -110,7 +110,8 @@ class WidgetFactory {
   Widget createWidget(BuildContext context, WidgetNodeSpec spec, Map state,
       Map? parentContext) {
     if (!EditorBloc.editMode && spec.props["buildCondition"] != null) {
-      if (!properties.evaluateCondition(spec.props["buildCondition"])) {
+      if (!properties.build(
+          Types.kCondition.type, spec.props["buildCondition"])) {
         return const NoWidget();
       }
     }

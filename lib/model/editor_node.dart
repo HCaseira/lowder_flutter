@@ -175,9 +175,7 @@ class EditorPropertyString extends EditorPropertyType {
   const EditorPropertyString({super.isArray}) : super("String");
 
   @override
-  String? build(propValue, {argument}) {
-    return propValue?.toString();
-  }
+  String? build(propValue, {argument}) => propValue?.toString();
 }
 
 /// Int type Property.
@@ -185,9 +183,7 @@ class EditorPropertyInt extends EditorPropertyType {
   const EditorPropertyInt({super.isArray}) : super("Int");
 
   @override
-  int? build(propValue, {argument}) {
-    return tryParseInt(propValue);
-  }
+  int? build(propValue, {argument}) => tryParseInt(propValue);
 }
 
 /// Double type Property.
@@ -195,9 +191,7 @@ class EditorPropertyDouble extends EditorPropertyType {
   const EditorPropertyDouble({super.isArray}) : super("Double");
 
   @override
-  double? build(propValue, {argument}) {
-    return tryParseDouble(propValue);
-  }
+  double? build(propValue, {argument}) => tryParseDouble(propValue);
 }
 
 /// Bool type Property.
@@ -205,9 +199,7 @@ class EditorPropertyBool extends EditorPropertyType {
   const EditorPropertyBool({super.isArray}) : super("Bool");
 
   @override
-  bool? build(propValue, {argument}) {
-    return tryParseBool(propValue);
-  }
+  bool? build(propValue, {argument}) => tryParseBool(propValue);
 }
 
 /// Color type Property.
@@ -215,9 +207,7 @@ class EditorPropertyColor extends EditorPropertyType {
   const EditorPropertyColor({super.isArray}) : super("Color");
 
   @override
-  Color? build(propValue, {argument}) {
-    return tryParseColor(propValue);
-  }
+  Color? build(propValue, {argument}) => tryParseColor(propValue);
 }
 
 /// Json type Property.
@@ -225,9 +215,7 @@ class EditorPropertyJson extends EditorPropertyType {
   const EditorPropertyJson({super.isArray}) : super("Json");
 
   @override
-  build(propValue, {argument}) {
-    return propValue;
-  }
+  build(propValue, {argument}) => propValue;
 }
 
 /// Class for creating a Node's Property as a list of possible values
@@ -264,6 +252,7 @@ abstract class Types {
   static const fontWeight = EditorPropertyType("FontWeight");
   static const fontStyle = EditorPropertyType("FontStyle");
   static const textDecoration = EditorPropertyType("TextDecoration");
+  static const edgeInsets = EditorPropertyType("EdgeInsets");
   static const boxShape = EditorPropertyType("BoxShape");
   static const borderType = EditorPropertyType("BorderType");
   static const navigationRailLabelType =

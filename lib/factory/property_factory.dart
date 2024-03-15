@@ -27,7 +27,14 @@ class PropertyFactory {
       log.severe("Property resolver for '$type' not found");
       return propValue;
     }
-    final func = _builders[type]!;
+    var func = _builders[type]!;
+    if (propValue is Map && propValue["_type"] is String) {
+      // Check if the "_type" subtype has its own resolver
+      final subtype = propValue["_type"] as String;
+      if (_builders.containsKey(subtype) && _builders[subtype] != null) {
+        func = _builders[subtype]!;
+      }
+    }
     if (func is ValueSpecBuildFunction) {
       return func(argument, propValue);
     } else {
@@ -47,21 +54,7 @@ class PropertyFactory {
   }
 
   /// Utility method to build an [EdgeInsets] based on a Property's [value].
-  EdgeInsets? getInsets(dynamic value) {
-    if (value == null) return null;
-    if (value is num) return EdgeInsets.all(parseDouble(value));
-
-    var parts = value.toString().split(RegExp(r'[|\s]'));
-    if (parts.length > 2) {
-      return EdgeInsets.fromLTRB(parseDouble(parts[0]), parseDouble(parts[1]),
-          parseDouble(parts[2]), parseDouble(parts[3]));
-    } else if (parts.length > 1) {
-      return EdgeInsets.symmetric(
-          vertical: parseDouble(parts[0]), horizontal: parseDouble(parts[1]));
-    } else {
-      return EdgeInsets.all(parseDouble(parts[0]));
-    }
-  }
+  EdgeInsets? getInsets(dynamic value) => BaseProperties().getInsets(value);
 
   /// Utility method to return a translated string from a [value].
   /// A [context] value will define it's transformation.

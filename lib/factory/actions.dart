@@ -475,6 +475,7 @@ class BaseActions with IActions {
           navigator.push(route).then(tailFunc);
         }
       });
+      SchedulerBinding.instance.ensureVisualUpdate();
     }
     return SilentActionResult(true);
   }

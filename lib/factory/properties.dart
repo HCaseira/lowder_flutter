@@ -31,8 +31,19 @@ mixin IProperties {
     return schema;
   }
 
+  /// Abstract method to register an IProperties' properties schema and resolver.
   void registerProperties();
 
+  /// Method for registering a property without a resolver.
+  @nonVirtual
+  void registerAbstractType(
+      String name, Map<String, EditorPropertyType> properties) {
+    _schema[name] = EditorSpecProperty(properties, abstract: true);
+  }
+
+  /// Method for registering a property that has any value from a list of possible values, with the same resolver.
+  /// On the Editor, it will be shown as a dropdown element.
+  /// eg: [Alignment]
   @nonVirtual
   void registerListType(
       String name, ValueBuildFunction func, List<String> values) {
@@ -40,12 +51,8 @@ mixin IProperties {
     _schema[name] = EditorValueListProperty(values);
   }
 
-  @nonVirtual
-  void registerAbstractType(
-      String name, Map<String, EditorPropertyType> properties) {
-    _schema[name] = EditorSpecProperty(properties, abstract: true);
-  }
-
+  /// Method for registering a property which itself has properties.
+  /// eg: [BoxDecoration], [TextStyle]
   @nonVirtual
   void registerSpecType(String name, SpecBuildFunction func,
       Map<String, EditorPropertyType> properties,
@@ -61,6 +68,16 @@ mixin IProperties {
     }
   }
 
+  /// Method for registering a subtype of an existing property with its own resolver.
+  @nonVirtual
+  void registerSpecSubType(String baseType, String name, SpecBuildFunction func,
+      Map<String, EditorPropertyType> properties) {
+    _propertyBuilders[name] = func;
+    _schema[name] = EditorSpecProperty(properties, baseType: baseType);
+  }
+
+  /// Method for registering an object property, whose resolver requires a value for its execution.
+  /// eg: [ImageProvider] needs the path or url.
   @nonVirtual
   void registerValueSpecType(String name, ValueSpecBuildFunction func,
       Map<String, EditorPropertyType> properties,
@@ -76,9 +93,11 @@ mixin IProperties {
     }
   }
 
+  /// Method for registering a subtype of an existing property with its own resolver.
   @nonVirtual
-  void registerSubType(String baseType, String name,
-      Map<String, EditorPropertyType> properties) {
+  void registerValueSpecSubType(String baseType, String name,
+      ValueSpecBuildFunction func, Map<String, EditorPropertyType> properties) {
+    _propertyBuilders[name] = func;
     _schema[name] = EditorSpecProperty(properties, baseType: baseType);
   }
 }
@@ -92,6 +111,7 @@ class NoProperties with IProperties {
 }
 
 /// The Lowder's Property preset.
+/// It's a singleton class so it can be used as an utility class.
 class BaseProperties with IProperties {
   static final _instance = BaseProperties._();
   BaseProperties._();
@@ -296,12 +316,8 @@ class BaseProperties with IProperties {
       "length": Types.int,
       "initialIndex": Types.int,
     });
-    // registerSpecProperty("EdgeInsets", getInsets, EditorSpecProperty({
-    //   "left": EditorPropertyType.int(),
-    //   "top": EditorPropertyType.int(),
-    //   "right": EditorPropertyType.int(),
-    //   "bottom": EditorPropertyType.int(),
-    // }));
+
+    registerSpecType(Types.edgeInsets.type, getInsets, {});
 
     registerSpecType(Types.boxConstraints.type, getBoxConstraints, {
       "minWidth": Types.int,
@@ -650,6 +666,22 @@ class BaseProperties with IProperties {
           return child;
       }
     };
+  }
+
+  EdgeInsets? getInsets(dynamic value) {
+    if (value == null) return null;
+    if (value is num) return EdgeInsets.all(parseDouble(value));
+
+    var parts = value.toString().split(RegExp(r'[|\s]'));
+    if (parts.length > 2) {
+      return EdgeInsets.fromLTRB(parseDouble(parts[0]), parseDouble(parts[1]),
+          parseDouble(parts[2]), parseDouble(parts[3]));
+    } else if (parts.length > 1) {
+      return EdgeInsets.symmetric(
+          vertical: parseDouble(parts[0]), horizontal: parseDouble(parts[1]));
+    } else {
+      return EdgeInsets.all(parseDouble(parts[0]));
+    }
   }
 
   TextInputType getTextInputType(String? inputType) {

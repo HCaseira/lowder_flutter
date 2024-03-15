@@ -2,6 +2,9 @@
 
 * Editor's console panel improvements.
 * Improved BlocList's behavior upon executing a "SetValue" Action.
+* Removed references to "http" package on method's arguments and return values, so the user can use any http client.
+* Improved the ability for creating new property variations.
+* Other minor fixes and improvements.
 
 ## 0.1.8
 
