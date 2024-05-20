@@ -96,9 +96,12 @@ extension JsonCodecExtensions on JsonCodec {
 extension StringExtension on String {
   static const _chars =
       'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
-  static String getRandomString(int length) =>
-      String.fromCharCodes(Iterable.generate(
-          length, (_) => _chars.codeUnitAt(Random().nextInt(_chars.length))));
+  static String getRandomString(int length) {
+    final random = Random.secure();
+    return String.fromCharCodes(Iterable.generate(
+        length, (_) => _chars.codeUnitAt(random.nextInt(_chars.length))));
+  }
+
   String toCapitalized() =>
       length > 0 ? '${this[0].toUpperCase()}${substring(1)}' : '';
   String toTitleCase() => replaceAll(RegExp(' +'), ' ')

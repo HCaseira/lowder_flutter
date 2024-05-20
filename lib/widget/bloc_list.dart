@@ -294,12 +294,12 @@ class BlocDataTable extends BlocListBase {
       horizontalMargin: tryParseDouble(props["horizontalMargin"]),
       showBottomBorder: parseBool(props["showBottomBorder"]),
       headingRowColor: headingRowColor != null
-          ? MaterialStateColor.resolveWith((states) => headingRowColor)
+          ? WidgetStateColor.resolveWith((states) => headingRowColor)
           : null,
       headingRowHeight: tryParseDouble(props["headingRowHeight"]),
       headingTextStyle: spec.buildProp("headingTextStyle"),
       dataRowColor: dataRowColor != null
-          ? MaterialStateColor.resolveWith((states) => dataRowColor)
+          ? WidgetStateColor.resolveWith((states) => dataRowColor)
           : null,
       dataRowMinHeight: tryParseDouble(props["dataRowHeight"]),
       dataTextStyle: spec.buildProp("dataTextStyle"),
@@ -331,7 +331,7 @@ class BlocDataTable extends BlocListBase {
 
     return DataRow(
       color: color != null
-          ? MaterialStateColor.resolveWith((states) => color)
+          ? WidgetStateColor.resolveWith((states) => color)
           : null,
       selected: selectionList.contains(entry),
       cells: buildDataCells(context, idx),

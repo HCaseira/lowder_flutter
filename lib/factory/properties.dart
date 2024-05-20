@@ -1496,36 +1496,35 @@ class BaseProperties with IProperties {
     return ButtonStyle(
       alignment: getAlignment(spec["alignment"]),
       shape: spec["shape"] != null
-          ? MaterialStateProperty.all(getShapeBorder(spec["shape"]))
+          ? WidgetStateProperty.all(getShapeBorder(spec["shape"]))
           : null,
-      padding: padding != null
-          ? MaterialStateProperty.all<EdgeInsets>(padding)
-          : null,
+      padding:
+          padding != null ? WidgetStateProperty.all<EdgeInsets>(padding) : null,
       foregroundColor: foregroundColor != null
-          ? MaterialStateProperty.all<Color>(foregroundColor)
+          ? WidgetStateProperty.all<Color>(foregroundColor)
           : null,
       backgroundColor: backgroundColor != null
-          ? MaterialStateProperty.all<Color>(backgroundColor)
+          ? WidgetStateProperty.all<Color>(backgroundColor)
           : null,
       surfaceTintColor: backgroundColor != null
-          ? MaterialStateProperty.all<Color>(backgroundColor)
+          ? WidgetStateProperty.all<Color>(backgroundColor)
           : null,
       overlayColor: overlayColor != null
-          ? MaterialStateProperty.all<Color>(overlayColor)
+          ? WidgetStateProperty.all<Color>(overlayColor)
           : null,
       side: borderSide != null
-          ? MaterialStateProperty.all<BorderSide>(borderSide)
+          ? WidgetStateProperty.all<BorderSide>(borderSide)
           : null,
       textStyle: textStyle != null
-          ? MaterialStateProperty.all<TextStyle>(textStyle)
+          ? WidgetStateProperty.all<TextStyle>(textStyle)
           : null,
       fixedSize:
-          fixedSize != null ? MaterialStateProperty.all<Size>(fixedSize) : null,
+          fixedSize != null ? WidgetStateProperty.all<Size>(fixedSize) : null,
       maximumSize: maximumSize != null
-          ? MaterialStateProperty.all<Size>(maximumSize)
+          ? WidgetStateProperty.all<Size>(maximumSize)
           : null,
       minimumSize: minimumSize != null
-          ? MaterialStateProperty.all<Size>(minimumSize)
+          ? WidgetStateProperty.all<Size>(minimumSize)
           : null,
       visualDensity: visualDensity,
     );

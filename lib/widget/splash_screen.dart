@@ -11,7 +11,7 @@ class LowderSplashScreen extends StatefulWidget {
   Color getColor1(BuildContext context) =>
       Theme.of(context).colorScheme.primary;
   Color getColor2(BuildContext context) =>
-      Theme.of(context).colorScheme.background;
+      Theme.of(context).colorScheme.surface;
 
   Widget getLogo(BuildContext context, Color foregroundColor,
       Color backgroundColor, int stage) {

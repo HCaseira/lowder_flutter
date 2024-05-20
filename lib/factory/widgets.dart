@@ -2999,7 +2999,7 @@ class BaseWidgets with IWidgets {
             dividerColor: tryParseColor(params.props["dividerColor"]),
             dividerHeight: tryParseDouble(params.props["dividerHeight"]),
             overlayColor: overlayColor != null
-                ? MaterialStatePropertyAll<Color>(overlayColor)
+                ? WidgetStatePropertyAll<Color>(overlayColor)
                 : null,
           ),
           Expanded(
@@ -3042,7 +3042,7 @@ class BaseWidgets with IWidgets {
       dividerColor: tryParseColor(params.props["dividerColor"]),
       dividerHeight: tryParseDouble(params.props["dividerHeight"]),
       overlayColor: overlayColor != null
-          ? MaterialStatePropertyAll<Color>(overlayColor)
+          ? WidgetStatePropertyAll<Color>(overlayColor)
           : null,
     );
   }
@@ -3381,7 +3381,7 @@ class BaseWidgets with IWidgets {
       borderRadius: params.buildProp("borderRadius"),
       customBorder: params.buildProp("customBorder"),
       overlayColor: overlayColor != null
-          ? MaterialStateProperty.all<Color>(overlayColor)
+          ? WidgetStateProperty.all<Color>(overlayColor)
           : null,
       highlightColor: tryParseColor(params.props["highlightColor"]),
       splashColor: tryParseColor(params.props["splashColor"]),
