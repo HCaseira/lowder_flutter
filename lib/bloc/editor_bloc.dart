@@ -129,7 +129,7 @@ class EditorBloc extends Bloc<BaseEditorEvent, BaseState> {
     final serverUrl = getServerUrl();
     while (instance == this) {
       try {
-        var response = await http.get(Uri.parse(serverUrl));
+        final response = await http.get(Uri.parse(serverUrl));
         if (response.statusCode == 200 && response.body.isNotEmpty) {
           log("New data from Lowder Server: ${response.body}");
           Map<String, dynamic> spec = json.decodeWithReviver(response.body);
@@ -144,7 +144,7 @@ class EditorBloc extends Bloc<BaseEditorEvent, BaseState> {
                   message.data["environment"] ?? "Dev",
                   language: message.data["language"] ?? "en");
               editMode = parseBool(message.data["editMode"]);
-              var selectedNode = message.data["selectedNode"];
+              final selectedNode = message.data["selectedNode"];
               if (selectedNode != null) {
                 var node = Schema.getScreen(selectedNode);
                 if (node != null) {
