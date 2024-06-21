@@ -6,20 +6,35 @@ import 'package:shelf_router/shelf_router.dart' as shelf_router;
 import 'package:shelf_static/shelf_static.dart' as shelf_static;
 import 'editor.dart';
 
+const _serverPort = 8787;
+const _serverAddress = "localhost";
+
 Future main(List<String> args) async {
-  int port = 8787;
-  final idx = args.indexOf("-p");
+  var port = _serverPort;
+  var idx = args.indexOf("-p");
   if (idx >= 0 && args.length > idx) {
     port = num.tryParse(args[idx + 1])?.toInt() ?? port;
   }
-  HttpServer().start(port: port);
+
+  var address = _serverAddress;
+  idx = args.indexOf("-a");
+  if (idx >= 0 && args.length > idx) {
+    address = args[idx + 1];
+  }
+
+  HttpServer(serverPort: port, serverAddress: address).start();
 }
 
 class HttpServer {
+  final int serverPort;
+  final String serverAddress;
   final List<String> _toEditor = [];
   final Map<String, List<String>> _toClients = {};
 
-  void start({int port = 8787, String? flutterPath}) async {
+  HttpServer(
+      {this.serverPort = _serverPort, this.serverAddress = _serverAddress});
+
+  void start({String? flutterPath}) async {
     if (flutterPath == null || flutterPath.isEmpty) {
       flutterPath = Directory.current.path;
       var file = File("$flutterPath/pubspec.yaml");
@@ -30,7 +45,7 @@ class HttpServer {
     }
 
     final flutterWebPath = "$flutterPath/build/web";
-    final buildResult = await _buildFlutterWeb(flutterPath, port);
+    final buildResult = await _buildFlutterWeb(flutterPath);
     if (!buildResult) {
       return;
     }
@@ -78,17 +93,17 @@ class HttpServer {
                       }))
               ..post('/loadSolutions', (req) => _loadSolutions(req))
               ..post('/saveSolutions', (req) => _saveSolutions(req))
-              ..get('/rebuild', (req) => _rebuild(req, flutterPath, port)))
+              ..get('/rebuild', (req) => _rebuild(req, flutterPath)))
             .call);
 
     final server = await shelf_io.serve(
       cascade.handler,
       InternetAddress.anyIPv4,
-      port,
+      serverPort,
     );
 
     log('Serving at http://${server.address.host}:${server.port}');
-    log('Open Editor at http://localhost:${server.port}/editor.html');
+    log('Open Editor at http://$serverAddress:${server.port}/editor.html');
   }
 
   Future<Response> _loadSolutions(Request request) async {
@@ -136,12 +151,12 @@ class HttpServer {
     return Response.ok(null, headers: _getDefaultHeaders());
   }
 
-  Future<Response> _rebuild(Request request, flutterPath, int port) async {
-    await _buildFlutterWeb(flutterPath, port);
+  Future<Response> _rebuild(Request request, flutterPath) async {
+    await _buildFlutterWeb(flutterPath);
     return Response.ok(null, headers: _getDefaultHeaders());
   }
 
-  Future<bool> _buildFlutterWeb(String flutterPath, int port) async {
+  Future<bool> _buildFlutterWeb(String flutterPath) async {
     logInfo("Building Flutter Web client from '$flutterPath'.");
     final result = await Process.run(
       "flutter",
@@ -150,7 +165,7 @@ class HttpServer {
         "web",
         "--dart-define=LOWDER_ENV=Dev",
         "--dart-define=LOWDER_EDITOR=true",
-        "--dart-define=LOWDER_SERVER=http://localhost:$port/",
+        "--dart-define=LOWDER_SERVER=http://$serverAddress:$serverPort/",
         "--profile",
         "--no-tree-shake-icons"
       ],

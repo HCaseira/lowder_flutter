@@ -16,6 +16,7 @@ import '../factory/properties.dart';
 import '../factory/property_factory.dart';
 import '../factory/widget_factory.dart';
 import '../factory/widgets.dart';
+import '../model/solution.dart';
 import '../util/extensions.dart';
 import '../schema.dart';
 import 'splash_screen.dart';
@@ -144,6 +145,11 @@ abstract class Lowder extends StatefulWidget {
       }
     }
     Schema.loadSolutionsFromMaps(maps, environment);
+    // Make sure that any language resources are loaded as the default 'en' language code may not exist
+    Solution.setLanguage(Solution.languages[0]);
+    // Now try to load the correct language resources based on the system locale
+    final locale = WidgetsBinding.instance.platformDispatcher.locale;
+    Solution.setLanguage("${locale.languageCode}_${locale.countryCode}");
   }
 
   /// This method will fetch the schema file from Assets.

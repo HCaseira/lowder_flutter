@@ -178,7 +178,13 @@ class Solution {
   }
 
   static bool setLanguage(String language) {
-    final resources = stringResources.getLanguageResources(language);
+    var resources = stringResources.getLanguageResources(language);
+    if (resources == null) {
+      // A language code can be something like 'en', 'en-US' or 'en_US'
+      language = language.split("-")[0].split("_")[0];
+      resources = stringResources.getLanguageResources(language);
+    }
+
     if (resources == null) {
       return false;
     }

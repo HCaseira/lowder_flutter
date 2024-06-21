@@ -327,8 +327,7 @@ class ActionFactory {
             body: body, headers: headers, encoding: encoding);
         break;
       case "delete":
-        response = await http.delete(uri,
-            body: body, headers: headers, encoding: encoding);
+        response = await http.delete(uri, headers: headers);
         break;
       default:
         response = await http.get(uri, headers: headers);

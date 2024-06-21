@@ -10,14 +10,6 @@ class Schema {
   static final _log = Logger("Schema");
   static Solution? _solution;
 
-  // static void loadSolutions(List<Solution> solutions) {
-  //   final solution = Solution.empty(name, environment, language: language, landingScreen: landingScreen);
-  //   for (var createdSolution in createdSolutions) {
-  //     solution.merge(createdSolution);
-  //   }
-  //   _solution = solution;
-  // }
-
   static void loadSolutionsFromMaps(List<Map> solutions, String environment,
       {String language = "en"}) {
     if (solutions.isEmpty) {
