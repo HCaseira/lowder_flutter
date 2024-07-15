@@ -167,7 +167,9 @@ class HttpServer {
         "--dart-define=LOWDER_EDITOR=true",
         "--dart-define=LOWDER_SERVER=http://$serverAddress:$serverPort/",
         "--profile",
-        "--no-tree-shake-icons"
+        "--no-tree-shake-icons",
+        "--quiet",
+        "--no-version-check",
       ],
       workingDirectory: flutterPath,
       runInShell: true,

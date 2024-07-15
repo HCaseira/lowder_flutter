@@ -2113,10 +2113,11 @@ class BaseWidgets with IWidgets {
         enabled ? params.buildProp("style") : params.buildProp("disabledStyle");
     final textInputAction =
         Types.textInputAction.build(props["textInputAction"]);
-    final TextEditingController controller = props["controller"] ??
+    final controller = props["controller"] ??
         TextEditingController(text: props["value"]?.toString());
     controller.selection =
         TextSelection.collapsed(offset: controller.text.length);
+    props["controller"] = controller;
     final onSaved = props["onSaved"] ??
         (v) {
           if (alias != null) {
@@ -2245,9 +2246,10 @@ class BaseWidgets with IWidgets {
   @protected
   Widget buildDatePicker(BuildParameters params) {
     DateTime? value;
-    final pickDate = params.props["mode"] != "time";
-    final pickTime = params.props["mode"] != "date";
-    final formatSpec = params.props["format"] ??
+    final props = params.props;
+    final pickDate = props["mode"] != "time";
+    final pickTime = props["mode"] != "date";
+    final formatSpec = props["format"] ??
         {
           "_type": pickDate && pickTime
               ? "KFormatterDateTime"
@@ -2256,45 +2258,44 @@ class BaseWidgets with IWidgets {
                   : "KFormatterTime"
         };
 
-    if (params.props["value"] == "now") {
+    if (props["value"] == "now") {
       value = DateTime.now();
     } else {
-      value = tryParseDateTime(params.props["value"]);
+      value = tryParseDateTime(props["value"]);
     }
 
-    final controller = TextEditingController(
-        text: properties.build(Types.kFormatter.type, formatSpec,
-            argument: value));
-    params.props["controller"] = controller;
-    final alias = params.props["alias"] ?? params.id;
-    params.props["onSaved"] = (v) {
+    final controller = props["controller"] ??
+        TextEditingController(
+            text: properties.build(Types.kFormatter.type, formatSpec,
+                argument: value));
+    props["controller"] = controller;
+    final alias = props["alias"] ?? params.id;
+    props["onSaved"] = (v) {
       if (alias != null) {
         params.state[alias] = tryParseDateTime(value);
       }
     };
 
     DateTime firstDate;
-    if (params.props["firstDate"] == "now") {
+    if (props["firstDate"] == "now") {
       firstDate = DateTime.now();
     } else {
       firstDate = DateTime(1900);
-      if (params.props["firstDate"] != null) {
-        firstDate =
-            parseDateTime(params.props["lastDate"], defaultValue: firstDate);
+      if (props["firstDate"] != null) {
+        firstDate = parseDateTime(props["lastDate"], defaultValue: firstDate);
       }
     }
     DateTime lastDate;
-    if (params.props["lastDate"] == "now") {
+    if (props["lastDate"] == "now") {
       lastDate = DateTime.now();
     } else {
       lastDate = DateTime(2100);
-      if (params.props["lastDate"] != null) {
-        lastDate =
-            parseDateTime(params.props["lastDate"], defaultValue: lastDate);
+      if (props["lastDate"] != null) {
+        lastDate = parseDateTime(props["lastDate"], defaultValue: lastDate);
       }
     }
 
-    if (!parseBool(params.props["readOnly"])) {
+    if (!parseBool(props["readOnly"])) {
       params.actions["onTap"] = () async {
         final buildContext = params.context;
         final initialValue = value ?? DateTime.now();
@@ -2334,14 +2335,15 @@ class BaseWidgets with IWidgets {
 
   @protected
   Widget buildSelect(BuildParameters params) {
-    var value = params.props["value"];
+    final props = params.props;
+    var value = props["value"];
     final stateClone = params.state.clone();
-    final valueKey = params.props["valueKey"] ?? "id";
-    final textKey = params.props["textKey"] ?? valueKey;
-    final alias = params.props["alias"] ?? params.id;
-    final controller = TextEditingController();
-    params.props["controller"] = controller;
-    params.props["onSaved"] = (v) => params.state[alias] = value;
+    final valueKey = props["valueKey"] ?? "id";
+    final textKey = props["textKey"] ?? valueKey;
+    final alias = props["alias"] ?? params.id;
+    final controller = props["controller"] ?? TextEditingController();
+    props["controller"] = controller;
+    props["onSaved"] = (v) => params.state[alias] = value;
 
     final headerSpec = params.widgets["dialogHeader"];
     final listTileSpec = params.widgets["dialogListTile"] ??
@@ -2386,7 +2388,7 @@ class BaseWidgets with IWidgets {
       Navigator.of(context).pop();
     }
 
-    if (!parseBool(params.props["readOnly"])) {
+    if (!parseBool(props["readOnly"])) {
       params.actions["onTap"] = () async {
         showDialog(
           context: params.context,
@@ -2397,21 +2399,21 @@ class BaseWidgets with IWidgets {
 
             final content = Container(
               constraints: BoxConstraints(
-                maxWidth: parseDouble(params.props["dialogMaxWidth"],
-                    defaultValue: 350),
-                maxHeight: parseDouble(params.props["dialogMaxHeight"],
-                    defaultValue: 550),
+                maxWidth:
+                    parseDouble(props["dialogMaxWidth"], defaultValue: 350),
+                maxHeight:
+                    parseDouble(props["dialogMaxHeight"], defaultValue: 550),
               ),
               child: LocalBlocWidget(
                 (context, state) => Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    if (params.props["dialogTitle"] != null)
+                    if (props["dialogTitle"] != null)
                       Padding(
                           padding: const EdgeInsets.fromLTRB(10, 10, 10, 20),
                           child: Text(
-                            Strings.getCapitalized(params.props["dialogTitle"]),
+                            Strings.getCapitalized(props["dialogTitle"]),
                             style: DialogTheme.of(context).titleTextStyle ??
                                 Theme.of(context).textTheme.titleLarge!,
                           )),
