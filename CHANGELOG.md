@@ -1,3 +1,12 @@
+## 0.1.11
+
+* Fixed initial language to fetch resources from, to take device's locale into account.
+* Refactored deprecated MaterialState properties with WidgetState properties.
+* Refactored deprecated ColorScheme background with surface.
+* Fixed issue with TextEditingControllers when rebuilding the interface.
+* Fixed random string generator to use a secure Random.
+* New argument for launching the editor server, to set the http server's IP address (eg: dart run lowder -a 192.168.1.7 -p 5445).
+
 ## 0.1.10
 
 * Fixed issue in the Editor, where the selected context option (state, env, global, etc) was not displayed.
