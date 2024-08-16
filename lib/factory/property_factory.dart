@@ -153,31 +153,31 @@ class PropertyFactory {
         .format(date.toLocal());
   }
 
-  /// Updates the content of a [Map] by evaluating it's values using [otherMap] as context.
-  void evaluateMap(Map map, Map? otherMap) {
-    if (otherMap == null) {
+  /// Updates the content of a [Map] by evaluating it's values using [context] as context.
+  void evaluateMap(Map map, Map? context) {
+    if (context == null) {
       return;
     }
     for (var key in map.keys) {
-      map[key] = evaluateValue(map[key], otherMap);
+      map[key] = evaluateValue(map[key], context);
     }
   }
 
-  /// Updates the content of a [List] by evaluating it's values using [map] as context.
-  void evaluateList(List list, Map map) {
+  /// Updates the content of a [List] by evaluating it's values using [context] as context.
+  void evaluateList(List list, Map context) {
     for (var i = 0; i < list.length; i++) {
-      list[i] = evaluateValue(list[i], map);
+      list[i] = evaluateValue(list[i], context);
     }
   }
 
-  /// Returns the evaluated value of a given [value] using [map] as context.
-  dynamic evaluateValue(dynamic value, Map map) {
+  /// Returns the evaluated value of a given [value] using [context] as context.
+  dynamic evaluateValue(dynamic value, Map context) {
     if (value is String) {
-      return evaluateString(value, map);
+      return evaluateString(value, context);
     } else if (value is Map) {
-      evaluateMap(value, map);
+      evaluateMap(value, context);
     } else if (value is List) {
-      evaluateList(value, map);
+      evaluateList(value, context);
     }
     return value;
   }

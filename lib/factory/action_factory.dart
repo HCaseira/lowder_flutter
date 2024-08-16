@@ -333,10 +333,27 @@ class ActionFactory {
         response = await http.get(uri, headers: headers);
         break;
     }
-    return HttpResponse(response.statusCode, response.body,
-        reasonPhrase: response.reasonPhrase,
-        headers: response.headers,
-        extra: {"response": response});
+
+    // Error message handling
+    final responseBody = response.body;
+    var reasonPhrase = response.reasonPhrase;
+    if (!response.isSuccess && responseBody.isNotEmpty) {
+      try {
+        final map = json.decodeWithReviver(responseBody) as Map;
+        reasonPhrase = map["reasonPhrase"] ??
+            map["statusMessage"] ??
+            map["statusText"] ??
+            reasonPhrase;
+      } catch (e) {/* Do nothing*/}
+    }
+
+    return HttpResponse(
+      response.statusCode,
+      responseBody,
+      reasonPhrase: reasonPhrase,
+      headers: response.headers,
+      extra: {"response": response},
+    );
   }
 
   /// Method used to handle Http errors.
