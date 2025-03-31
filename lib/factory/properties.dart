@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math' as math;
 import 'package:flutter/foundation.dart';
@@ -523,9 +524,15 @@ class BaseProperties with IProperties {
       "fixedSize": Types.size,
       "minimumSize": Types.size,
       "maximumSize": Types.size,
-      "visualDensity": const EditorPropertyListType(
-          ["standard", "comfortable", "compact", "adaptivePlatformDensity"]),
+      "visualDensity": Types.visualDensity,
     });
+
+    registerListType(Types.visualDensity.type, getVisualDensity, [
+      "standard",
+      "comfortable",
+      "compact",
+      "adaptivePlatformDensity",
+    ]);
 
     registerSpecType(Types.loadingIndicator.type, getLoadingIndicator, {
       "color": Types.color,
@@ -672,7 +679,7 @@ class BaseProperties with IProperties {
     if (value == null) return null;
     if (value is num) return EdgeInsets.all(parseDouble(value));
 
-    var parts = value.toString().split(RegExp(r'[|\s]'));
+    final parts = getListValue(value);
     if (parts.length > 2) {
       return EdgeInsets.fromLTRB(parseDouble(parts[0]), parseDouble(parts[1]),
           parseDouble(parts[2]), parseDouble(parts[3]));
@@ -1219,7 +1226,7 @@ class BaseProperties with IProperties {
       return Offset(parseDouble(value), parseDouble(value));
     }
 
-    final parts = value.split(RegExp(r'[|\s]'));
+    final parts = getListValue(value);
     if (parts.length == 1) {
       return Offset(parseDouble(parts[0]), parseDouble(parts[0]));
     }
@@ -1242,7 +1249,8 @@ class BaseProperties with IProperties {
     }
 
     final colors = <Color>[];
-    final colorParts = (spec["colors"] as String).split(RegExp(r'[|\s]'));
+    final colorParts = getListValue(spec["colors"]);
+
     for (var part in colorParts) {
       var color = tryParseColor(part);
       if (color != null) {
@@ -1251,7 +1259,7 @@ class BaseProperties with IProperties {
     }
 
     List<double>? stops;
-    final stopParts = (spec["stops"] as String).split(RegExp(r'[|\s]'));
+    final stopParts = getListValue(spec["stops"]);
     if (stopParts.length == colors.length) {
       stops = <double>[];
       for (var part in stopParts) {
@@ -1294,7 +1302,7 @@ class BaseProperties with IProperties {
       return BorderRadius.all(Radius.circular(parseDouble(value)));
     }
 
-    final parts = value.split(RegExp(r'[|\s]'));
+    final parts = getListValue(value);
     if (parts.length == 4) {
       return BorderRadius.only(
         topLeft: Radius.circular(parseDouble(parts[0])),
@@ -1305,6 +1313,24 @@ class BaseProperties with IProperties {
     }
 
     return BorderRadius.all(Radius.circular(parseDouble(parts[0])));
+  }
+
+  VisualDensity? getVisualDensity(String? value) {
+    if (value == null || value.isEmpty) {
+      return null;
+    }
+    switch (value) {
+      case "comfortable":
+        return VisualDensity.comfortable;
+      case "compact":
+        return VisualDensity.compact;
+      case "standard":
+        return VisualDensity.standard;
+      case "adaptivePlatformDensity":
+        return VisualDensity.adaptivePlatformDensity;
+      default:
+        return null;
+    }
   }
 
   TextStyle? getTextStyle(Map? spec) {
@@ -1344,7 +1370,7 @@ class BaseProperties with IProperties {
       String? maskFilterValue = spec["maskFilter"];
       if (maskFilterValue != null) {
         maskFilter = {};
-        final filters = maskFilterValue.split(RegExp(r'[|\s]'));
+        final filters = getListValue(maskFilterValue);
         for (var filter in filters) {
           var parts = filter.split(":");
           if (parts.length > 1) {
@@ -1477,21 +1503,8 @@ class BaseProperties with IProperties {
         width: parseDouble(spec["side"]["width"], defaultValue: 1.0),
       );
     }
-    final VisualDensity visualDensity;
-    switch (spec["visualDensity"] ?? "") {
-      case "comfortable":
-        visualDensity = VisualDensity.comfortable;
-        break;
-      case "compact":
-        visualDensity = VisualDensity.compact;
-        break;
-      case "standard":
-        visualDensity = VisualDensity.standard;
-        break;
-      default:
-        visualDensity = VisualDensity.adaptivePlatformDensity;
-        break;
-    }
+    final visualDensity = getVisualDensity(spec["visualDensity"]) ??
+        VisualDensity.adaptivePlatformDensity;
 
     return ButtonStyle(
       alignment: getAlignment(spec["alignment"]),
@@ -1696,6 +1709,9 @@ class BaseProperties with IProperties {
         return NetworkImage(value,
             scale: parseDouble(spec["scale"], defaultValue: 1));
       case "MemoryImage":
+        if (value is String) {
+          value = base64Decode(value);
+        }
         return MemoryImage(value,
             scale: parseDouble(spec["scale"], defaultValue: 1));
       case "FileImage":
@@ -1879,5 +1895,13 @@ class BaseProperties with IProperties {
       default:
         return null;
     }
+  }
+
+  List getListValue(dynamic value, {RegExp? expression}) {
+    if (value is List) {
+      return value;
+    }
+    expression ??= RegExp(r'[|\s]');
+    return value.toString().split(expression);
   }
 }

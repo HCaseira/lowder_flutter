@@ -177,7 +177,8 @@ class Solution {
     environmentVariables = environmentData.environments[environment] ?? {};
   }
 
-  static bool setLanguage(String language) {
+  static bool setLanguage(String? language) {
+    language ??= "en";
     var resources = stringResources.getLanguageResources(language);
     if (resources == null) {
       // A language code can be something like 'en', 'en-US' or 'en_US'

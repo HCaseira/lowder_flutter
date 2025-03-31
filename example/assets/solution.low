@@ -210,12 +210,33 @@
       "Dev",
       "QA",
       "Prod"
+    ],
+    "keys": [
+      "env"
+    ],
+    "values": [
+      [
+        "Dev",
+        "QA",
+        "Prod"
+      ]
     ]
   },
   "stringResources": {
     "languages": [
       "en",
-      "pt"
+      "pt",
+      "fr"
+    ],
+    "keys": [
+      "good_morning"
+    ],
+    "values": [
+      [
+        "good morning",
+        "bom dia",
+        "bon jour"
+      ]
     ]
   }
 }

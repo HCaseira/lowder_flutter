@@ -222,7 +222,7 @@ class BaseActions with IActions {
       "data": Types.json
     });
     registerSilentAction("KActionSetState", onSetState,
-        properties: {"newState": Types.json});
+        properties: {"newState": Types.json, "reloadLists": Types.bool});
     registerSilentAction("KActionSetGlobalVar", onSetGlobalVar,
         properties: {"key": Types.string, "value": Types.string});
     registerSilentAction("KActionIf", onIf,
@@ -553,9 +553,10 @@ class BaseActions with IActions {
   Future<SilentActionResult> onSetState(
       NodeSpec action, ActionContext context) async {
     final newState = Map<String, dynamic>.from(action.props["newState"] ?? {});
+    context.state.addAll(newState);
     try {
-      BlocProvider.of<LocalBloc>(context.buildContext)
-          .add(EmitState(SetStateState(newState)));
+      BlocProvider.of<LocalBloc>(context.buildContext).add(EmitState(
+          SetStateState(newState, parseBool(action.props["reloadLists"]))));
     } catch (e, stack) {
       log.severe("LocalBloc not found while emitting SetState.", e, stack);
     }

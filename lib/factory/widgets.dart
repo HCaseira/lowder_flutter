@@ -119,6 +119,7 @@ class BaseWidgets with IWidgets {
 
     final componentProperties = {
       "component": const EditorPropertyType("KComponent"),
+      "value": Types.json,
       // "state": Types.json,
     };
     registerWidget("PreferredSizeComponent", buildComponent,
@@ -567,6 +568,11 @@ class BaseWidgets with IWidgets {
         properties: listViewProps,
         widgets: {"children": EditorWidgetType.widget(isArray: true)},
         tags: ["layout", "scrolling"]);
+    // registerWidget("AnimatedListView", buildAnimatedListView,
+    //     properties: {...listViewProps, ...blocListProps},
+    //     actions: blocListActions,
+    //     widgets: {...blocListWidgets, "separator": EditorWidgetType.widget()},
+    //     tags: ["common", "data list"]);
 
     final gridViewProps = {
       "crossAxisCount": Types.int,
@@ -724,14 +730,23 @@ class BaseWidgets with IWidgets {
       "subValue": Types.string,
       "enabled": Types.bool,
       "listTileStyle": const EditorPropertyListType(["drawer", "list"]),
+      "isThreeLine": Types.bool,
+      "dense": Types.bool,
+      "visualDensity": Types.visualDensity,
       "contentPadding": Types.edgeInsets,
+      "minVerticalPadding": Types.double,
       "horizontalTitleGap": Types.double,
+      "minTileHeight": Types.double,
       "shape": Types.shapeBorder,
+      "selected": Types.bool,
+      "selectedColor": Types.color,
+      "selectedTileColor": Types.color,
       "iconColor": Types.color,
       "textColor": Types.color,
       "tileColor": Types.color,
       "focusColor": Types.color,
-      "hoverColor": Types.color
+      "hoverColor": Types.color,
+      "splashColor": Types.color,
     }, actions: {
       "onTap": EditorActionType.action()
     }, widgets: {
@@ -992,6 +1007,7 @@ class BaseWidgets with IWidgets {
           "iconCode": Types.int,
           "tooltip": Types.string,
           "mini": Types.bool,
+          "extended": Types.bool,
           "shape": Types.shapeBorder,
           "backgroundColor": Types.color,
           "foregroundColor": Types.color,
@@ -1168,8 +1184,9 @@ class BaseWidgets with IWidgets {
   Widget buildComponent(BuildParameters params) {
     final spec = params.spec;
     WidgetNodeSpec? componentSpec;
-    if (spec.props["component"] != null) {
-      componentSpec = Schema.getComponent(spec.props["component"]);
+    final componentId = spec.props["component"];
+    if (componentId != null) {
+      componentSpec = Schema.getComponent(componentId, newId: params.id);
     }
     if (componentSpec == null) {
       return Container();
@@ -1177,11 +1194,20 @@ class BaseWidgets with IWidgets {
 
     /// Using the same component multiple times in the same Screen may have issues related to Widget's Ids
     /// Maybe when building Component's widget tree, ids should be generated so they can be unique
+    var stateKeys = [...params.state.keys];
+    for (var key in stateKeys) {
+      if (key is String &&
+          key.length == 36 &&
+          key.contains('-') &&
+          !key.contains(' ')) {
+        params.state.remove(key);
+      }
+    }
 
     // format: <widgetId>.<property type>.<property key>
     final exposedProps = Map<String, dynamic>.from(
         componentSpec.extra["exposedProperties"] ?? {});
-    for (String key in exposedProps.keys) {
+    for (var key in exposedProps.keys) {
       if (exposedProps[key] == null || exposedProps[key].isEmpty) {
         continue;
       }
@@ -1190,8 +1216,10 @@ class BaseWidgets with IWidgets {
       var keyParts = (exposedProps[key] as String).split(".");
       var propertyType = keyParts.removeAt(1);
       var stateKey = keyParts.join(".");
-      params.state.remove(
-          stateKey); // To avoid inheriting this property from previous component build
+      stateKey = stateKey.replaceAll(componentId, params.id);
+
+      // To avoid inheriting this property from previous component build
+      params.state.remove(stateKey);
 
       switch (propertyType) {
         case "action":
@@ -1219,26 +1247,11 @@ class BaseWidgets with IWidgets {
       params.state[stateKey] = value;
     }
 
-    // final componentState = Map<String, dynamic>.from(spec.props["state"] ?? {});
-    // params.state.addAll(componentState);
-    // for (String key in spec.props.keys) {
-    //   if (key.split(".").length == 2) {
-    //     params.state[key] = spec.props[key];
-    //   }
-    // }
-    // for (String key in spec.widgets.keys) {
-    //   if (key.split(".").length == 2) {
-    //     params.state[key] = spec.widgets[key];
-    //   }
-    // }
-    // for (String key in spec.actions.keys) {
-    //   if (key.split(".").length == 2) {
-    //     params.state[key] = spec.actions[key];
-    //   }
-    // }
+    final evaluatorContext = params.parentContext ?? {};
+    evaluatorContext["component"] = params.props["value"];
 
     return builder.buildWidgetFromSpec(
-        params.context, componentSpec, params.state, params.parentContext);
+        params.context, componentSpec, params.state, evaluatorContext);
   }
 
   @protected
@@ -2037,13 +2050,22 @@ class BaseWidgets with IWidgets {
       trailing: builder.tryBuildWidget(params.context,
           params.widgets["trailing"], params.state, params.parentContext),
       contentPadding: params.buildProp("contentPadding"),
+      minVerticalPadding: tryParseDouble(params.props["minVerticalPadding"]),
       horizontalTitleGap: tryParseDouble(params.props["horizontalTitleGap"]),
+      minTileHeight: tryParseDouble(params.props["minTileHeight"]),
       style: listTileStyle,
+      dense: tryParseBool(params.props["dense"]),
+      visualDensity: params.buildProp("visualDensity"),
+      isThreeLine: parseBool(params.props["isThreeLine"]),
+      selected: parseBool(params.props["selected"]),
+      selectedColor: tryParseColor(params.props["selectedColor"]),
+      selectedTileColor: tryParseColor(params.props["selectedTileColor"]),
       iconColor: tryParseColor(params.props["iconColor"]),
       textColor: tryParseColor(params.props["textColor"]),
       tileColor: tryParseColor(params.props["tileColor"]),
       focusColor: tryParseColor(params.props["focusColor"]),
       hoverColor: tryParseColor(params.props["hoverColor"]),
+      splashColor: tryParseColor(params.props["splashColor"]),
       shape: params.buildProp("shape"),
       enabled: parseBool(params.props["enabled"], defaultValue: true),
       onTap: events.getFunction(params.context, params.actions["onTap"],
@@ -2096,7 +2118,7 @@ class BaseWidgets with IWidgets {
       key: properties.getKey(params.id),
       textAlign: params.buildProp("textAlign"),
       maxLines: tryParseInt(params.props["maxLines"]),
-      semanticsLabel: params.props["semanticsLabel"],
+      semanticsLabel: Strings.get(params.props["semanticsLabel"] ?? ""),
       softWrap: tryParseBool(params.props["softWrap"]),
       overflow: params.buildProp("overflow"),
       style: params.buildProp("style"),
@@ -2819,6 +2841,16 @@ class BaseWidgets with IWidgets {
   }
 
   @protected
+  Widget buildAnimatedListView(BuildParameters params) {
+    return AnimatedBlocList(
+      params.spec,
+      params.state,
+      params.parentContext,
+      key: properties.getKey(params.id),
+    );
+  }
+
+  @protected
   Widget buildGridView(BuildParameters params) {
     return BlocGrid(
       params.spec,
@@ -3141,6 +3173,7 @@ class BaseWidgets with IWidgets {
           ? properties.getText(params.props["tooltip"], "label")
           : null,
       mini: parseBool(params.props["mini"]),
+      isExtended: parseBool(params.props["extended"]),
       shape: params.buildProp("shape"),
       backgroundColor: tryParseColor(params.props["backgroundColor"]),
       hoverColor: tryParseColor(params.props["hoverColor"]),
@@ -3560,8 +3593,9 @@ class BaseWidgets with IWidgets {
       final func = events.getFunction(
           context, actionSpec.clone(), params.state, stateContext);
       if (func != null) {
-        log.info(
-            "Executing '${actionSpec["name"] ?? actionSpec["_type"]}' from state '${state.state}'");
+        log.infoWithContext(
+            "Executing '${actionSpec["name"] ?? actionSpec["_type"]}' from state '${state.state}'",
+            state.data is Map ? state.data : null);
         func();
       }
     }
@@ -3577,8 +3611,9 @@ class BaseWidgets with IWidgets {
       final stateContext = parentContext.clone();
       if (state is ActionState) {
         stateContext.addAll({"stateData": state.data});
-        log.info(
-            "Building '${widgetSpec["name"] ?? widgetSpec["_type"]}' from state '${state.state}'");
+        log.infoWithContext(
+            "Building '${widgetSpec["name"] ?? widgetSpec["_type"]}' from state '${state.state}'",
+            state.data is Map ? state.data : null);
       }
       params.state.remove(widgetSpec["_id"]);
 

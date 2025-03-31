@@ -92,7 +92,7 @@ abstract class Lowder extends StatefulWidget {
   PropertyFactory createPropertyFactory() => PropertyFactory();
 
   /// Implement this method to register your solution.
-  /// A solution has a name, a schema file (<my solution>.low),
+  /// A solution has a name, a schema file ([my solution].low),
   /// and optional [IWidgets], [IActions] and [IProperties].
   List<SolutionSpec> get solutions;
 
@@ -273,7 +273,7 @@ class AppState extends State<Lowder> {
         if (!goHome) {
           return PopScope(
             canPop: false,
-            onPopInvoked: (didPop) async {
+            onPopInvokedWithResult: (didPop, _) async {
               await load();
               setState(() => goHome = true);
             },

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math' hide log;
+import 'dart:ui';
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 
@@ -168,4 +169,9 @@ extension LoggerExtension on Logger {
           context,
         ),
       );
+}
+
+extension ColorExtension on Color {
+  String toHexString() =>
+      "#${toARGB32().toRadixString(16).substring(2).padLeft(2, '0')}";
 }

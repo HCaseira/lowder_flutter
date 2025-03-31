@@ -10,7 +10,7 @@ bool? tryParseBool(var value) {
 }
 
 bool? _parseBool(var value, bool? defaultValue) {
-  if (value != null) {
+  if (value != null || value == "null") {
     if (value is bool || value is bool?) {
       return value;
     } else if (value is String) {
@@ -32,7 +32,7 @@ int? tryParseInt(var value) {
 }
 
 int? _parseInt(var value, int? defaultValue) {
-  if (value != null) {
+  if (value != null && value != "null") {
     if (value is num) {
       return value.toInt();
     } else if (value is String) {
@@ -54,7 +54,7 @@ double? tryParseDouble(var value) {
 }
 
 double? _parseDouble(var value, double? defaultValue) {
-  if (value != null) {
+  if (value != null && value != "null") {
     if (value is num) {
       return value.toDouble();
     } else if (value is String) {
@@ -75,7 +75,7 @@ DateTime? tryParseDateTime(var value) {
 }
 
 DateTime? _parseDateTime(var value, DateTime? defaultValue) {
-  if (value != null) {
+  if (value != null && value != "null") {
     if (value is DateTime) {
       return value;
     } else if (value is int) {
@@ -98,7 +98,7 @@ Color? tryParseColor(String? value) {
 }
 
 Color? _parseColor(String? value, Color? defaultColor) {
-  if (value == null) return defaultColor;
+  if (value == null || value == "null") return defaultColor;
 
   if (value.contains(",")) {
     final parts = value.split(",");

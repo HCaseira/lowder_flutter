@@ -71,10 +71,10 @@ class WidgetNodeSpec extends RootNodeSpec {
   }
 
   @override
-  WidgetNodeSpec clone() {
+  WidgetNodeSpec clone({String? newId}) {
     final spec = extra.clone()
       ..addAll({
-        "_id": id,
+        "_id": newId ?? id,
         "name": name,
         "_type": type,
         "_template": template,

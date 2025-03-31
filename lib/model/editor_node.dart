@@ -284,6 +284,7 @@ abstract class Types {
   static const mainAxisSize = EditorPropertyType("MainAxisSize");
   // static const EditorPropertyType decoration = EditorPropertyType("Decoration");
   static const tabBarIndicatorSize = EditorPropertyType("TabBarIndicatorSize");
+  static const visualDensity = EditorPropertyType("VisualDensity");
   static const loadingIndicator = EditorPropertyType("LoadingIndicator");
   static const textStyle = EditorPropertyType("TextStyle");
   static const textAlign = EditorPropertyType("TextAlign");

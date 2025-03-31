@@ -25,7 +25,8 @@ class ReloadState extends BaseState {}
 /// A Bloc state to signal a new [state].
 class SetStateState extends BaseState {
   final Map state;
-  SetStateState(this.state) : super();
+  final bool reloadLists;
+  SetStateState(this.state, this.reloadLists) : super();
 }
 
 /// A Bloc state to signal that a new page data exists.

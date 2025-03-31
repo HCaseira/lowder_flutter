@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
@@ -16,6 +18,8 @@ class LowderScreen extends StatefulWidget {
   final formKey = GlobalKey<FormState>();
   final WidgetNodeSpec spec;
   final Map state = {};
+  final StreamController<void> _reloadController = StreamController<void>();
+  late final Stream<void> reload;
 
   LowderScreen(this.spec, Map initialState, {super.key}) {
     // to avoid messing with the original object, copy it instead of using it as the screen state
@@ -24,6 +28,7 @@ class LowderScreen extends StatefulWidget {
     if (spec.props["state"] is Map) {
       state.addAll(spec.props["state"]);
     }
+    reload = _reloadController.stream.asBroadcastStream();
     if (Lowder.editorMode && initialState.isNotEmpty) {
       EditorBloc.addEvent(ScreenInitEvent(spec.id, state));
     }
@@ -71,8 +76,10 @@ class LowderScreenState extends State<LowderScreen> {
   EditorBlocConsumer getEditorHandler(
           String screenId, EditorBuildFunction buildFunc) =>
       EditorBlocConsumer(screenId, buildFunc);
-  updateSpec() =>
-      widget.spec.widgets["body"] = Schema.getScreen(id)?.widgets["body"];
+  updateSpec() {
+    _initialized = false;
+    widget.spec.widgets["body"] = Schema.getScreen(id)?.widgets["body"];
+  }
 
   void listener(BuildContext context, BaseState currentState) {}
 
@@ -102,8 +109,13 @@ class LowderScreenState extends State<LowderScreen> {
 
     if (currentState is ReloadState || currentState is ReloadAll) {
       _initialized = false;
+      _removePreviousValues();
     } else if (currentState is SetStateState) {
+      _removePreviousValues();
       state.addAll(currentState.state);
+      if (currentState.reloadLists) {
+        widget._reloadController.add(null);
+      }
     }
 
     if (!_initialized) {
@@ -132,6 +144,19 @@ class LowderScreenState extends State<LowderScreen> {
         stack,
       );
       return Container();
+    }
+  }
+
+  // Removes any value previously set to Widgets, so they can be re-evaluated.
+  void _removePreviousValues() {
+    var stateKeys = [...state.keys];
+    for (var key in stateKeys) {
+      if (key is String &&
+          key.length == 36 &&
+          key.contains('-') &&
+          !key.contains(' ')) {
+        state.remove(key);
+      }
     }
   }
 }

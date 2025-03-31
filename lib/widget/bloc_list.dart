@@ -6,11 +6,13 @@ import 'package:logging/logging.dart';
 import '../bloc/base_bloc.dart';
 import '../bloc/base_state.dart';
 import '../bloc/editor_bloc.dart';
+import '../factory/widget_factory.dart';
 import '../model/node_spec.dart';
 import '../util/extensions.dart';
 import '../util/parser.dart';
 import '../util/strings.dart';
 import 'lowder.dart';
+import 'screen.dart';
 
 /// A ListView Widget using a `ListBloc` to handle page loads.
 class BlocList extends BlocListBase {
@@ -66,6 +68,67 @@ class BlocList extends BlocListBase {
         }
         return itemWidget;
       }),
+    );
+  }
+}
+
+class AnimatedBlocList extends BlocListBase {
+  AnimatedBlocList(super.spec, super.state, super.evaluatorContext,
+      {super.key});
+
+  Map? get childSpec => widgets["child"];
+
+  @override
+  Widget buildList(BuildContext context) {
+    var count = mutable.lastState.fullData.length;
+    if (mutable.lastState.hasMore) count++;
+
+    Function? selectFunction;
+    if (!EditorBloc.editMode) {
+      selectFunction = Lowder.actions.getValueFunction(
+          context, actions["onSelect"], state, evaluatorContext);
+    }
+
+    final axis = spec.buildProp("scrollDirection") ?? Axis.vertical;
+    Widget? separatorWidget = Lowder.widgets
+        .tryBuildWidget(context, widgets["separator"], state, null);
+
+    // ReorderableListView.builder
+
+    return AnimatedList(
+      key: Key("${id}_list"),
+      padding: Lowder.properties.getInsets(spec.props["padding"]),
+      shrinkWrap: parseBool(props["shrinkWrap"]),
+      reverse: parseBool(props["reverse"]),
+      primary: tryParseBool(props["primary"]),
+      controller: controller,
+      scrollDirection: axis,
+      initialItemCount: count,
+      itemBuilder: (context, i, animation) {
+        if (mutable.lastState.hasMore && i == count - 1) {
+          return getLoadingIndicator();
+        }
+
+        var itemWidget = buildWidget(context, childSpec!, i);
+        if (selectFunction != null) {
+          itemWidget = InkWell(
+            child: itemWidget,
+            onTap: () => selectFunction!(mutable.lastState.fullData[i]),
+          );
+        }
+        if (separatorWidget != null && i < count - 1) {
+          final children = [itemWidget, separatorWidget];
+          itemWidget = axis == Axis.vertical
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: children)
+              : Row(children: children);
+        }
+        return FadeTransition(
+          opacity: animation,
+          child: itemWidget,
+        );
+      },
     );
   }
 }
@@ -302,6 +365,7 @@ class BlocDataTable extends BlocListBase {
           ? WidgetStateColor.resolveWith((states) => dataRowColor)
           : null,
       dataRowMinHeight: tryParseDouble(props["dataRowHeight"]),
+      dataRowMaxHeight: tryParseDouble(props["dataRowHeight"]),
       dataTextStyle: spec.buildProp("dataTextStyle"),
       onSelectAll: !multiSelect
           ? null
@@ -356,7 +420,9 @@ class BlocDataTable extends BlocListBase {
     final childrenSpec = widgets["children"];
     for (var childSpec in childrenSpec) {
       var widget = buildWidget(context, childSpec, idx);
-      cells.add(DataCell(widget));
+      if (widget is! NoWidget) {
+        cells.add(DataCell(widget));
+      }
     }
     return cells;
   }
@@ -372,8 +438,10 @@ class BlocDataTable extends BlocListBase {
       for (var childSpec in columnsSpec) {
         final widget =
             Lowder.widgets.buildWidget(context, childSpec, state, null);
-        columns.add(
-            buildDataColumn(context, childSpec, sortable, setState, widget));
+        if (widget is! NoWidget) {
+          columns.add(
+              buildDataColumn(context, childSpec, sortable, setState, widget));
+        }
       }
     } else {
       for (var childSpec in childrenSpec) {
@@ -389,8 +457,18 @@ class BlocDataTable extends BlocListBase {
     final props = spec["properties"] ?? {};
     final label = props["label"] ?? spec["name"] ?? "";
     final specAlias = props["alias"] ?? label;
+    TableColumnWidth? columnWidth;
+
+    if (labelWidget is DataColumn) {
+      return labelWidget as DataColumn;
+    }
+    if (labelWidget is Container &&
+        (labelWidget.constraints?.maxWidth ?? 0) > 0) {
+      columnWidth = FixedColumnWidth(labelWidget.constraints!.maxWidth);
+    }
 
     return DataColumn(
+      columnWidth: columnWidth,
       label: labelWidget ?? Text(Lowder.properties.getText(label, "title")),
       numeric: parseBool(props["numeric"]),
       tooltip: props["tooltip"],
@@ -474,13 +552,15 @@ abstract class BlocListBase extends StatefulWidget {
     page ??= mutable.lastState.page + 1;
     final data = page == 1 ? [] : mutable.lastState.fullData;
 
+    log.infoWithContext("Loading list data", loadPageSpec);
+
     Lowder.actions.executePageLoadAction(
       mutable.blocContext!,
       bloc,
       page,
       50,
       data,
-      loadPageSpec!,
+      loadPageSpec!.clone(),
       state,
       evaluatorContext,
     );
@@ -546,11 +626,17 @@ abstract class BlocListBase extends StatefulWidget {
 }
 
 class BlocListState extends State<BlocListBase> {
+  StreamSubscription<void>? reloadListener;
+
   @override
   Widget build(BuildContext context) {
     if (widget.widgets.isEmpty || widget.loadPageSpec == null) {
       return const Center(child: Text("No child provided."));
     }
+
+    reloadListener ??= LowderScreen.of(context)
+        ?.reload
+        .listen((_) => widget.loadPage(page: 1));
 
     final listBuilder = BlocBuilder<ListBloc, BaseState>(
       key: Key("${widget.id}_blocBuilder"),
@@ -604,6 +690,7 @@ class BlocListState extends State<BlocListBase> {
   @override
   void dispose() {
     widget.dispose();
+    reloadListener?.cancel();
     super.dispose();
   }
 }

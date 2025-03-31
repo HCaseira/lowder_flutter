@@ -88,8 +88,8 @@ class Schema {
 
   static WidgetNodeSpec? getTemplate(String id) => _solution?.getTemplate(id);
 
-  static WidgetNodeSpec? getComponent(String id) =>
-      _solution?.getComponent(id)?.clone();
+  static WidgetNodeSpec? getComponent(String id, {String? newId}) =>
+      _solution?.getComponent(id)?.clone(newId: newId);
 
   static ActionNodeSpec? getAction(String id) => _solution?.getAction(id);
 

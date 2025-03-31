@@ -157,6 +157,7 @@ class WidgetFactory {
   Widget handleHero(BuildContext context, Widget widget, WidgetNodeSpec spec) {
     if (spec.props["heroTag"] != null) {
       final hero = Hero(
+          key: Key("${spec.id}_hero"),
           tag: spec.props["heroTag"],
           child: Material(type: MaterialType.transparency, child: widget));
       if (widget is PreferredSizeWidget) {
@@ -179,7 +180,7 @@ class WidgetFactory {
       widget = buildWidget(
           context,
           {
-            "_id": "",
+            "_id": "${spec.id}_decorator",
             "_type": "container",
             "properties": spec.props["decorator"],
             "widgets": {
@@ -391,7 +392,7 @@ class WidgetFactory {
   Widget buildActivityIndicator(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.1),
+        color: Colors.black.withValues(alpha: 0.1),
       ),
       child: const Center(child: CircularProgressIndicator()),
     );

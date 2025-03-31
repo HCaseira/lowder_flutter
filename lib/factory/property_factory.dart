@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
@@ -183,7 +184,7 @@ class PropertyFactory {
   }
 
   /// Evaluates a string using [evaluatorContext].
-  /// A string containing ${<some var>} will be evaluated.
+  /// A string containing ${some var} will be evaluated.
   /// E.g.: a string "${state.name}" will be replaced with the (evaluatorContext["state"] as Map)["name"].
   dynamic evaluateString(String? value, Map evaluatorContext) {
     if (value == null || value.isEmpty) {
@@ -228,11 +229,7 @@ class PropertyFactory {
 
         if (argsString.isNotEmpty) {
           final args = argsString.split(",");
-          if (args.length == 1) {
-            return func(args[0]);
-          } else {
-            return func(args);
-          }
+          return Function.apply(func, args);
         }
         return func(null);
       }
@@ -369,6 +366,7 @@ class PropertyFactory {
       "language": Solution.language,
     });
     final map = {};
+    map.addAll(microFunctions);
     if (specContext != null) map.addAll(specContext);
     map.addAll({
       "state": state,
@@ -387,10 +385,26 @@ class PropertyFactory {
         "isFuchsia": kIsWeb ? false : Platform.isFuchsia,
         "portrait": mediaQueryData.orientation == Orientation.portrait,
         "landscape": mediaQueryData.orientation == Orientation.landscape,
+        "shortestSide": mediaQueryData.size.shortestSide,
+        "width": mediaQueryData.size.width,
+        "height": mediaQueryData.size.height,
         // "version": Platform.version,
       },
       "null": null,
     });
     return map;
   }
+
+  static final microFunctions = {
+    "math.add": (a, b) => parseDouble(a) + parseDouble(b),
+    "math.sub": (a, b) => parseDouble(a) - parseDouble(b),
+    "math.mul": (a, b) => parseDouble(a) * parseDouble(b),
+    "math.div": (a, b) => parseDouble(a) / parseDouble(b),
+    "math.max": (a, b) => max(parseDouble(a), parseDouble(b)),
+    "math.min": (a, b) => min(parseDouble(a), parseDouble(b)),
+    "toInt": (v) => parseInt(v),
+    "toDouble": (v) => parseDouble(v),
+    "toBool": (v) => parseBool(v),
+    "toString": (v) => v?.toString(),
+  };
 }
