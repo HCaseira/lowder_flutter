@@ -35,7 +35,7 @@ abstract class Strings {
     return get(key,
         fallbackValue: fallbackValue,
         attributes: attributes,
-        transform: Transform.capitalize);
+        transform: TextTransform.capitalize);
   }
 
   /// return a string resource in upper case.
@@ -44,7 +44,7 @@ abstract class Strings {
     return get(key,
         fallbackValue: fallbackValue,
         attributes: attributes,
-        transform: Transform.upper);
+        transform: TextTransform.upper);
   }
 
   /// return a string resource in lower case.
@@ -53,7 +53,7 @@ abstract class Strings {
     return get(key,
         fallbackValue: fallbackValue,
         attributes: attributes,
-        transform: Transform.lower);
+        transform: TextTransform.lower);
   }
 
   /// return a string resource in title case.
@@ -62,14 +62,14 @@ abstract class Strings {
     return get(key,
         fallbackValue: fallbackValue,
         attributes: attributes,
-        transform: Transform.title);
+        transform: TextTransform.title);
   }
 
   /// return a string resource.
   static String get(String key,
       {String? fallbackValue,
       Map<String, dynamic>? attributes,
-      Transform transform = Transform.none}) {
+      TextTransform transform = TextTransform.none}) {
     var value =
         _strings[key] ?? _strings[key.toLowerCase()] ?? fallbackValue ?? key;
     if (attributes != null) {
@@ -81,13 +81,13 @@ abstract class Strings {
     }
 
     switch (transform) {
-      case Transform.upper:
+      case TextTransform.upper:
         return value.toUpperCase();
-      case Transform.lower:
+      case TextTransform.lower:
         return value.toLowerCase();
-      case Transform.capitalize:
+      case TextTransform.capitalize:
         return value.toCapitalized();
-      case Transform.title:
+      case TextTransform.title:
         return value.toTitleCase();
       default:
         return value;
@@ -95,7 +95,7 @@ abstract class Strings {
   }
 }
 
-enum Transform {
+enum TextTransform {
   none,
   upper,
   lower,

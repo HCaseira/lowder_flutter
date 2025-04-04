@@ -309,4 +309,6 @@ abstract class Types {
   static const curve = EditorPropertyType("Curve");
   static const keyboardDismissBehavior =
       EditorPropertyType("KeyboardDismissBehavior");
+  static const matrix4 = EditorPropertyType("Matrix4");
+  static const offset = EditorPropertyType("Offset");
 }

@@ -588,6 +588,26 @@ class BaseProperties with IProperties {
 
     registerListType(Types.keyboardDismissBehavior.type,
         getKeyboardDismissBehavior, ["onDrag", "manual"]);
+
+    registerSpecType(Types.offset.type, getOffset, {
+      "x": Types.double,
+      "y": Types.double,
+    });
+
+    registerSpecType(Types.matrix4.type, getMatrix4, {}, subTypes: {
+      "scale": {
+        "scaleX": Types.double,
+        "scaleY": Types.double,
+      },
+      "translate": {"offset": Types.offset},
+      "rotate": {
+        "angle": Types.double,
+      },
+      "flip": {
+        "flipX": Types.bool,
+        "flipY": Types.bool,
+      },
+    });
   }
 
   MaterialType? getMaterialType(String? type) {
@@ -1224,6 +1244,9 @@ class BaseProperties with IProperties {
 
     if (value is num) {
       return Offset(parseDouble(value), parseDouble(value));
+    }
+    if (value is Map) {
+      return Offset(parseDouble(value["x"]), parseDouble(value["y"]));
     }
 
     final parts = getListValue(value);
@@ -1903,5 +1926,57 @@ class BaseProperties with IProperties {
     }
     expression ??= RegExp(r'[|\s]');
     return value.toString().split(expression);
+  }
+
+  Matrix4? getMatrix4(Map? spec) {
+    if (spec == null || spec.isEmpty) {
+      return null;
+    }
+
+    final type = spec["_type"] ?? "default";
+    switch (type) {
+      case "scale":
+        return Matrix4.diagonal3Values(
+            parseDouble(spec["scaleX"], defaultValue: 1),
+            parseDouble(spec["scaleY"], defaultValue: 1),
+            1.0);
+      case "translate":
+        final offset = getOffset(spec["offset"]) ?? Offset.zero;
+        return Matrix4.translationValues(offset.dx, offset.dy, 0.0);
+      case "rotate":
+        createZRotation(sin, cos) {
+          final Matrix4 result = Matrix4.zero();
+          result.storage[0] = cos;
+          result.storage[1] = sin;
+          result.storage[4] = -sin;
+          result.storage[5] = cos;
+          result.storage[10] = 1.0;
+          result.storage[15] = 1.0;
+          return result;
+        }
+        computeRotation(radians) {
+          if (radians == 0.0) {
+            return Matrix4.identity();
+          }
+          final double sin = math.sin(radians);
+          if (sin == 1.0) {
+            return createZRotation(1.0, 0.0);
+          }
+          if (sin == -1.0) {
+            return createZRotation(-1.0, 0.0);
+          }
+          final double cos = math.cos(radians);
+          if (cos == -1.0) {
+            return createZRotation(0.0, -1.0);
+          }
+          return createZRotation(sin, cos);
+        }
+        return computeRotation(parseDouble(spec["angle"]) * math.pi / 180);
+      case "flip":
+        return Matrix4.diagonal3Values(parseBool(spec["flipX"]) ? -1.0 : 1.0,
+            parseBool(spec["flipY"]) ? -1.0 : 1.0, 1.0);
+      default:
+        return null;
+    }
   }
 }

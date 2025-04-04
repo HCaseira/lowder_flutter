@@ -1092,7 +1092,10 @@ class BaseWidgets with IWidgets {
       "iconCode": Types.int,
       "color": Types.color,
       "size": Types.double,
-      "semanticLabel": Types.string
+      "semanticLabel": Types.string,
+      "weight": Types.double,
+      "grade": Types.double,
+      "textDirection": EditorPropertyListType(["ltr", "rtl"]),
     }, tags: [
       "asset",
       "common",
@@ -1149,6 +1152,19 @@ class BaseWidgets with IWidgets {
     }, widgets: {
       "label": EditorWidgetType.widget(),
       "child": EditorWidgetType.widget()
+    });
+
+    registerWidget("RotatedBox", buildRotatedBox, properties: {
+      "quarterTurns": Types.int,
+    }, widgets: {
+      "child": EditorWidgetType.widget()
+    });
+    registerWidget("Transform", buildTransform, properties: {
+      "origin": Types.offset,
+      "alignment": Types.alignment,
+      "transform": Types.matrix4,
+    }, widgets: {
+      "child": EditorWidgetType.widget(),
     });
 
     registerWidget("BlocBuilder", buildBlocBuilder, properties: {
@@ -3391,15 +3407,29 @@ class BaseWidgets with IWidgets {
 
   @protected
   Widget buildIcon(BuildParameters params) {
+    final props = params.props;
+    TextDirection? textDirection;
+    switch (props["textDirection"] ?? "") {
+      case "ltr":
+        textDirection = TextDirection.ltr;
+        break;
+      case "rtl":
+        textDirection = TextDirection.rtl;
+        break;
+    }
+
     return Icon(
       IconData(
-        parseInt(params.props["iconCode"]),
+        parseInt(props["iconCode"]),
         fontFamily: 'MaterialIcons',
       ),
       key: properties.getKey(params.id),
-      color: tryParseColor(params.props["color"]),
-      size: tryParseDouble(params.props["size"]),
-      semanticLabel: params.props["semanticLabel"],
+      color: tryParseColor(props["color"]),
+      size: tryParseDouble(props["size"]),
+      semanticLabel: props["semanticLabel"],
+      textDirection: textDirection,
+      weight: tryParseDouble(props["weight"]),
+      grade: tryParseDouble(props["grade"]),
     );
   }
 
@@ -3530,6 +3560,28 @@ class BaseWidgets with IWidgets {
           ? properties.evaluateCondition(props["isLabelVisible"])
           : true,
       label: label,
+      child: builder.tryBuildWidget(params.context, params.widgets["child"],
+          params.state, params.parentContext),
+    );
+  }
+
+  Widget buildRotatedBox(BuildParameters params) {
+    return RotatedBox(
+      key: properties.getKey(params.id),
+      quarterTurns: parseInt(params.props["quarterTurns"]),
+      child: builder.tryBuildWidget(params.context, params.widgets["child"],
+          params.state, params.parentContext),
+    );
+  }
+
+  Widget buildTransform(BuildParameters params) {
+    final props = params.props;
+
+    return Transform(
+      key: properties.getKey(params.id),
+      origin: BaseProperties().getOffset(props["origin"]),
+      alignment: params.buildProp("alignment"),
+      transform: params.buildProp("transform") ?? Matrix4.zero(),
       child: builder.tryBuildWidget(params.context, params.widgets["child"],
           params.state, params.parentContext),
     );
