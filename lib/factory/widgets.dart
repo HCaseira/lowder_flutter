@@ -483,7 +483,8 @@ class BaseWidgets with IWidgets {
       "verticalDirection": Types.verticalDirection,
       "crossAxisAlignment": Types.crossAxisAlignment,
       "mainAxisAlignment": Types.mainAxisAlignment,
-      "mainAxisSize": Types.mainAxisSize
+      "mainAxisSize": Types.mainAxisSize,
+      "spacing": Types.int,
     }, widgets: {
       "children": EditorWidgetType.widget(isArray: true)
     });
@@ -1133,9 +1134,14 @@ class BaseWidgets with IWidgets {
 
     registerWidget("CircularProgressIndicator", buildCircularProgressIndicator,
         properties: {
-          "color": Types.color,
+          "value": Types.double,
+          "maxValue": Types.double,
           "strokeWidth": Types.double,
-          "strokeAlign": Types.double
+          "strokeAlign": Types.double,
+          "color": Types.color,
+          "backgroundColor": Types.color,
+          "padding": Types.intArray,
+          "constraints": Types.boxConstraints,
         },
         actions: {
           "doWork": EditorActionType.action()
@@ -1976,6 +1982,7 @@ class BaseWidgets with IWidgets {
 
     return Row(
       key: properties.getKey(params.id),
+      spacing: parseDouble(params.props["spacing"]),
       verticalDirection: params.buildProp("verticalDirection"),
       crossAxisAlignment: params.buildProp("crossAxisAlignment"),
       mainAxisAlignment: params.buildProp("mainAxisAlignment"),
@@ -1998,6 +2005,7 @@ class BaseWidgets with IWidgets {
 
     return Column(
       key: properties.getKey(params.id),
+      spacing: parseDouble(params.props["spacing"]),
       verticalDirection: params.buildProp("verticalDirection"),
       crossAxisAlignment: params.buildProp("crossAxisAlignment"),
       mainAxisAlignment: params.buildProp("mainAxisAlignment"),
@@ -3527,17 +3535,31 @@ class BaseWidgets with IWidgets {
 
   @protected
   Widget buildCircularProgressIndicator(BuildParameters params) {
+    final props = params.props;
     final doWorkFunc = events.getFunction(params.context,
         params.actions["doWork"], params.state, params.parentContext);
 
     if (doWorkFunc != null) {
       Future.delayed(const Duration(milliseconds: 500), doWorkFunc);
     }
+
+    var value = tryParseDouble(props["value"]);
+    if (value != null) {
+      final maxValue = tryParseDouble(props["maxValue"]);
+      if (maxValue != null) {
+        value = value / maxValue;
+      }
+    }
+
     return CircularProgressIndicator(
       key: properties.getKey(params.id),
-      color: tryParseColor(params.props["color"]),
-      strokeWidth: parseDouble(params.props["strokeWidth"], defaultValue: 4.0),
-      strokeAlign: parseDouble(params.props["strokeAlign"]),
+      strokeWidth: parseDouble(props["strokeWidth"], defaultValue: 4.0),
+      strokeAlign: parseDouble(props["strokeAlign"]),
+      color: tryParseColor(props["color"]),
+      backgroundColor: tryParseColor(props["backgroundColor"]),
+      padding: params.buildProp("padding"),
+      constraints: params.buildProp("constraints"),
+      value: value,
     );
   }
 

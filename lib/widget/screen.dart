@@ -110,6 +110,7 @@ class LowderScreenState extends State<LowderScreen> {
     if (currentState is ReloadState || currentState is ReloadAll) {
       _initialized = false;
       _removePreviousValues();
+      widget._reloadController.add(null);
     } else if (currentState is SetStateState) {
       _removePreviousValues();
       state.addAll(currentState.state);

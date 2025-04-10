@@ -277,6 +277,12 @@ class PropertyFactory {
     } else if (leftStatement is bool || rightStatement is bool) {
       left = tryParseBool(leftStatement);
       right = tryParseBool(rightStatement);
+    } else if (parseDouble(leftStatement, defaultValue: double.maxFinite) !=
+            double.maxFinite ||
+        parseDouble(rightStatement, defaultValue: double.maxFinite) !=
+            double.maxFinite) {
+      left = tryParseDouble(leftStatement);
+      right = tryParseDouble(rightStatement);
     } else {
       left = leftStatement;
       right = rightStatement;
@@ -291,16 +297,16 @@ class PropertyFactory {
         return left != right;
       case ">":
       case "greater":
-        return left > right;
+        return left == null || right == null ? false : left > right;
       case ">=":
       case "greaterEqual":
-        return left >= right;
+        return left == null || right == null ? false : left >= right;
       case "<":
       case "less":
-        return left < right;
+        return left == null || right == null ? false : left < right;
       case "<=":
       case "lessEqual":
-        return left <= right;
+        return left == null || right == null ? false : left <= right;
       case "contain":
       case "not contain":
         var result = false;
