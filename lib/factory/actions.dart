@@ -210,7 +210,8 @@ class BaseActions with IActions {
           "alignment": Types.alignment,
           "elevation": Types.int,
           "transition": Types.routeTransitionBuilder,
-          "transitionDuration": Types.int
+          "transitionDuration": Types.int,
+          "returnName": Types.string,
         },
         actions: {
           "onPop": EditorActionType.action()
@@ -514,6 +515,11 @@ class BaseActions with IActions {
     tailFunc(value) {
       final onPopAction = action.actions["onPop"];
       if (onPopAction != null && context.buildContext.mounted) {
+        final returnName = props["returnName"];
+        if (returnName != null) {
+          context.actionContext[returnName] = value;
+        }
+
         Lowder.actions.run(
           context.buildContext,
           NodeSpec.fromMap(onPopAction),

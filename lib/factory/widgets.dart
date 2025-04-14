@@ -1975,8 +1975,11 @@ class BaseWidgets with IWidgets {
     final children = <Widget>[];
     if (params.widgets["children"] != null) {
       for (Map childSpec in params.widgets["children"] as List<Map>) {
-        children.add(builder.buildWidget(
-            params.context, childSpec, params.state, params.parentContext));
+        var widget = builder.buildWidget(
+            params.context, childSpec, params.state, params.parentContext);
+        if (widget is! NoWidget) {
+          children.add(widget);
+        }
       }
     }
 
@@ -1998,8 +2001,11 @@ class BaseWidgets with IWidgets {
     final children = <Widget>[];
     if (params.widgets["children"] != null) {
       for (Map childSpec in params.widgets["children"] as List<Map>) {
-        children.add(builder.buildWidget(
-            params.context, childSpec, params.state, params.parentContext));
+        var widget = builder.buildWidget(
+            params.context, childSpec, params.state, params.parentContext);
+        if (widget is! NoWidget) {
+          children.add(widget);
+        }
       }
     }
 
@@ -2021,8 +2027,11 @@ class BaseWidgets with IWidgets {
     final children = <Widget>[];
     if (params.widgets["children"] != null) {
       for (Map childSpec in params.widgets["children"] as List<Map>) {
-        children.add(builder.buildWidget(
-            params.context, childSpec, params.state, params.parentContext));
+        var widget = builder.buildWidget(
+            params.context, childSpec, params.state, params.parentContext);
+        if (widget is! NoWidget) {
+          children.add(widget);
+        }
       }
     }
 
