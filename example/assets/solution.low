@@ -34,7 +34,11 @@
                       "fontSize": "36"
                     },
                     "alias": "counter",
-                    "value": "0"
+                    "value": "0",
+                    "format": {
+                      "_type": "FormatterNumber",
+                      "format": "#"
+                    }
                   }
                 }
               }
@@ -52,7 +56,13 @@
                     "_type": "floatingActionButton",
                     "name": "Subtract",
                     "properties": {
-                      "iconCode": "0xe516"
+                      "iconCode": "0xe516",
+                      "buildCondition": {
+                        "_type": "OperatorCondition",
+                        "left": "${state.counter}",
+                        "operator": ">",
+                        "right": "0"
+                      }
                     },
                     "actions": {
                       "onPressed": {
@@ -62,12 +72,16 @@
                           "input": "${state.counter}",
                           "operation": "subtract",
                           "value": "1",
-                          "returnName": "counter"
+                          "returnName": "counter",
+                          "confirmation": {
+                            "title": "What??",
+                            "message": "No way!!"
+                          }
                         },
                         "actions": {
                           "nextAction": {
                             "_id": "f022f5c1-c976-421c-8a98-ec6b84926d06",
-                            "_type": "KActionSetState",
+                            "_type": "SetState",
                             "properties": {
                               "newState": {
                                 "counter": "${counter}"
@@ -105,7 +119,7 @@
                         "actions": {
                           "nextAction": {
                             "_id": "70ba1a4c-b76b-479f-94d0-d4c33d416fb3",
-                            "_type": "KActionSetState",
+                            "_type": "SetState",
                             "properties": {
                               "newState": {
                                 "counter": "${counter}"
