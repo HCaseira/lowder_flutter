@@ -1,6 +1,10 @@
 ## 0.1.12
-
-
+* Fixed issue where Widgets would not be updated after a SetState Action.
+* Fixed List Widgets reloading.
+* Fixed OperatorCondition on null values.
+* New Widgets RotateBox and Transform.
+* Some Model objects were renamed.
+* Some other minor improvements.
 
 ## 0.1.11
 
