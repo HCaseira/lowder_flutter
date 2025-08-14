@@ -14,7 +14,7 @@ typedef BlocBuilderFunction = Widget Function(
 typedef EditorBuildFunction = Widget Function(BuildContext context);
 
 /// Base Bloc consumer class for handling states
-class LowderBlocConsumer<B extends BaseBloc> extends StatefulWidget {
+abstract class LowderBlocConsumer<B extends BaseBloc> extends StatefulWidget {
   final Map<String, BlocListenerFunction> _listeners =
       <String, BlocListenerFunction>{};
   final Map<String, BlocBuilderFunction> _builders =
@@ -64,6 +64,8 @@ class LowderBlocConsumer<B extends BaseBloc> extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _LowderBlocConsumerState<B>();
 
+  B getBloc(BuildContext context) => BlocProvider.of<B>(context);
+
   void dispose() {}
 }
 
@@ -72,6 +74,7 @@ class _LowderBlocConsumerState<B extends BaseBloc>
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<B, BaseState>(
+      bloc: widget.getBloc(context) as B,
       listenWhen: widget._listenWhen,
       listener: widget._listener,
       buildWhen: widget._buildWhen,
@@ -116,8 +119,13 @@ class LocalBlocWidget extends StatelessWidget {
     return BlocProvider<LocalBloc>(
       lazy: false,
       create: (c) => Lowder.actions.createLocalBloc(),
-      child: Lowder.widgets.getGlobalBlocConsumer((context, state) {
-        return Lowder.widgets.getLocalBlocConsumer(builder, listener: listener);
+      child: Lowder.widgets.getGlobalBlocConsumer((context, globalState) {
+        return Lowder.widgets.getLocalBlocConsumer((context, localState) {
+          if (localState is InitialState) {
+            localState = globalState;
+          }
+          return builder(context, localState);
+        }, listener: listener);
       }, listener: listener),
     );
   }

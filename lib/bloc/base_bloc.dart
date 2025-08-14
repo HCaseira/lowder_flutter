@@ -51,7 +51,7 @@ class GlobalBloc extends BaseBloc {
   @override
   String get className => "GlobalBloc";
 
-  static emitState(BaseState state) => GlobalBloc().add(EmitState(state));
+  static void emitState(BaseState state) => GlobalBloc().add(EmitState(state));
 }
 
 /// A [BaseBloc] used by Widgets wanting to handle private events.

@@ -488,7 +488,7 @@ class BlocDataTable extends BlocListBase {
 
 /// The base class for using `ListBloc` to handle page loads.
 abstract class BlocListBase extends StatefulWidget {
-  static final Map<String, KListMutable> _listState = {};
+  static final Map<String, ListMutable> _listState = {};
   final log = Logger("BlocList");
   final Map state;
   final Map? evaluatorContext;
@@ -505,12 +505,12 @@ abstract class BlocListBase extends StatefulWidget {
   Map get widgets => spec.widgets;
   Map? get loadPageSpec => actions["loadPage"];
 
-  KListMutable get mutable {
+  ListMutable get mutable {
     // Upon setState ocurrencies, multiple instances of the same list may exist.
     // We're keeping a static reference to the List's state so the transition between
     // instances can be smoother.
     if (!_listState.containsKey(id)) {
-      _listState[id] = KListMutable();
+      _listState[id] = ListMutable();
     }
     _listState[id]!.timer?.cancel();
     return _listState[id]!;
@@ -533,7 +533,7 @@ abstract class BlocListBase extends StatefulWidget {
     return Lowder.actions.createListBloc();
   }
 
-  scrollListener() {
+  void scrollListener() {
     if (!mutable.lastState.hasMore) return;
     if (!mutable.loadingPage &&
         controller.position.maxScrollExtent == controller.offset) {
@@ -542,7 +542,7 @@ abstract class BlocListBase extends StatefulWidget {
     }
   }
 
-  loadPage({int? page}) {
+  void loadPage({int? page}) {
     if (mutable.blocContext == null) {
       log.warning(
           "Context not yet initialized while loading page '$page' on '${spec.name ?? spec.id}'.");
@@ -695,7 +695,7 @@ class BlocListState extends State<BlocListBase> {
   }
 }
 
-class KListMutable {
+class ListMutable {
   ListBloc? bloc;
   BuildContext? blocContext;
   bool loadingPage = false;

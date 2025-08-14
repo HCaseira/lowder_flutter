@@ -148,7 +148,7 @@ class ActionFactory {
       }
 
       final context =
-          ActionContext(state, runState, currentValue, buildContext);
+          ActionContext(state.clone(), runState, currentValue, buildContext);
       if (!await preExecute(currentAction, context)) {
         break;
       }

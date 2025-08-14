@@ -41,9 +41,9 @@ abstract class EditorNode extends EditorNodeBase {
 
 /// Class for creating an Action's schema.
 class EditorAction extends EditorNode {
-  static const String terminationAction = "KAction";
-  static const String action = "KStackAction";
-  static const String listAction = "KListAction";
+  static const String terminationAction = "IAction";
+  static const String action = "IStackAction";
+  static const String listAction = "IListAction";
 
   final Map<String, EditorActionType>? actions;
 
@@ -243,10 +243,10 @@ abstract class Types {
   static const json = EditorPropertyJson();
 
   static const screen = EditorPropertyType("Screen");
-  static const kFormatter = EditorPropertyType("KFormatter");
-  static const kCondition = EditorPropertyType("KCondition");
-  static const kOperator = EditorPropertyType("KOperator");
-  static const request = EditorPropertyType("KRequest");
+  static const formatter = EditorPropertyType("IFormatter");
+  static const condition = EditorPropertyType("ICondition");
+  static const operator = EditorPropertyType("Operator");
+  static const request = EditorPropertyType("IRequest");
 
   static const safeArea = EditorPropertyType("SafeArea");
   static const fontWeight = EditorPropertyType("FontWeight");

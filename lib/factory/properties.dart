@@ -120,17 +120,17 @@ class BaseProperties with IProperties {
 
   @override
   void registerProperties() {
-    registerAbstractType("KModel", {});
-    registerAbstractType("KRequest", {
+    registerAbstractType("IModel", {});
+    registerAbstractType("IRequest", {
       "url": Types.string,
       "path": Types.string,
       "method": const EditorPropertyListType(
           ["get", "post", "put", "delete", "patch"]),
-      "pathParameters": const EditorPropertyType("KModel"),
-      "queryArgs": const EditorPropertyType("KModel"),
-      "body": const EditorPropertyType("KModel"),
+      "pathParameters": const EditorPropertyType("IModel"),
+      "queryArgs": const EditorPropertyType("IModel"),
+      "body": const EditorPropertyType("IModel"),
     });
-    registerSpecType("KConfirmMessage", (_) => null, {
+    registerSpecType("ConfirmMessage", (_) => null, {
       "title": Types.string,
       "message": Types.string,
       "attributes": Types.json,
@@ -152,7 +152,7 @@ class BaseProperties with IProperties {
       "minimum": Types.intArray,
     });
 
-    registerListType(Types.kOperator.type, (v) => v,
+    registerListType(Types.operator.type, (v) => v,
         ["==", "!=", ">", ">=", "<", "<=", "contain", "not contain"]);
     registerListType(Types.materialType.type, getMaterialType,
         ["canvas", "card", "circle", "button", "transparency"]);
@@ -269,48 +269,52 @@ class BaseProperties with IProperties {
     ]);
 
     registerSpecType(
-        Types.kCondition.type,
+        Types.condition.type,
         (spec) =>
             spec != null ? Lowder.properties.evaluateCondition(spec) : false,
         {
-          "and": Types.kCondition,
-          "or": Types.kCondition,
+          "and": Types.condition,
+          "or": Types.condition,
         },
         subTypes: {
           "OperatorCondition": {
             "left": Types.string,
-            "operator": Types.kOperator,
+            "operator": Types.operator,
             "right": Types.string,
           },
           "NullOrEmpty": {"value": Types.string, "not": Types.bool},
         });
 
-    registerValueSpecType(Types.kFormatter.type, formatValue, {}, subTypes: {
-      "KFormatterTranslate": {
+    registerValueSpecType(Types.formatter.type, formatValue, {}, subTypes: {
+      "FormatterTranslate": {
         "transform": const EditorPropertyListType(
             ["upper", "lower", "capitalize", "title", "none"]),
         "attributes": Types.json,
       },
-      "KFormatterDateTime": {
+      "FormatterDateTime": {
         "format": Types.string,
         "diffToNow": Types.bool,
       },
-      "KFormatterDate": {
+      "FormatterDate": {
         "format": Types.string,
         "diffToNow": Types.bool,
       },
-      "KFormatterTime": {
+      "FormatterTime": {
         "format": Types.string,
         "diffToNow": Types.bool,
       },
-      "KFormatterNumber": {
+      "FormatterNumber": {
         "format": Types.string,
       },
-      "KFormatterCurrency": {
+      "FormatterCurrency": {
         "symbol": Types.string,
         "decimalDigits": Types.int,
       },
-      "KFormatterNone": {},
+      "FormatterTransform": {
+        "transform": const EditorPropertyListType(
+            ["upper", "lower", "capitalize", "title", "none"]),
+      },
+      "FormatterNone": {},
     });
 
     registerValueSpecType(Types.tabController.type, getTabController, {
@@ -388,6 +392,23 @@ class BaseProperties with IProperties {
     });
 
     registerSpecType(Types.textStyle.type, getTextStyle, {
+      "base": EditorPropertyListType([
+        "headlineLarge",
+        "headlineMedium",
+        "headlineSmall",
+        "titleLarge",
+        "titleMedium",
+        "titleSmall",
+        "labelLarge",
+        "labelMedium",
+        "labelSmall",
+        "bodyLarge",
+        "bodyMedium",
+        "bodySmall",
+        "displayLarge",
+        "displayMedium",
+        "displaySmall",
+      ]),
       "fontFamily": Types.string,
       "fontSize": Types.int,
       "fontWeight": Types.fontWeight,
@@ -1326,6 +1347,9 @@ class BaseProperties with IProperties {
     }
 
     final parts = getListValue(value);
+    if (parts.length == 1) {
+      return BorderRadius.all(Radius.circular(parseDouble(parts[0])));
+    }
     if (parts.length == 4) {
       return BorderRadius.only(
         topLeft: Radius.circular(parseDouble(parts[0])),
@@ -1334,8 +1358,7 @@ class BaseProperties with IProperties {
         bottomRight: Radius.circular(parseDouble(parts[3])),
       );
     }
-
-    return BorderRadius.all(Radius.circular(parseDouble(parts[0])));
+    return null;
   }
 
   VisualDensity? getVisualDensity(String? value) {
@@ -1361,7 +1384,59 @@ class BaseProperties with IProperties {
       return null;
     }
 
-    return TextStyle(
+    TextStyle? textStyle;
+    final baseStyle = spec["base"] ?? "";
+    switch (baseStyle) {
+      case "headlineLarge":
+        textStyle = Theme.of(Lowder.widgets.appContext).textTheme.headlineLarge;
+        break;
+      case "headlineMedium":
+        textStyle =
+            Theme.of(Lowder.widgets.appContext).textTheme.headlineMedium;
+        break;
+      case "headlineSmall":
+        textStyle = Theme.of(Lowder.widgets.appContext).textTheme.headlineSmall;
+        break;
+      case "titleLarge":
+        textStyle = Theme.of(Lowder.widgets.appContext).textTheme.titleLarge;
+        break;
+      case "titleMedium":
+        textStyle = Theme.of(Lowder.widgets.appContext).textTheme.titleMedium;
+        break;
+      case "titleSmall":
+        textStyle = Theme.of(Lowder.widgets.appContext).textTheme.titleSmall;
+        break;
+      case "labelLarge":
+        textStyle = Theme.of(Lowder.widgets.appContext).textTheme.labelLarge;
+        break;
+      case "labelMedium":
+        textStyle = Theme.of(Lowder.widgets.appContext).textTheme.labelMedium;
+        break;
+      case "labelSmall":
+        textStyle = Theme.of(Lowder.widgets.appContext).textTheme.labelSmall;
+        break;
+      case "bodyLarge":
+        textStyle = Theme.of(Lowder.widgets.appContext).textTheme.bodyLarge;
+        break;
+      case "bodyMedium":
+        textStyle = Theme.of(Lowder.widgets.appContext).textTheme.bodyMedium;
+        break;
+      case "bodySmall":
+        textStyle = Theme.of(Lowder.widgets.appContext).textTheme.bodySmall;
+        break;
+      case "displayLarge":
+        textStyle = Theme.of(Lowder.widgets.appContext).textTheme.displayLarge;
+        break;
+      case "displayMedium":
+        textStyle = Theme.of(Lowder.widgets.appContext).textTheme.displayMedium;
+        break;
+      case "displaySmall":
+        textStyle = Theme.of(Lowder.widgets.appContext).textTheme.displaySmall;
+        break;
+    }
+    textStyle ??= TextStyle();
+
+    return textStyle.copyWith(
       fontFamily: spec["fontFamily"],
       fontSize: tryParseDouble(spec["fontSize"]),
       fontWeight: getFontWeight(spec["fontWeight"]),
@@ -1764,7 +1839,7 @@ class BaseProperties with IProperties {
     value = value.toString();
     if (spec != null) {
       switch (spec["_type"]) {
-        case "KFormatterTranslate":
+        case "FormatterTranslate":
           final attributes =
               Map<String, dynamic>.from(spec["attributes"] ?? {});
           if (spec["transform"] == "upper") {
@@ -1777,28 +1852,28 @@ class BaseProperties with IProperties {
             return Strings.getTitle(value, attributes: attributes);
           }
           return Strings.get(value, attributes: attributes);
-        case "KFormatterDateTime":
+        case "FormatterDateTime":
           return Lowder.properties.formatDateTime(
             parseDateTime(value),
             parseBool(spec["diffToNow"]),
             format: spec["format"],
           );
-        case "KFormatterDate":
+        case "FormatterDate":
           return Lowder.properties.formatDate(
             parseDateTime(value),
             parseBool(spec["diffToNow"]),
             format: spec["format"],
           );
-        case "KFormatterTime":
+        case "FormatterTime":
           return Lowder.properties.formatTime(
             parseDateTime(value),
             parseBool(spec["diffToNow"]),
             format: spec["format"],
           );
-        case "KFormatterNumber":
+        case "FormatterNumber":
           final format = spec["format"] ?? Strings.get("_number_format_");
           return NumberFormat(format).format(parseDouble(value));
-        case "KFormatterCurrency":
+        case "FormatterCurrency":
           return NumberFormat.currency(
                   symbol: spec["symbol"] ?? Strings.get("_currency_symbol_"),
                   decimalDigits:

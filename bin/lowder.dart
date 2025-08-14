@@ -278,21 +278,21 @@ class HttpServer {
     };
   }
 
-  log(String message) {
+  void log(String message) {
     stdout.writeln(message);
   }
 
-  logInfo(String message) {
+  void logInfo(String message) {
     stdout.writeln(message);
     _sendLogToEditor("info", message);
   }
 
-  logError(String message, {String? stackTrace}) {
+  void logError(String message, {String? stackTrace}) {
     stderr.writeln(message);
     _sendLogToEditor("error", message);
   }
 
-  _sendLogToEditor(String type, String message, {String? stackTrace}) {
+  void _sendLogToEditor(String type, String message, {String? stackTrace}) {
     final logMessage = {
       "dataType": "log",
       "data": {

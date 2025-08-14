@@ -196,7 +196,7 @@ abstract class Lowder extends StatefulWidget {
     );
   }
 
-  getTheme() => ThemeData.light(useMaterial3: true);
+  ThemeData getTheme() => ThemeData.light(useMaterial3: true);
 
   @override
   AppState createState() => AppState();

@@ -93,32 +93,32 @@ class BaseWidgets with IWidgets {
     registerWidget("RootWidget", (_) => const SizedBox(),
         baseType: null,
         abstract: true,
-        properties: {"template": const EditorPropertyType("KTemplate")});
+        properties: {"template": const EditorPropertyType("Template")});
     registerWidget("PreferredSizeWidget", (_) => const SizedBox(),
         baseType: null,
         abstract: true,
         properties: {
-          "template": const EditorPropertyType("KTemplate"),
+          "template": const EditorPropertyType("Template"),
           "heroTag": Types.string,
           "safeArea": Types.bool,
-          "buildCondition": Types.kCondition
+          "buildCondition": Types.condition
         });
     registerWidget("Widget", (_) => const SizedBox(),
         baseType: null,
         abstract: true,
         properties: {
-          "template": const EditorPropertyType("KTemplate"),
+          "template": const EditorPropertyType("Template"),
           "decorator": const EditorPropertyType("Decorator"),
           "wrapExpanded": Types.bool,
           "visible": Types.bool,
           "margin": Types.edgeInsets,
           "heroTag": Types.string,
           "safeArea": Types.safeArea,
-          "buildCondition": Types.kCondition
+          "buildCondition": Types.condition
         });
 
     final componentProperties = {
-      "component": const EditorPropertyType("KComponent"),
+      "component": const EditorPropertyType("Component"),
       "value": Types.json,
       // "state": Types.json,
     };
@@ -300,7 +300,7 @@ class BaseWidgets with IWidgets {
           "iconCode": Types.int,
           "selectedIconCode": Types.int,
           "padding": Types.edgeInsets,
-          "buildCondition": Types.kCondition
+          "buildCondition": Types.condition
         },
         tags: [
           "structure & navigation"
@@ -808,7 +808,7 @@ class BaseWidgets with IWidgets {
     registerWidget("text", buildText, properties: {
       "alias": Types.string,
       "value": Types.string,
-      "format": Types.kFormatter,
+      "format": Types.formatter,
       "maxLines": Types.int,
       "semanticsLabel": Types.string,
       "softWrap": Types.bool,
@@ -1154,7 +1154,7 @@ class BaseWidgets with IWidgets {
       "textStyle": Types.textStyle,
       "textColor": Types.color,
       "backgroundColor": Types.color,
-      "isLabelVisible": Types.kCondition,
+      "isLabelVisible": Types.condition,
     }, widgets: {
       "label": EditorWidgetType.widget(),
       "child": EditorWidgetType.widget()
@@ -2307,10 +2307,10 @@ class BaseWidgets with IWidgets {
     final formatSpec = props["format"] ??
         {
           "_type": pickDate && pickTime
-              ? "KFormatterDateTime"
+              ? "FormatterDateTime"
               : pickDate
-                  ? "KFormatterDate"
-                  : "KFormatterTime"
+                  ? "FormatterDate"
+                  : "FormatterTime"
         };
 
     if (props["value"] == "now") {
@@ -2321,7 +2321,7 @@ class BaseWidgets with IWidgets {
 
     final controller = props["controller"] ??
         TextEditingController(
-            text: properties.build(Types.kFormatter.type, formatSpec,
+            text: properties.build(Types.formatter.type, formatSpec,
                 argument: value));
     props["controller"] = controller;
     final alias = props["alias"] ?? params.id;
@@ -2380,7 +2380,7 @@ class BaseWidgets with IWidgets {
         }
         if (newValue != value) {
           value = newValue;
-          controller.text = Types.kFormatter.build(formatSpec, argument: value);
+          controller.text = Types.formatter.build(formatSpec, argument: value);
         }
       };
     }
@@ -3596,6 +3596,7 @@ class BaseWidgets with IWidgets {
     );
   }
 
+  @protected
   Widget buildRotatedBox(BuildParameters params) {
     return RotatedBox(
       key: properties.getKey(params.id),
@@ -3605,6 +3606,7 @@ class BaseWidgets with IWidgets {
     );
   }
 
+  @protected
   Widget buildTransform(BuildParameters params) {
     final props = params.props;
 

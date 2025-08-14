@@ -98,17 +98,6 @@ class PropertyFactory {
     } else {
       return formatDate(date.toLocal(), true);
     }
-
-    // var formattedDate = formatDate(date.toLocal(), diffToNow);
-    // var formattedTime = formatTime(date.toLocal(), false);
-    // if (formattedDate.isEmpty ||
-    //     formattedDate == Strings.getCapitalized("today")) {
-    //   return formattedTime;
-    // } else if (formattedTime.isEmpty) {
-    //   return formattedDate;
-    // } else {
-    //   return "$formattedDate, $formattedTime";
-    // }
   }
 
   /// Method to build a String representing the Date part of a DateTime

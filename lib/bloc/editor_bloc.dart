@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
-import 'package:uuid/uuid.dart';
 import '../model/editor_message.dart';
 import '../model/solution.dart';
 import '../schema.dart';
@@ -18,7 +19,7 @@ import 'editor_state.dart';
 /// Available when in [Lowder.editorMode].
 class EditorBloc extends Bloc<BaseEditorEvent, BaseState> {
   static bool editMode = false;
-  static String clientId = const Uuid().v1();
+  static String get clientId => getClientId();
   static EditorBloc? instance;
 
   final _log = Logger("EditorBloc");
@@ -227,5 +228,13 @@ class EditorBloc extends Bloc<BaseEditorEvent, BaseState> {
 
   static void addEvent(BaseEditorEvent event) {
     instance?.add(event);
+  }
+
+  static String getClientId() {
+    var id = DateTime.now().toIso8601String();
+    if (kIsWeb) {
+      return "web_$id";
+    }
+    return "${Platform.operatingSystem}_$id";
   }
 }

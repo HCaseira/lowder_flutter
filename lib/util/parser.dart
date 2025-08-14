@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
 /// [bool] parser utility methods
-bool parseBool(var value, {bool defaultValue = false}) {
+bool parseBool(dynamic value, {bool defaultValue = false}) {
   return _parseBool(value, defaultValue) as bool;
 }
 
-bool? tryParseBool(var value) {
+bool? tryParseBool(dynamic value) {
   return _parseBool(value, null);
 }
 
-bool? _parseBool(var value, bool? defaultValue) {
+bool? _parseBool(dynamic value, bool? defaultValue) {
   if (value != null || value == "null") {
     if (value is bool || value is bool?) {
       return value;
@@ -23,15 +23,15 @@ bool? _parseBool(var value, bool? defaultValue) {
 }
 
 /// [int] parser utility methods
-int parseInt(var value, {int defaultValue = 0}) {
+int parseInt(dynamic value, {int defaultValue = 0}) {
   return _parseInt(value, defaultValue) as int;
 }
 
-int? tryParseInt(var value) {
+int? tryParseInt(dynamic value) {
   return _parseInt(value, null);
 }
 
-int? _parseInt(var value, int? defaultValue) {
+int? _parseInt(dynamic value, int? defaultValue) {
   if (value != null && value != "null") {
     if (value is num) {
       return value.toInt();
@@ -45,15 +45,15 @@ int? _parseInt(var value, int? defaultValue) {
 }
 
 /// [double] parser utility methods
-double parseDouble(var value, {double defaultValue = 0.0}) {
+double parseDouble(dynamic value, {double defaultValue = 0.0}) {
   return _parseDouble(value, defaultValue) as double;
 }
 
-double? tryParseDouble(var value) {
+double? tryParseDouble(dynamic value) {
   return _parseDouble(value, null);
 }
 
-double? _parseDouble(var value, double? defaultValue) {
+double? _parseDouble(dynamic value, double? defaultValue) {
   if (value != null && value != "null") {
     if (value is num) {
       return value.toDouble();
@@ -65,16 +65,16 @@ double? _parseDouble(var value, double? defaultValue) {
 }
 
 /// [DateTime] parser utility methods
-DateTime parseDateTime(var value, {DateTime? defaultValue}) {
+DateTime parseDateTime(dynamic value, {DateTime? defaultValue}) {
   defaultValue ??= DateTime.fromMillisecondsSinceEpoch(0);
   return _parseDateTime(value, defaultValue) as DateTime;
 }
 
-DateTime? tryParseDateTime(var value) {
+DateTime? tryParseDateTime(dynamic value) {
   return _parseDateTime(value, null);
 }
 
-DateTime? _parseDateTime(var value, DateTime? defaultValue) {
+DateTime? _parseDateTime(dynamic value, DateTime? defaultValue) {
   if (value != null && value != "null") {
     if (value is DateTime) {
       return value;

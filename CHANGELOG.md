@@ -1,3 +1,7 @@
+## 0.1.12
+
+
+
 ## 0.1.11
 
 * Fixed initial language to fetch resources from, to take device's locale into account.

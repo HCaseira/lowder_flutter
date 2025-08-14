@@ -67,6 +67,8 @@ class LowderScreen extends StatefulWidget {
 }
 
 class LowderScreenState extends State<LowderScreen> {
+  static final String _uuidPattern =
+      r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-8][0-9a-f]{3}-[0-9a-f]{4}-[0-9a-f]{12}';
   String get id => widget.id;
   String? get name => widget.name;
   Map get state => widget.state;
@@ -76,7 +78,8 @@ class LowderScreenState extends State<LowderScreen> {
   EditorBlocConsumer getEditorHandler(
           String screenId, EditorBuildFunction buildFunc) =>
       EditorBlocConsumer(screenId, buildFunc);
-  updateSpec() {
+
+  void updateSpec() {
     _initialized = false;
     widget.spec.widgets["body"] = Schema.getScreen(id)?.widgets["body"];
   }
@@ -153,9 +156,7 @@ class LowderScreenState extends State<LowderScreen> {
     var stateKeys = [...state.keys];
     for (var key in stateKeys) {
       if (key is String &&
-          key.length == 36 &&
-          key.contains('-') &&
-          !key.contains(' ')) {
+          RegExp(_uuidPattern, caseSensitive: false).hasMatch(key)) {
         state.remove(key);
       }
     }

@@ -1,26 +1,7 @@
-# Flutter Lowder
+# Lowder
 
-## What
-
-Flutter Lowder is a lightweight low-code development tool for Flutter.
-Using the `Lowder Editor`, build your app's `model`, which this plugin will interpret and execute.
-
-## How
-
-Lowder is composed of an `editor` and an `interpreter`, and both work with a `model` file.
-The `editor` is a visual interface where you can create your app's UI and logic.
-The `model` is a json file containing the objects created in the `editor`.
-The `interpreter` (this package) is a set of classes to load and execute the `model`.
-
-## Why
-
-* Gui: visually build your app with ease. 
-
-* Speed: quickly create a new screen, update a form or simply fix a typo.
-
-* Less coding: code your custom widgets and business logic when needed and use the `editor` to do the rest.
-
-* Updates over-the-air: as the `model` is a file, you can modify it and deploy it somewhere, where the app can download and load it.
+Lowder is a lightweight, low-code development tool for Flutter.
+Accelerate app development without sacrificing control. Add your own widgets or integrate with third-party APIs quickly and easily.
 
 ## Usage
 
