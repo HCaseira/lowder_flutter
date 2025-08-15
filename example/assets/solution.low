@@ -72,11 +72,7 @@
                           "input": "${state.counter}",
                           "operation": "subtract",
                           "value": "1",
-                          "returnName": "counter",
-                          "confirmation": {
-                            "title": "What??",
-                            "message": "No way!!"
-                          }
+                          "returnName": "counter"
                         },
                         "actions": {
                           "nextAction": {
