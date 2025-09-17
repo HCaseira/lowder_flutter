@@ -908,7 +908,6 @@ class BaseWidgets with IWidgets {
       "required": Types.bool,
       "requiredMessage": Types.string,
       "contentPadding": Types.edgeInsets,
-      "activeColor": Types.color,
       "hoverColor": Types.color,
       "title": Types.string,
       "subtitle": Types.string,
@@ -923,6 +922,7 @@ class BaseWidgets with IWidgets {
     });
     registerWidget("checkbox", buildCheckbox,
         properties: {
+          "activeColor": Types.color,
           "checkColor": Types.color,
           "triState": Types.bool,
         }..addAll(boolInputProperties.properties!),
@@ -931,9 +931,16 @@ class BaseWidgets with IWidgets {
         tags: ["input"]);
     registerWidget("switch", buildSwitch,
         properties: {
-          "activeTrackColor": Types.color,
+          "thumbColor": Types.color,
+          "activeThumbColor": Types.color,
           "inactiveThumbColor": Types.color,
+          "trackColor": Types.color,
+          "activeTrackColor": Types.color,
           "inactiveTrackColor": Types.color,
+          "trackOutlineColor": Types.color,
+          "overlayColor": Types.color,
+          "dense": Types.bool,
+          "visualDensity": Types.visualDensity,
         }..addAll(boolInputProperties.properties!),
         actions: boolInputProperties.actions,
         widgets: boolInputProperties.widgets,
@@ -1179,7 +1186,7 @@ class BaseWidgets with IWidgets {
       "child": EditorWidgetType.widget(),
       "states": EditorWidgetType("BuildState", isArray: true),
     });
-    registerWidget("BuildState", (_) => const SizedBox(),
+    registerWidget("BuildState", (p) => BlocState(p),
         baseType: null,
         properties: {"state": Types.string},
         widgets: {"child": EditorWidgetType.widget()});
@@ -1195,10 +1202,10 @@ class BaseWidgets with IWidgets {
         baseType: null,
         properties: {"state": Types.string},
         actions: {"listener": EditorActionType.action()});
-    registerWidget("StateBuilder", (_) => const SizedBox(),
+    registerWidget("StateBuilder", (p) => BlocState(p),
         baseType: "BlocBuilderState",
         widgets: {"child": EditorWidgetType.widget()});
-    registerWidget("StateListener", (_) => const SizedBox(),
+    registerWidget("StateListener", (p) => BlocState(p),
         baseType: "BlocBuilderState");
   }
 
@@ -2608,38 +2615,44 @@ class BaseWidgets with IWidgets {
 
   @protected
   Widget buildSwitch(BuildParameters params) {
-    var alias = params.props["alias"] ?? params.id;
-    var enabled = parseBool(params.props["enabled"], defaultValue: true);
-    var controlAffinity = params.props["direction"] == "leading"
+    final props = params.props;
+    final alias = props["alias"] ?? params.id;
+    final enabled = parseBool(props["enabled"], defaultValue: true);
+    final controlAffinity = props["direction"] == "leading"
         ? ListTileControlAffinity.leading
-        : params.props["direction"] == "trailing"
+        : props["direction"] == "trailing"
             ? ListTileControlAffinity.trailing
             : ListTileControlAffinity.platform;
 
     Widget? title = builder.tryBuildWidget(params.context,
         params.widgets["titleWidget"], params.state, params.parentContext);
-    title ??= params.props["title"] != null
-        ? Text(properties.getText(params.props["title"], "titleMessage"))
+    title ??= props["title"] != null
+        ? Text(properties.getText(props["title"], "titleMessage"))
         : null;
     Widget? subtitle = builder.tryBuildWidget(params.context,
         params.widgets["subtitleWidget"], params.state, params.parentContext);
-    subtitle ??= params.props["subtitle"] != null
-        ? Text(properties.getText(params.props["subtitle"], "titleMessage"))
+    subtitle ??= props["subtitle"] != null
+        ? Text(properties.getText(props["subtitle"], "titleMessage"))
         : null;
 
     var onChanged = events.getValueFunction<bool?>(params.context,
         params.actions["onChanged"], params.state, params.parentContext);
-    var onSaved = params.props["onSaved"] ??
+    var onSaved = props["onSaved"] ??
         (v) {
           if (alias != null) {
             params.state[alias] = v;
           }
         };
 
+    WidgetStateProperty<Color>? getStateColor(val) {
+      final color = tryParseColor(val);
+      return color != null ? WidgetStateProperty.all(color) : null;
+    }
+
     return FormField<bool>(
       key:
           UniqueKey(), // otherwise on a ListView, FormField's state would override the real value when reusing widgets
-      initialValue: parseBool(params.props["value"]),
+      initialValue: parseBool(props["value"]),
       enabled: enabled,
       autovalidateMode: AutovalidateMode.disabled,
       validator: builder.getCheckboxValidator(params.props),
@@ -2649,11 +2662,17 @@ class BaseWidgets with IWidgets {
           key: properties.getKey(params.id),
           value: state.value ?? false,
           controlAffinity: controlAffinity,
-          activeThumbColor: tryParseColor(params.props["activeColor"]),
-          hoverColor: tryParseColor(params.props["hoverColor"]),
-          activeTrackColor: tryParseColor(params.props["activeTrackColor"]),
-          inactiveThumbColor: tryParseColor(params.props["inactiveThumbColor"]),
-          inactiveTrackColor: tryParseColor(params.props["inactiveTrackColor"]),
+          thumbColor: getStateColor(props["thumbColor"]),
+          activeThumbColor: tryParseColor(props["activeThumbColor"]),
+          inactiveThumbColor: tryParseColor(props["inactiveThumbColor"]),
+          trackColor: getStateColor(props["trackColor"]),
+          activeTrackColor: tryParseColor(props["activeTrackColor"]),
+          inactiveTrackColor: tryParseColor(props["inactiveTrackColor"]),
+          trackOutlineColor: getStateColor(props["trackOutlineColor"]),
+          overlayColor: getStateColor(props["overlayColor"]),
+          hoverColor: tryParseColor(props["hoverColor"]),
+          dense: tryParseBool(props["dense"]),
+          visualDensity: params.buildProp("visualDensity"),
           shape: params.buildProp("shape"),
           title: title,
           subtitle: state.hasError
@@ -3622,29 +3641,30 @@ class BaseWidgets with IWidgets {
 
   @protected
   Widget buildBlocBuilder(BuildParameters params) {
-    final children = params.widgets["states"] as List<Map>?;
-    if (children == null || children.isEmpty) {
+    final childrenList = params.widgets["states"] as List<Map>?;
+    if (childrenList == null || childrenList.isEmpty) {
       return const SizedBox();
     }
 
     final log = Logger("BlocBuilder");
+    final children = <BlocState>[];
+    for (var c in childrenList) {
+      children.add(builder.buildWidget(
+          params.context, c, params.state, params.parentContext) as BlocState);
+    }
+
     final stateActions = <String>[];
     final stateWidgets = <String>[];
     final actionMap = <String, Map?>{};
     final widgetMap = <String, Map?>{};
     for (var child in children) {
-      final childProps = child["properties"] as Map? ?? {};
-      final state = childProps["state"] as String? ?? "";
+      if (child.state.isNotEmpty) {
+        stateActions.add(child.state);
+        actionMap[child.state] = child.listener;
 
-      if (state.isNotEmpty) {
-        stateActions.add(state);
-        final childActions = child["actions"] as Map? ?? {};
-        actionMap[state] = childActions["listener"] as Map?;
-
-        if (child["_type"] != "StateListener") {
-          stateWidgets.add(state);
-          final childWidgets = child["widgets"] as Map? ?? {};
-          widgetMap[state] = childWidgets["child"] as Map?;
+        if (child.type != "StateListener") {
+          stateWidgets.add(child.state);
+          widgetMap[child.state] = child.widget;
         }
       }
     }
@@ -3721,5 +3741,23 @@ class BaseWidgets with IWidgets {
             listener: listener,
             buildWhen: buildWhen,
             builder: stateBuilder);
+  }
+}
+
+class BlocState extends SizedBox {
+  late final String type;
+  late final String state;
+  late final Map? listener;
+  late final Map? widget;
+
+  BlocState(BuildParameters params, {super.key}) {
+    type = params.spec.type;
+    state = params.props["state"] as String? ?? "";
+    if (state.isNotEmpty) {
+      listener = params.actions["listener"] as Map?;
+      if (type != "StateListener") {
+        widget = params.widgets["child"] as Map?;
+      }
+    }
   }
 }

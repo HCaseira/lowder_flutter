@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
-import 'package:lowder/util/extensions.dart';
+import '../util/extensions.dart';
 import '../widget/lowder.dart';
 import 'base_event.dart';
 import 'base_state.dart';

@@ -32,26 +32,43 @@ class Solution {
   void upsertScreen(Map spec) {
     final node = WidgetNodeSpec.fromMap(spec);
     screens[node.id] = node;
+
+    final routeName = node.props["routeName"] as String?;
+    if (routeName != null && routeName.isNotEmpty) {
+      screens[routeName] = node;
+    }
   }
 
   void upsertTemplate(Map spec) {
     final node = WidgetNodeSpec.fromMap(spec);
     templates[node.id] = node;
+    if (node.name != null && node.name!.isNotEmpty) {
+      templates[node.name!] = node;
+    }
   }
 
   void upsertComponent(Map spec) {
     final node = WidgetNodeSpec.fromMap(spec);
     components[node.id] = node;
+    if (node.name != null && node.name!.isNotEmpty) {
+      components[node.name!] = node;
+    }
   }
 
   void upsertAction(Map spec) {
     final node = ActionNodeSpec.fromMap(spec);
     actions[node.id] = node;
+    if (node.name != null && node.name!.isNotEmpty) {
+      actions[node.name!] = node;
+    }
   }
 
   void upsertRequest(Map spec) {
     final node = RootNodeSpec.fromMap(spec);
     requests[node.type] = node;
+    if (node.name != null && node.name!.isNotEmpty) {
+      requests[node.name!] = node;
+    }
   }
 
   WidgetNodeSpec? getScreen(String id) {
@@ -140,18 +157,30 @@ class Solution {
     for (var template in templates) {
       final node = WidgetNodeSpec.fromMap(template);
       templateMap[node.id] = node;
+      if (node.name != null && node.name!.isNotEmpty) {
+        templateMap[node.name!] = node;
+      }
     }
     for (var component in components) {
       final node = WidgetNodeSpec.fromMap(component);
       componentMap[node.id] = node;
+      if (node.name != null && node.name!.isNotEmpty) {
+        componentMap[node.name!] = node;
+      }
     }
     for (var action in actions) {
       final node = ActionNodeSpec.fromMap(action);
       actionMap[node.type] = node;
+      if (node.name != null && node.name!.isNotEmpty) {
+        actionMap[node.name!] = node;
+      }
     }
     for (var request in requests) {
       final node = RootNodeSpec.fromMap(request);
       requestMap[node.type] = node;
+      if (node.name != null && node.name!.isNotEmpty) {
+        requestMap[node.name!] = node;
+      }
     }
 
     return Solution._(
