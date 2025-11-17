@@ -410,12 +410,17 @@ class WidgetFactory {
     // Use Template to set Property values, if not existing
     mergeMaps(spec.props, newTemplate);
 
-    // Set Widget's value via its alias
-    var alias = spec.props["alias"] ?? spec.id;
-    if (state.containsKey(alias)) {
-      spec.props["value"] = state[alias];
-    } else if (spec.props.containsKey("value")) {
-      state[alias] = spec.props["value"];
+    final conditionalProperties =
+        spec.props["conditionalProperties"] as List? ?? [];
+    for (var cp in conditionalProperties) {
+      var condition = cp["condition"] as Map?;
+      if (condition != null && properties.evaluateCondition(condition)) {
+        var props = cp["properties"] as Map?;
+        if (props != null) {
+          mergeMaps(spec.props, props, override: true);
+          break;
+        }
+      }
     }
 
     // Evaluate State keys starting with Widget's Id
@@ -442,10 +447,20 @@ class WidgetFactory {
         }
       }
     }
+
+    // Set Widget's value via its alias
+    var alias = spec.props["alias"];
+    if (alias is String) {
+      if (state.containsKey(alias)) {
+        spec.props["value"] = state[alias];
+      } else if (spec.props.containsKey("value")) {
+        state[alias] = spec.props["value"];
+      }
+    }
   }
 
   /// Utility method to merge two Maps.
-  void mergeMaps(Map map1, Map map2) {
+  void mergeMaps(Map map1, Map map2, {bool override = false}) {
     for (var key in map2.keys) {
       var map1Value = map1[key];
       var map2Value = map2[key];
@@ -455,8 +470,9 @@ class WidgetFactory {
           map1Value = {};
           map1[key] = map1Value;
         }
-        mergeMaps(map1Value, map2Value);
-      } else if (map1Value == null) {
+        mergeMaps(map1Value, map2Value, override: override);
+      } else if ((!override && map1Value == null) ||
+          (override && map2Value != null)) {
         map1[key] = map2Value;
       }
     }

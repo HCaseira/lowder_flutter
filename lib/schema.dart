@@ -21,9 +21,9 @@ class Schema {
     final createdSolutions = <Solution>[];
 
     for (var solution in solutions) {
-      if (solution["landingScreen"] != null &&
-          solution["landingScreen"].isNotEmpty) {
-        landingScreen = solution["landingScreen"];
+      var solutionLandingScreen = solution["landingScreen"];
+      if (solutionLandingScreen is String && solutionLandingScreen.isNotEmpty) {
+        landingScreen = solutionLandingScreen;
       }
       var newSolution =
           Solution.fromMap(solution, environment, language: language);

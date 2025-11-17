@@ -311,4 +311,10 @@ abstract class Types {
       EditorPropertyType("KeyboardDismissBehavior");
   static const matrix4 = EditorPropertyType("Matrix4");
   static const offset = EditorPropertyType("Offset");
+  static const widgetStateColor = EditorPropertyType("WidgetStateColor");
+
+  static const conditionalProperties =
+      EditorPropertyType("LowderConditionalProperties", isArray: true);
+  static const nodeProperties = EditorPropertyType("LowderNodeProperties");
+  static const nodeAction = EditorPropertyType("LowderNodeAction");
 }

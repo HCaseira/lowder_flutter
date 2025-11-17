@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 import 'dart:math' hide log;
 
 import 'package:flutter/foundation.dart';
@@ -21,6 +22,7 @@ import '../widget/lowder.dart';
 import '../widget/bloc_handler.dart';
 import '../widget/bloc_list.dart';
 import 'action_factory.dart';
+import 'hollow_widgets.dart';
 import 'properties.dart';
 import 'property_factory.dart';
 import 'widget_factory.dart';
@@ -101,7 +103,8 @@ class BaseWidgets with IWidgets {
           "template": const EditorPropertyType("Template"),
           "heroTag": Types.string,
           "safeArea": Types.bool,
-          "buildCondition": Types.condition
+          "buildCondition": Types.condition,
+          "conditionalProperties": Types.conditionalProperties
         });
     registerWidget("Widget", (_) => const SizedBox(),
         baseType: null,
@@ -114,7 +117,8 @@ class BaseWidgets with IWidgets {
           "margin": Types.edgeInsets,
           "heroTag": Types.string,
           "safeArea": Types.safeArea,
-          "buildCondition": Types.condition
+          "buildCondition": Types.condition,
+          "conditionalProperties": Types.conditionalProperties
         });
 
     final componentProperties = {
@@ -1092,6 +1096,279 @@ class BaseWidgets with IWidgets {
       "button"
     ]);
 
+    registerWidget("SegmentedButton", buildSegmentedButton, properties: {
+      "alias": Types.string,
+      "value": Types.string,
+      "segments": Types.stringArray,
+      "multiSelectionEnabled": Types.bool,
+      "emptySelectionAllowed": Types.bool,
+      "showSelectedIcon": Types.bool,
+      "style": Types.buttonStyle,
+      "expandedInsets": Types.edgeInsets,
+      "direction": Types.axis,
+    }, actions: {
+      "onSelectionChanged": EditorActionType.action()
+    }, widgets: {
+      "segments": EditorWidgetType(ButtonSegmentWidget.type, isArray: true),
+      "selectedIcon": EditorWidgetType.widget()
+    }, tags: [
+      "input",
+      "button"
+    ]);
+    registerWidget(ButtonSegmentWidget.type, (p) => ButtonSegmentWidget(p),
+        baseType: null,
+        properties: ButtonSegmentWidget.properties,
+        widgets: ButtonSegmentWidget.widgets);
+
+    registerWidget(
+      "Chip",
+      buildChip,
+      abstract: true,
+      // properties: {
+      //   "label": Types.string,
+      //   "avatarBoxConstraints": Types.boxConstraints,
+      //   "color": Types.widgetStateColor,
+      //   "backgroundColor": Types.color,
+      //   "surfaceTintColor": Types.color,
+      //   "padding": Types.edgeInsets,
+      //   "visualDensity": Types.visualDensity,
+      //   "shape": Types.shapeBorder,
+      //   "side": Types.borderSide,
+      //   "elevation": Types.double,
+      //   "shadowColor": Types.color,
+      //   "labelStyle": Types.textStyle,
+      //   "labelPadding": Types.edgeInsets,
+      //   "deleteIconColor": Types.color,
+      //   "deleteButtonTooltipMessage": Types.string,
+      //   "deleteIconBoxConstraints": Types.boxConstraints,
+      // },
+      // actions: {
+      //   "onDeleted": EditorActionType.action(),
+      // },
+      widgets: {
+        "label": EditorWidgetType.widget(),
+        "avatar": EditorWidgetType.widget(),
+        // "deleteIcon": EditorWidgetType.widget(),
+      },
+    );
+    registerWidget(
+      "ActionChip",
+      buildActionChip,
+      baseType: "Chip",
+      properties: {
+        "label": Types.string,
+        "tooltip": Types.string,
+        "color": Types.widgetStateColor,
+        "backgroundColor": Types.color,
+        "surfaceTintColor": Types.color,
+        "padding": Types.edgeInsets,
+        "visualDensity": Types.visualDensity,
+        "shape": Types.shapeBorder,
+        "side": Types.borderSide,
+        "elevation": Types.double,
+        "pressElevation": Types.double,
+        "shadowColor": Types.color,
+        "labelStyle": Types.textStyle,
+        "labelPadding": Types.edgeInsets,
+        "avatarBoxConstraints": Types.boxConstraints,
+      },
+      actions: {"onPressed": EditorActionType.action()},
+      tags: ["button", "action"],
+    );
+    registerWidget(
+      "ChoiceChip",
+      buildChoiceChip,
+      baseType: "Chip",
+      properties: {
+        "selected": Types.bool,
+        "label": Types.string,
+        "tooltip": Types.string,
+        "color": Types.widgetStateColor,
+        "selectedColor": Types.color,
+        "selectedShadowColor": Types.color,
+        "showCheckmark": Types.bool,
+        "checkmarkColor": Types.color,
+        "backgroundColor": Types.color,
+        "surfaceTintColor": Types.color,
+        "padding": Types.edgeInsets,
+        "visualDensity": Types.visualDensity,
+        "shape": Types.shapeBorder,
+        "side": Types.borderSide,
+        "elevation": Types.double,
+        "pressElevation": Types.double,
+        "shadowColor": Types.color,
+        "labelStyle": Types.textStyle,
+        "labelPadding": Types.edgeInsets,
+        "avatarBoxConstraints": Types.boxConstraints,
+        "avatarBorder": Types.shapeBorder,
+      },
+      actions: {"onSelected": EditorActionType.action()},
+      tags: ["button", "input"],
+    );
+    registerWidget(
+      "ChoiceChipList",
+      buildChoiceChipList,
+      properties: {
+        "alias": Types.string,
+        "value": Types.json,
+        "scrollable": Types.bool,
+        "spacing": Types.double,
+        "alignment": Types.mainAxisAlignment,
+        "runAlignment": Types.mainAxisAlignment,
+        "runSpacing": Types.double,
+        "crossAxisAlignment":
+            const EditorPropertyListType(["start", "center", "end"]),
+        "emptySelectionAllowed": Types.bool,
+        "color": Types.widgetStateColor,
+        "selectedColor": Types.color,
+        "selectedShadowColor": Types.color,
+        "showCheckmark": Types.bool,
+        "checkmarkColor": Types.color,
+        "backgroundColor": Types.color,
+        "surfaceTintColor": Types.color,
+        "padding": Types.edgeInsets,
+        "visualDensity": Types.visualDensity,
+        "shape": Types.shapeBorder,
+        "side": Types.borderSide,
+        "elevation": Types.double,
+        "pressElevation": Types.double,
+        "shadowColor": Types.color,
+        "labelStyle": Types.textStyle,
+        "labelPadding": Types.edgeInsets,
+        "avatarBoxConstraints": Types.boxConstraints,
+        "avatarBorder": Types.shapeBorder,
+      },
+      actions: {"onSelectionChanged": EditorActionType.action()},
+      widgets: {
+        "chips": EditorWidgetType(ChoiceChipValueWidget.type, isArray: true)
+      },
+      tags: ["button", "input"],
+    );
+    registerWidget(ChoiceChipValueWidget.type, (p) => ChoiceChipValueWidget(p),
+        baseType: null,
+        properties: ChoiceChipValueWidget.properties,
+        widgets: ChoiceChipValueWidget.widgets);
+    registerWidget(
+      "FilterChip",
+      buildFilterChip,
+      baseType: "Chip",
+      properties: {
+        "selected": Types.bool,
+        "label": Types.string,
+        "tooltip": Types.string,
+        "color": Types.widgetStateColor,
+        "selectedColor": Types.color,
+        "selectedShadowColor": Types.color,
+        "showCheckmark": Types.bool,
+        "checkmarkColor": Types.color,
+        "backgroundColor": Types.color,
+        "surfaceTintColor": Types.color,
+        "padding": Types.edgeInsets,
+        "visualDensity": Types.visualDensity,
+        "shape": Types.shapeBorder,
+        "side": Types.borderSide,
+        "elevation": Types.double,
+        "pressElevation": Types.double,
+        "shadowColor": Types.color,
+        "labelStyle": Types.textStyle,
+        "labelPadding": Types.edgeInsets,
+        "avatarBoxConstraints": Types.boxConstraints,
+        "avatarBorder": Types.shapeBorder,
+        "deleteButtonTooltipMessage": Types.string,
+        "deleteIconColor": Types.color,
+        "deleteIconBoxConstraints": Types.boxConstraints,
+      },
+      actions: {
+        "onSelected": EditorActionType.action(),
+        "onDeleted": EditorActionType.action()
+      },
+      widgets: {"deleteIcon": EditorWidgetType.widget()},
+      tags: ["button", "input"],
+    );
+    registerWidget(
+      "FilterChipList",
+      buildFilterChipList,
+      properties: {
+        "alias": Types.string,
+        "value": Types.json,
+        "scrollable": Types.bool,
+        "spacing": Types.double,
+        "alignment": Types.mainAxisAlignment,
+        "runAlignment": Types.mainAxisAlignment,
+        "runSpacing": Types.double,
+        "crossAxisAlignment":
+            const EditorPropertyListType(["start", "center", "end"]),
+        "emptySelectionAllowed": Types.bool,
+        "color": Types.widgetStateColor,
+        "selectedColor": Types.color,
+        "selectedShadowColor": Types.color,
+        "showCheckmark": Types.bool,
+        "checkmarkColor": Types.color,
+        "backgroundColor": Types.color,
+        "surfaceTintColor": Types.color,
+        "padding": Types.edgeInsets,
+        "visualDensity": Types.visualDensity,
+        "shape": Types.shapeBorder,
+        "side": Types.borderSide,
+        "elevation": Types.double,
+        "pressElevation": Types.double,
+        "shadowColor": Types.color,
+        "labelStyle": Types.textStyle,
+        "labelPadding": Types.edgeInsets,
+        "avatarBoxConstraints": Types.boxConstraints,
+        "avatarBorder": Types.shapeBorder,
+      },
+      actions: {"onSelectionChanged": EditorActionType.action()},
+      widgets: {
+        "chips": EditorWidgetType(FilterChipValueWidget.type, isArray: true)
+      },
+      tags: ["button", "input"],
+    );
+    registerWidget(FilterChipValueWidget.type, (p) => FilterChipValueWidget(p),
+        baseType: null,
+        properties: FilterChipValueWidget.properties,
+        widgets: FilterChipValueWidget.widgets);
+    registerWidget(
+      "InputChip",
+      buildInputChip,
+      baseType: "Chip",
+      properties: {
+        "selected": Types.bool,
+        "isEnabled": Types.bool,
+        "label": Types.string,
+        "tooltip": Types.string,
+        "color": Types.widgetStateColor,
+        "disabledColor": Types.color,
+        "selectedColor": Types.color,
+        "selectedShadowColor": Types.color,
+        "showCheckmark": Types.bool,
+        "checkmarkColor": Types.color,
+        "backgroundColor": Types.color,
+        "surfaceTintColor": Types.color,
+        "padding": Types.edgeInsets,
+        "visualDensity": Types.visualDensity,
+        "shape": Types.shapeBorder,
+        "side": Types.borderSide,
+        "elevation": Types.double,
+        "pressElevation": Types.double,
+        "shadowColor": Types.color,
+        "labelStyle": Types.textStyle,
+        "labelPadding": Types.edgeInsets,
+        "avatarBoxConstraints": Types.boxConstraints,
+        "avatarBorder": Types.shapeBorder,
+        "deleteButtonTooltipMessage": Types.string,
+        "deleteIconColor": Types.color,
+        "deleteIconBoxConstraints": Types.boxConstraints,
+      },
+      actions: {
+        "onPressed": EditorActionType.action(),
+        "onSelected": EditorActionType.action(),
+        "onDeleted": EditorActionType.action(),
+      },
+      widgets: {"deleteIcon": EditorWidgetType.widget()},
+      tags: ["button", "input"],
+    );
+
     registerWidget("Hero", buildHero,
         properties: {"tag": Types.string},
         widgets: {"child": EditorWidgetType.widget()},
@@ -1180,13 +1457,16 @@ class BaseWidgets with IWidgets {
       "child": EditorWidgetType.widget(),
     });
 
+    registerWidget("LayoutBuilder", buildLayoutBuilder,
+        widgets: {"child": EditorWidgetType.widget()});
+
     registerWidget("BlocBuilder", buildBlocBuilder, properties: {
       "type": const EditorPropertyListType(["local", "global"]),
     }, widgets: {
       "child": EditorWidgetType.widget(),
       "states": EditorWidgetType("BuildState", isArray: true),
     });
-    registerWidget("BuildState", (p) => BlocState(p),
+    registerWidget("BuildState", (p) => BlocStateWidget(p),
         baseType: null,
         properties: {"state": Types.string},
         widgets: {"child": EditorWidgetType.widget()});
@@ -1202,10 +1482,10 @@ class BaseWidgets with IWidgets {
         baseType: null,
         properties: {"state": Types.string},
         actions: {"listener": EditorActionType.action()});
-    registerWidget("StateBuilder", (p) => BlocState(p),
+    registerWidget("StateBuilder", (p) => BlocStateWidget(p),
         baseType: "BlocBuilderState",
         widgets: {"child": EditorWidgetType.widget()});
-    registerWidget("StateListener", (p) => BlocState(p),
+    registerWidget("StateListener", (p) => BlocStateWidget(p),
         baseType: "BlocBuilderState");
   }
 
@@ -2042,17 +2322,19 @@ class BaseWidgets with IWidgets {
       }
     }
 
+    final props = params.props;
+    final propFactory = BaseProperties();
+
     return Wrap(
       key: properties.getKey(params.id),
       direction: params.buildProp("direction") ?? Axis.horizontal,
       verticalDirection: params.buildProp("verticalDirection"),
-      spacing: parseDouble(params.props["spacing"]),
-      runAlignment:
-          BaseProperties().getWrapAlignment(params.props["runAlignment"]),
-      runSpacing: parseDouble(params.props["runSpacing"]),
-      alignment: params.buildProp("alignment"),
-      crossAxisAlignment: BaseProperties()
-          .getWrapCrossAlignment(params.props["crossAxisAlignment"]),
+      spacing: parseDouble(props["spacing"]),
+      runSpacing: parseDouble(props["runSpacing"]),
+      runAlignment: propFactory.getWrapAlignment(props["runAlignment"]),
+      alignment: propFactory.getWrapAlignment(props["alignment"]),
+      crossAxisAlignment:
+          propFactory.getWrapCrossAlignment(props["crossAxisAlignment"]),
       children: children,
     );
   }
@@ -3394,6 +3676,82 @@ class BaseWidgets with IWidgets {
   }
 
   @protected
+  Widget buildSegmentedButton(BuildParameters params) {
+    final props = params.props;
+    final alias = props["alias"] ?? params.id;
+    final value = props["value"];
+    final multipleSelect = parseBool(props["multiSelectionEnabled"]);
+
+    final onChangeAction = events.getValueFunction(
+        params.context,
+        params.actions["onSelectionChanged"],
+        params.state,
+        params.parentContext);
+
+    final selectedSet = <dynamic>{};
+    if (value != null) {
+      if (value is Set || value is List) {
+        selectedSet.addAll(value);
+      } else if (value is! String || value.isNotEmpty) {
+        selectedSet.add(value);
+      }
+    }
+
+    final segments = <ButtonSegment>[];
+    final segmentWidgets = params.widgets["segments"] as List?;
+    if (segmentWidgets is List && segmentWidgets.isNotEmpty) {
+      for (var spec in segmentWidgets) {
+        var widget = builder.buildWidget(
+            params.context, spec, params.state, params.parentContext);
+        if (widget is ButtonSegmentWidget && widget.widget != null) {
+          segments.add(widget.widget!);
+        }
+      }
+    } else {
+      final segmentProps = props["segments"];
+      if (segmentProps is List) {
+        for (var seg in segmentProps) {
+          if (seg == null) continue;
+          if (seg is String && seg.isEmpty) continue;
+          segments.add(ButtonSegment(value: seg, label: Text(seg.toString())));
+        }
+      }
+    }
+
+    return StatefulBuilder(builder: (context, setState) {
+      return SegmentedButton(
+        key: properties.getKey(params.id),
+        multiSelectionEnabled: multipleSelect,
+        emptySelectionAllowed: parseBool(props["emptySelectionAllowed"]),
+        showSelectedIcon: parseBool(props["showSelectedIcon"],
+            defaultValue: params.widgets["selectedIcon"] != null),
+        direction: params.buildProp("direction") ?? Axis.horizontal,
+        expandedInsets: params.buildProp("expandedInsets"),
+        style: params.buildProp("style"),
+        selected: selectedSet,
+        segments: segments,
+        onSelectionChanged: (val) {
+          setState(() {
+            selectedSet.clear();
+            selectedSet.addAll(val);
+            var newValue = multipleSelect ? val : val.firstOrNull;
+            params.state[alias] = newValue;
+            if (onChangeAction != null) {
+              onChangeAction(newValue);
+            }
+          });
+        },
+        selectedIcon: builder.tryBuildWidget(
+          params.context,
+          params.widgets["selectedIcon"],
+          params.state,
+          params.parentContext,
+        ),
+      );
+    });
+  }
+
+  @protected
   Widget buildIconButton(BuildParameters params) {
     Widget icon;
     if (params.widgets["icon"] != null) {
@@ -3466,6 +3824,413 @@ class BaseWidgets with IWidgets {
       textDirection: textDirection,
       weight: tryParseDouble(props["weight"]),
       grade: tryParseDouble(props["grade"]),
+    );
+  }
+
+  @protected
+  Widget buildChip(BuildParameters params) {
+    final props = params.props;
+    final actions = params.actions;
+    final widgets = params.widgets;
+
+    var label = builder.tryBuildWidget(
+        params.context, widgets["label"], params.state, params.parentContext);
+    label ??=
+        Text(properties.getText((props["label"] ?? "").toString(), "label"));
+
+    return Chip(
+      key: properties.getKey(params.id),
+      avatarBoxConstraints: params.buildProp("avatarBoxConstraints"),
+      color: params.buildProp("color"),
+      backgroundColor: tryParseColor(props["backgroundColor"]),
+      surfaceTintColor: tryParseColor(props["surfaceTintColor"]),
+      padding: params.buildProp("padding"),
+      visualDensity: params.buildProp("visualDensity"),
+      shape: params.buildProp("shape"),
+      side: params.buildProp("side"),
+      elevation: tryParseDouble(props["elevation"]),
+      shadowColor: tryParseColor(props["shadowColor"]),
+      labelStyle: params.buildProp("labelStyle"),
+      labelPadding: params.buildProp("labelPadding"),
+      deleteIconColor: tryParseColor(props["deleteIconColor"]),
+      deleteButtonTooltipMessage: props["deleteButtonTooltipMessage"] != null
+          ? properties.getText(props["deleteButtonTooltipMessage"], "hintText")
+          : null,
+      deleteIconBoxConstraints: params.buildProp("deleteIconBoxConstraints"),
+      label: label,
+      avatar: builder.tryBuildWidget(params.context, widgets["avatar"],
+          params.state, params.parentContext),
+      deleteIcon: builder.tryBuildWidget(params.context, widgets["deleteIcon"],
+          params.state, params.parentContext),
+      onDeleted: Lowder.actions.getFunction(params.context,
+          actions["onDeleted"], params.state, params.parentContext),
+    );
+  }
+
+  @protected
+  Widget buildActionChip(BuildParameters params) {
+    final props = params.props;
+    final actions = params.actions;
+    final widgets = params.widgets;
+
+    var label = builder.tryBuildWidget(
+        params.context, widgets["label"], params.state, params.parentContext);
+    label ??=
+        Text(properties.getText((props["label"] ?? "").toString(), "label"));
+
+    return ActionChip(
+      key: properties.getKey(params.id),
+      tooltip: props["tooltip"] != null
+          ? properties.getText(props["tooltip"], "hintText")
+          : null,
+      color: params.buildProp("color"),
+      backgroundColor: tryParseColor(props["backgroundColor"]),
+      surfaceTintColor: tryParseColor(props["surfaceTintColor"]),
+      padding: params.buildProp("padding"),
+      visualDensity: params.buildProp("visualDensity"),
+      shape: params.buildProp("shape"),
+      side: params.buildProp("side"),
+      elevation: tryParseDouble(props["elevation"]),
+      pressElevation: tryParseDouble(props["pressElevation"]),
+      shadowColor: tryParseColor(props["shadowColor"]),
+      labelStyle: params.buildProp("labelStyle"),
+      labelPadding: params.buildProp("labelPadding"),
+      avatarBoxConstraints: params.buildProp("avatarBoxConstraints"),
+      label: label,
+      avatar: builder.tryBuildWidget(params.context, widgets["avatar"],
+          params.state, params.parentContext),
+      onPressed: Lowder.actions.getFunction(params.context,
+          actions["onPressed"], params.state, params.parentContext),
+    );
+  }
+
+  @protected
+  Widget buildChoiceChip(BuildParameters params) {
+    final props = params.props;
+    final actions = params.actions;
+    final widgets = params.widgets;
+
+    var label = builder.tryBuildWidget(
+        params.context, widgets["label"], params.state, params.parentContext);
+    label ??=
+        Text(properties.getText((props["label"] ?? "").toString(), "label"));
+
+    return ChoiceChip(
+      key: properties.getKey(params.id),
+      selected: parseBool(props["selected"]),
+      tooltip: props["tooltip"] != null
+          ? properties.getText(props["tooltip"], "hintText")
+          : null,
+      color: params.buildProp("color"),
+      selectedColor: tryParseColor(props["selectedColor"]),
+      selectedShadowColor: tryParseColor(props["selectedShadowColor"]),
+      checkmarkColor: tryParseColor(props["checkmarkColor"]),
+      showCheckmark: tryParseBool(props["showCheckmark"]),
+      backgroundColor: tryParseColor(props["backgroundColor"]),
+      surfaceTintColor: tryParseColor(props["surfaceTintColor"]),
+      padding: params.buildProp("padding"),
+      visualDensity: params.buildProp("visualDensity"),
+      shape: params.buildProp("shape"),
+      side: params.buildProp("side"),
+      elevation: tryParseDouble(props["elevation"]),
+      pressElevation: tryParseDouble(props["pressElevation"]),
+      shadowColor: tryParseColor(props["shadowColor"]),
+      labelStyle: params.buildProp("labelStyle"),
+      labelPadding: params.buildProp("labelPadding"),
+      avatarBoxConstraints: params.buildProp("avatarBoxConstraints"),
+      avatarBorder: params.buildProp("avatarBorder") ?? const CircleBorder(),
+      label: label,
+      avatar: builder.tryBuildWidget(params.context, widgets["avatar"],
+          params.state, params.parentContext),
+      onSelected: Lowder.actions.getValueFunction(params.context,
+          actions["onSelected"], params.state, params.parentContext),
+    );
+  }
+
+  @protected
+  Widget buildChoiceChipList(BuildParameters params) {
+    final props = params.props;
+    final actions = params.actions;
+    final widgets = params.widgets;
+    final propFactory = BaseProperties();
+
+    final childrenSpecs = widgets["chips"] as List?;
+    if (childrenSpecs == null || childrenSpecs.isEmpty) {
+      return SizedBox();
+    }
+
+    final chips = <ChoiceChipValueWidget>[];
+    for (var map in childrenSpecs) {
+      map["parentSpec"] = params.spec;
+      var spec = WidgetNodeSpec.fromMap(map);
+      chips.add(builder.buildWidgetFromSpec(
+        params.context,
+        spec,
+        params.state,
+        params.parentContext,
+      ) as ChoiceChipValueWidget);
+    }
+
+    final alias = props["alias"] ?? params.id;
+    var selectedValue = props["value"];
+    final emptySelectionAllowed = parseBool(props["emptySelectionAllowed"]);
+    final scrollable = parseBool(props["scrollable"]);
+    final onSelectionChanged = Lowder.actions.getValueFunction(params.context,
+        actions["onSelectionChanged"], params.state, params.parentContext);
+
+    onSelect(value, selected) {
+      if (selected) {
+        selectedValue = value;
+        if (onSelectionChanged != null) {
+          onSelectionChanged(selectedValue);
+        }
+      } else if (emptySelectionAllowed) {
+        selectedValue = null;
+        if (onSelectionChanged != null) {
+          onSelectionChanged(selectedValue);
+        }
+      }
+      params.state[alias] = selectedValue;
+    }
+
+    return StatefulBuilder(builder: (context, setState) {
+      final children = <Widget>[];
+      for (var chip in chips) {
+        var spec = chip.widget;
+        if (spec == null) {
+          continue;
+        }
+
+        spec.actions["onSelected"] =
+            (selected) => setState(() => onSelect(chip.value, selected));
+        spec.props["selected"] = selectedValue == chip.value;
+        children.add(builder.buildWidgetFromSpec(
+            context, spec, params.state, params.parentContext));
+      }
+
+      final wrap = Wrap(
+        key: properties.getKey(params.id),
+        direction: Axis.horizontal,
+        spacing: parseDouble(props["spacing"]),
+        alignment: propFactory.getWrapAlignment(props["alignment"]),
+        runSpacing: parseDouble(props["runSpacing"]),
+        runAlignment: propFactory.getWrapAlignment(props["runAlignment"]),
+        crossAxisAlignment:
+            propFactory.getWrapCrossAlignment(props["crossAxisAlignment"]),
+        children: children,
+      );
+
+      return scrollable
+          ? SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: wrap,
+            )
+          : wrap;
+    });
+  }
+
+  @protected
+  Widget buildFilterChip(BuildParameters params) {
+    final props = params.props;
+    final actions = params.actions;
+    final widgets = params.widgets;
+
+    final alias = props["alias"] ?? params.id;
+    var label = builder.tryBuildWidget(
+        params.context, widgets["label"], params.state, params.parentContext);
+    label ??=
+        Text(properties.getText((props["label"] ?? "").toString(), "label"));
+
+    final onSelected = Lowder.actions.getValueFunction(params.context,
+        actions["onSelected"], params.state, params.parentContext);
+
+    return FilterChip(
+      key: properties.getKey(params.id),
+      selected: parseBool(props["selected"]),
+      tooltip: props["tooltip"] != null
+          ? properties.getText(props["tooltip"], "hintText")
+          : null,
+      color: params.buildProp("color"),
+      selectedColor: tryParseColor(props["selectedColor"]),
+      selectedShadowColor: tryParseColor(props["selectedShadowColor"]),
+      checkmarkColor: tryParseColor(props["checkmarkColor"]),
+      showCheckmark: tryParseBool(props["showCheckmark"]),
+      backgroundColor: tryParseColor(props["backgroundColor"]),
+      surfaceTintColor: tryParseColor(props["surfaceTintColor"]),
+      padding: params.buildProp("padding"),
+      visualDensity: params.buildProp("visualDensity"),
+      shape: params.buildProp("shape"),
+      side: params.buildProp("side"),
+      elevation: tryParseDouble(props["elevation"]),
+      pressElevation: tryParseDouble(props["pressElevation"]),
+      shadowColor: tryParseColor(props["shadowColor"]),
+      labelStyle: params.buildProp("labelStyle"),
+      labelPadding: params.buildProp("labelPadding"),
+      avatarBoxConstraints: params.buildProp("avatarBoxConstraints"),
+      avatarBorder: params.buildProp("avatarBorder") ?? const CircleBorder(),
+      deleteButtonTooltipMessage: props["deleteButtonTooltipMessage"] != null
+          ? properties.getText(props["deleteButtonTooltipMessage"], "hintText")
+          : null,
+      deleteIconColor: tryParseColor(props["deleteIconColor"]),
+      deleteIconBoxConstraints: params.buildProp("deleteIconBoxConstraints"),
+      label: label,
+      avatar: builder.tryBuildWidget(params.context, widgets["avatar"],
+          params.state, params.parentContext),
+      deleteIcon: builder.tryBuildWidget(params.context, widgets["deleteIcon"],
+          params.state, params.parentContext),
+      onSelected: (selected) {
+        if (selected) {
+          params.state[alias] = selected;
+        } else {
+          params.state.remove(alias);
+        }
+        if (onSelected != null) {
+          onSelected(selected);
+        }
+      },
+      onDeleted: Lowder.actions.getFunction(params.context,
+          actions["onDeleted"], params.state, params.parentContext),
+    );
+  }
+
+  @protected
+  Widget buildFilterChipList(BuildParameters params) {
+    final props = params.props;
+    final actions = params.actions;
+    final widgets = params.widgets;
+    final propFactory = BaseProperties();
+
+    final childrenSpecs = widgets["chips"] as List?;
+    if (childrenSpecs == null || childrenSpecs.isEmpty) {
+      return SizedBox();
+    }
+
+    final chips = <FilterChipValueWidget>[];
+    for (var map in childrenSpecs) {
+      map["parentSpec"] = params.spec;
+      var spec = WidgetNodeSpec.fromMap(map);
+      chips.add(builder.buildWidgetFromSpec(
+        params.context,
+        spec,
+        params.state,
+        params.parentContext,
+      ) as FilterChipValueWidget);
+    }
+
+    final alias = props["alias"] ?? params.id;
+    final selectedItems = props["value"] as List? ?? [];
+    final emptySelectionAllowed =
+        parseBool(props["emptySelectionAllowed"], defaultValue: true);
+    final scrollable = parseBool(props["scrollable"]);
+    final onSelectionChanged = Lowder.actions.getValueFunction(params.context,
+        actions["onSelectionChanged"], params.state, params.parentContext);
+
+    onSelect(value, selected) {
+      if (!selected) {
+        if (emptySelectionAllowed || selectedItems.length > 1) {
+          selectedItems.remove(value);
+          if (onSelectionChanged != null) {
+            onSelectionChanged(selectedItems);
+          }
+        }
+      } else if (!selectedItems.contains(value)) {
+        selectedItems.add(value);
+        if (onSelectionChanged != null) {
+          onSelectionChanged(selectedItems);
+        }
+      }
+      params.state[alias] = selectedItems;
+    }
+
+    return StatefulBuilder(builder: (context, setState) {
+      final children = <Widget>[];
+      for (var chip in chips) {
+        var spec = chip.widget;
+        if (spec == null) {
+          continue;
+        }
+
+        spec.actions["onSelected"] =
+            (selected) => setState(() => onSelect(chip.value, selected));
+        spec.props["selected"] = selectedItems.contains(chip.value);
+        children.add(builder.buildWidgetFromSpec(
+            context, spec, params.state, params.parentContext));
+      }
+
+      final wrap = Wrap(
+        key: properties.getKey(params.id),
+        direction: Axis.horizontal,
+        spacing: parseDouble(props["spacing"]),
+        alignment: propFactory.getWrapAlignment(props["alignment"]),
+        runSpacing: parseDouble(props["runSpacing"]),
+        runAlignment: propFactory.getWrapAlignment(props["runAlignment"]),
+        crossAxisAlignment:
+            propFactory.getWrapCrossAlignment(props["crossAxisAlignment"]),
+        children: children,
+      );
+
+      return scrollable
+          ? SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: wrap,
+            )
+          : wrap;
+    });
+  }
+
+  @protected
+  Widget buildInputChip(BuildParameters params) {
+    final props = params.props;
+    final actions = params.actions;
+    final widgets = params.widgets;
+
+    var label = builder.tryBuildWidget(
+        params.context, widgets["label"], params.state, params.parentContext);
+    label ??=
+        Text(properties.getText((props["label"] ?? "").toString(), "label"));
+
+    return InputChip(
+      key: properties.getKey(params.id),
+      selected: parseBool(props["selected"]),
+      isEnabled: parseBool(props["isEnabled"], defaultValue: true),
+      tooltip: props["tooltip"] != null
+          ? properties.getText(props["tooltip"], "hintText")
+          : null,
+      color: params.buildProp("color"),
+      disabledColor: tryParseColor(props["disabledColor"]),
+      selectedColor: tryParseColor(props["selectedColor"]),
+      selectedShadowColor: tryParseColor(props["selectedShadowColor"]),
+      checkmarkColor: tryParseColor(props["checkmarkColor"]),
+      showCheckmark: tryParseBool(props["showCheckmark"]),
+      backgroundColor: tryParseColor(props["backgroundColor"]),
+      surfaceTintColor: tryParseColor(props["surfaceTintColor"]),
+      padding: params.buildProp("padding"),
+      visualDensity: params.buildProp("visualDensity"),
+      shape: params.buildProp("shape"),
+      side: params.buildProp("side"),
+      elevation: tryParseDouble(props["elevation"]),
+      pressElevation: tryParseDouble(props["pressElevation"]),
+      shadowColor: tryParseColor(props["shadowColor"]),
+      labelStyle: params.buildProp("labelStyle"),
+      labelPadding: params.buildProp("labelPadding"),
+      avatarBoxConstraints: params.buildProp("avatarBoxConstraints"),
+      avatarBorder: params.buildProp("avatarBorder") ?? const CircleBorder(),
+      deleteButtonTooltipMessage: props["deleteButtonTooltipMessage"] != null
+          ? properties.getText(props["deleteButtonTooltipMessage"], "hintText")
+          : null,
+      deleteIconColor: tryParseColor(props["deleteIconColor"]),
+      deleteIconBoxConstraints: params.buildProp("deleteIconBoxConstraints"),
+      label: label,
+      avatar: builder.tryBuildWidget(params.context, widgets["avatar"],
+          params.state, params.parentContext),
+      deleteIcon: builder.tryBuildWidget(params.context, widgets["deleteIcon"],
+          params.state, params.parentContext),
+      onPressed: Lowder.actions.getFunction(params.context,
+          actions["onPressed"], params.state, params.parentContext),
+      onSelected: Lowder.actions.getValueFunction(params.context,
+          actions["onSelected"], params.state, params.parentContext),
+      onDeleted: Lowder.actions.getFunction(params.context,
+          actions["onDeleted"], params.state, params.parentContext),
     );
   }
 
@@ -3640,6 +4405,29 @@ class BaseWidgets with IWidgets {
   }
 
   @protected
+  Widget buildLayoutBuilder(BuildParameters params) {
+    final childSpec = params.widgets["child"] as Map?;
+    if (childSpec == null) {
+      return SizedBox();
+    }
+
+    return LayoutBuilder(
+      key: properties.getKey(params.id),
+      builder: (context, constraints) {
+        final constraintsMap = {
+          "minWidth": constraints.minWidth,
+          "minHeight": constraints.minHeight,
+          "maxWidth": constraints.maxWidth,
+          "maxHeight": constraints.maxHeight,
+        };
+        return builder.buildWidget(context, childSpec, params.state, {
+          "constraints": constraintsMap,
+        });
+      },
+    );
+  }
+
+  @protected
   Widget buildBlocBuilder(BuildParameters params) {
     final childrenList = params.widgets["states"] as List<Map>?;
     if (childrenList == null || childrenList.isEmpty) {
@@ -3647,10 +4435,11 @@ class BaseWidgets with IWidgets {
     }
 
     final log = Logger("BlocBuilder");
-    final children = <BlocState>[];
+    final children = <BlocStateWidget>[];
     for (var c in childrenList) {
       children.add(builder.buildWidget(
-          params.context, c, params.state, params.parentContext) as BlocState);
+              params.context, c, params.state, params.parentContext)
+          as BlocStateWidget);
     }
 
     final stateActions = <String>[];
@@ -3705,6 +4494,27 @@ class BaseWidgets with IWidgets {
       }
     }
 
+    // removePreviousValues(Map widgetSpec) {
+    //   final queue = Queue<Map>();
+    //   queue.add(widgetSpec);
+    //   while (queue.isNotEmpty) {
+    //     var map = queue.removeFirst();
+    //     params.state.remove(map["_id"]);
+
+    //     var childWidgets = map["widgets"];
+    //     if (childWidgets is Map) {
+    //       for (var key in childWidgets.keys) {
+    //         var spec = childWidgets[key];
+    //         if (spec is List) {
+    //           queue.addAll(List<Map>.from(spec));
+    //         } else if (spec is Map) {
+    //           queue.add(spec);
+    //         }
+    //       }
+    //     }
+    //   }
+    // }
+
     stateBuilder(BuildContext context, BaseState state) {
       Map? widgetSpec;
       if (state is ActionState) {
@@ -3720,7 +4530,7 @@ class BaseWidgets with IWidgets {
             "Building '${widgetSpec["name"] ?? widgetSpec["_type"]}' from state '${state.state}'",
             state.data is Map ? state.data : null);
       }
-      params.state.remove(widgetSpec["_id"]);
+      // removePreviousValues(widgetSpec);
 
       // Returning a dummy Builder with an unique key to force a repaint.
       return Builder(
@@ -3741,23 +4551,5 @@ class BaseWidgets with IWidgets {
             listener: listener,
             buildWhen: buildWhen,
             builder: stateBuilder);
-  }
-}
-
-class BlocState extends SizedBox {
-  late final String type;
-  late final String state;
-  late final Map? listener;
-  late final Map? widget;
-
-  BlocState(BuildParameters params, {super.key}) {
-    type = params.spec.type;
-    state = params.props["state"] as String? ?? "";
-    if (state.isNotEmpty) {
-      listener = params.actions["listener"] as Map?;
-      if (type != "StateListener") {
-        widget = params.widgets["child"] as Map?;
-      }
-    }
   }
 }

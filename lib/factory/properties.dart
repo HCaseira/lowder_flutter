@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import '../model/case.dart';
 import '../util/parser.dart';
 import '../util/strings.dart';
 import '../model/editor_node.dart';
@@ -629,6 +630,35 @@ class BaseProperties with IProperties {
         "flipY": Types.bool,
       },
     });
+
+    registerSpecType(
+      Types.widgetStateColor.type,
+      getWidgetStateColor,
+      {},
+      subTypes: {
+        "all": {"color": Types.color},
+        "with": {
+          "default": Types.color,
+          "hovered": Types.color,
+          "pressed": Types.color,
+          "selected": Types.color,
+          "focused": Types.color,
+          "disabled": Types.color,
+          "dragged": Types.color,
+          "scrolledUnder": Types.color,
+          "error": Types.color,
+        }
+      },
+    );
+
+    registerSpecType("ActionCondition", (map) => ActionCase.fromMap(map),
+        {"condition": Types.condition, "action": Types.nodeAction});
+    registerSpecType("ActionCase", (map) => ActionCase.fromMap(map),
+        {"value": Types.string, "action": Types.nodeAction});
+    registerSpecType(
+        Types.conditionalProperties.type,
+        (map) => PropertyCondition.fromMap(map),
+        {"condition": Types.condition, "properties": Types.nodeProperties});
   }
 
   MaterialType? getMaterialType(String? type) {
@@ -1056,12 +1086,12 @@ class BaseProperties with IProperties {
       focusedBorder: getInputBorder(spec["focusedBorder"]),
       focusedErrorBorder: getInputBorder(spec["focusedErrorBorder"]),
       contentPadding: Lowder.properties.getInsets(spec["contentPadding"]),
-      errorText: spec["errorText"] != null
+      errorText: spec["errorText"] is String
           ? Lowder.properties.getText(spec["errorText"], "errorMessage")
           : null,
       errorStyle: getTextStyle(spec["errorStyle"]),
       label: widgetMap?["label"],
-      labelText: spec["labelText"] != null
+      labelText: spec["labelText"] is String
           ? Lowder.properties.getText(spec["labelText"], "label")
           : null,
       labelStyle: getTextStyle(spec["labelStyle"]),
@@ -1069,7 +1099,7 @@ class BaseProperties with IProperties {
       filled: tryParseColor(spec["fillColor"]) != null,
       fillColor: tryParseColor(spec["fillColor"]),
       hoverColor: tryParseColor(spec["hoverColor"]),
-      hintText: spec["hintText"] != null
+      hintText: spec["hintText"] is String
           ? Lowder.properties.getText(spec["hintText"], "hintText")
           : null,
       hintStyle: getTextStyle(spec["hintStyle"]),
@@ -2050,6 +2080,49 @@ class BaseProperties with IProperties {
       case "flip":
         return Matrix4.diagonal3Values(parseBool(spec["flipX"]) ? -1.0 : 1.0,
             parseBool(spec["flipY"]) ? -1.0 : 1.0, 1.0);
+      default:
+        return null;
+    }
+  }
+
+  WidgetStateProperty<Color?>? getWidgetStateColor(Map? spec) {
+    if (spec == null || spec.isEmpty) {
+      return null;
+    }
+
+    final type = spec["_type"] ?? "default";
+
+    switch (type) {
+      case "all":
+        return WidgetStatePropertyAll<Color>(
+            parseColor(spec["color"], defaultColor: Colors.transparent));
+      case "with":
+        return WidgetStateColor.resolveWith((state) {
+          final defaultColor =
+              parseColor(spec["default"], defaultColor: Colors.transparent);
+          if (state.isEmpty) {
+            return defaultColor;
+          }
+          switch (state.first) {
+            case WidgetState.disabled:
+              return parseColor(spec["disabled"], defaultColor: defaultColor);
+            case WidgetState.dragged:
+              return parseColor(spec["dragged"], defaultColor: defaultColor);
+            case WidgetState.error:
+              return parseColor(spec["error"], defaultColor: defaultColor);
+            case WidgetState.focused:
+              return parseColor(spec["focused"], defaultColor: defaultColor);
+            case WidgetState.hovered:
+              return parseColor(spec["hovered"], defaultColor: defaultColor);
+            case WidgetState.pressed:
+              return parseColor(spec["pressed"], defaultColor: defaultColor);
+            case WidgetState.scrolledUnder:
+              return parseColor(spec["scrolledUnder"],
+                  defaultColor: defaultColor);
+            case WidgetState.selected:
+              return parseColor(spec["selected"], defaultColor: defaultColor);
+          }
+        });
       default:
         return null;
     }

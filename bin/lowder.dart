@@ -60,8 +60,11 @@ class HttpServer {
     final editorJs = editorFiles["editor.js"];
 
     final cascade = Cascade()
-        .add(shelf_static.createStaticHandler(flutterWebPath,
-            serveFilesOutsidePath: true, defaultDocument: 'index.html'))
+        .add(shelf_static.createStaticHandler(
+          flutterWebPath,
+          serveFilesOutsidePath: true,
+          defaultDocument: 'index.html',
+        ))
         .add((shelf_router.Router()
               ..get(
                   '/editor.html',
@@ -274,7 +277,8 @@ class HttpServer {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Header": "*",
       "Access-Control-Allow-Method": "*",
-      "Cache-Control": "no-cache"
+      "Cache-Control": "no-cache, no-store, must-revalidate",
+      "Expires": "0",
     };
   }
 
