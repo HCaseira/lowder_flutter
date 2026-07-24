@@ -74,8 +74,9 @@ class LowderSplashScreenState extends State<LowderSplashScreen> {
       case 2:
         loader = widget.getActivityIndicator(
             context, foregroundColor, backgroundColor);
-        Future.delayed(const Duration(milliseconds: 400),
-            () async => await widget.onFinished(context));
+        Future.delayed(const Duration(milliseconds: 400), () async {
+          if (context.mounted) await widget.onFinished(context);
+        });
     }
 
     return AnimatedContainer(

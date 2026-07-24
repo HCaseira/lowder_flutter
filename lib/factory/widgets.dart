@@ -823,6 +823,22 @@ class BaseWidgets with IWidgets {
       "common",
       "text"
     ]);
+    registerWidget("selectableText", buildSelectableText, properties: {
+      "alias": Types.string,
+      "value": Types.string,
+      "format": Types.formatter,
+      "minLines": Types.int,
+      "maxLines": Types.int,
+      "semanticsLabel": Types.string,
+      "style": Types.textStyle,
+      "textAlign": Types.textAlign,
+      "toolbarOptions": Types.toolbarOptions,
+    }, actions: {
+      "onTap": EditorActionType.action(),
+    }, tags: [
+      "common",
+      "text"
+    ]);
     final textFormFieldProperties = EditorWidget(properties: {
       "value": Types.string,
       "alias": Types.string,
@@ -2444,6 +2460,26 @@ class BaseWidgets with IWidgets {
       softWrap: tryParseBool(params.props["softWrap"]),
       overflow: params.buildProp("overflow"),
       style: params.buildProp("style"),
+    );
+  }
+
+  @protected
+  Widget buildSelectableText(BuildParameters params) {
+    final props = params.props;
+    final actions = params.actions;
+    var onTap = events.getFunction(
+        params.context, actions["onTap"], params.state, params.parentContext);
+
+    return SelectableText(
+      params.buildProp("format", argument: props["value"]),
+      key: properties.getKey(params.id),
+      textAlign: params.buildProp("textAlign"),
+      minLines: tryParseInt(props["minLines"]),
+      maxLines: tryParseInt(props["maxLines"]),
+      semanticsLabel: Strings.get(props["semanticsLabel"] ?? ""),
+      style: params.buildProp("style"),
+      contextMenuBuilder: params.buildProp("toolbarOptions"),
+      onTap: onTap,
     );
   }
 

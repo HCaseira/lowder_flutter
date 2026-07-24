@@ -67,8 +67,6 @@ class LowderScreen extends StatefulWidget {
 }
 
 class LowderScreenState extends State<LowderScreen> {
-  static final String _uuidPattern =
-      r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-8][0-9a-f]{3}-[0-9a-f]{4}-[0-9a-f]{12}';
   String get id => widget.id;
   String? get name => widget.name;
   Map get state => widget.state;
@@ -112,10 +110,8 @@ class LowderScreenState extends State<LowderScreen> {
 
     if (currentState is ReloadState || currentState is ReloadAll) {
       _initialized = false;
-      _removePreviousValues();
       widget._reloadController.add(null);
     } else if (currentState is SetStateState) {
-      _removePreviousValues();
       state.addAll(currentState.state);
       if (currentState.reloadLists) {
         widget._reloadController.add(null);
@@ -148,17 +144,6 @@ class LowderScreenState extends State<LowderScreen> {
         stack,
       );
       return Container();
-    }
-  }
-
-  // Removes any value previously set to Widgets, so they can be re-evaluated.
-  void _removePreviousValues() {
-    var stateKeys = [...state.keys];
-    for (var key in stateKeys) {
-      if (key is String &&
-          RegExp(_uuidPattern, caseSensitive: false).hasMatch(key)) {
-        state.remove(key);
-      }
     }
   }
 }

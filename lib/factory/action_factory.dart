@@ -77,14 +77,18 @@ class ActionFactory {
     if (EditorBloc.editMode) return (v) {};
     if (actionSpec is ActionValueFunction<Object?>) return actionSpec;
 
-    final nodeSpec =
-        actionSpec is NodeSpec ? actionSpec : NodeSpec.fromMap(actionSpec);
+    NodeSpec? nodeSpec;
+    if (actionSpec is NodeSpec) {
+      nodeSpec = actionSpec;
+    } else if (actionSpec is Map) {
+      nodeSpec = NodeSpec.fromMap(actionSpec);
+    }
 
-    return (val) {
-      if (actionSpec != null) {
-        run(context, nodeSpec, state, val, evaluatorContext);
-      }
-    };
+    if (nodeSpec == null) {
+      return null;
+    }
+
+    return (val) => run(context, nodeSpec!, state, val, evaluatorContext);
   }
 
   /// Executes a [PageLoadFunction]
@@ -344,7 +348,11 @@ class ActionFactory {
             map["statusMessage"] ??
             map["statusText"] ??
             reasonPhrase;
-      } catch (e) {/* Do nothing*/}
+      } catch (e) {
+        if (responseBody.isNotEmpty) {
+          reasonPhrase ??= responseBody;
+        }
+      }
     }
 
     return HttpResponse(
@@ -363,7 +371,7 @@ class ActionFactory {
     if (response.statusCode == 401) {
       showErrorMessage("invalid_session_message");
     } else {
-      showErrorMessage("communication_error_message");
+      showErrorMessage(response.reasonPhrase ?? "communication_error_message");
     }
     return RetryAction(false);
   }
@@ -386,12 +394,12 @@ class ActionFactory {
       {String? contentType, Map<String, String>? otherHeaders}) {
     final headers = <String, String>{};
 
-    if (contentType != null && contentType.isNotEmpty) {
+    if (contentType is String && contentType.isNotEmpty) {
       headers["Content-Type"] = contentType;
     }
 
     final accessToken = Lowder.globalVariables["access_token"];
-    if (accessToken != null && accessToken.isNotEmpty) {
+    if (accessToken is String && accessToken.isNotEmpty) {
       headers["Authorization"] = "Bearer $accessToken";
     }
 

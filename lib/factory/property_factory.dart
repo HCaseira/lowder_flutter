@@ -187,7 +187,7 @@ class PropertyFactory {
         return value;
       }
 
-      // A scenery of something like ${state.${env.nameKey}}
+      // A scenario like ${state.${env.nameKey}}
       var nextStartIdx = value.indexOf("\${", startIdx + 2);
       if (nextStartIdx >= 0 && nextStartIdx < endIdx) {
         startIdx = nextStartIdx;

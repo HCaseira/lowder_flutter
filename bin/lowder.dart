@@ -118,7 +118,7 @@ class HttpServer {
         logInfo("Loading solution file: $path");
         var file = File(path);
         if (!await file.exists()) {
-          logError("Solution file not found: $path");
+          logError("Solution file not found: ${file.absolute.path}");
           files.add({
             "path": path,
             "data": {},
