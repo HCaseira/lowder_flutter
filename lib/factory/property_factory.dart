@@ -255,6 +255,16 @@ class PropertyFactory {
   /// Evaluates the result of a given [leftStatement], an [operator] and a [rightStatement].
   bool evaluateOperator(
       dynamic leftStatement, String operator, dynamic rightStatement) {
+    if (operator == "contain" || operator == "not contain") {
+      var result = false;
+      if (leftStatement is Map) {
+        result = leftStatement.containsKey(rightStatement);
+      } else if (leftStatement != null) {
+        result = leftStatement.contains(rightStatement);
+      }
+      return operator == "contain" ? result : !result;
+    }
+
     dynamic left;
     dynamic right;
     if (leftStatement is DateTime || rightStatement is DateTime) {
@@ -296,15 +306,6 @@ class PropertyFactory {
       case "<=":
       case "lessEqual":
         return left == null || right == null ? false : left <= right;
-      case "contain":
-      case "not contain":
-        var result = false;
-        if (left is Map) {
-          result = left.containsKey(right);
-        } else if (left != null) {
-          left.contains(right);
-        }
-        return operator == "contain" ? result : !result;
       default:
         return false;
     }
