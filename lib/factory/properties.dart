@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-import '../model/case.dart';
 import '../util/parser.dart';
 import '../util/strings.dart';
 import '../model/editor_node.dart';
@@ -650,15 +649,6 @@ class BaseProperties with IProperties {
         }
       },
     );
-
-    registerSpecType("ActionCondition", (map) => ActionCase.fromMap(map),
-        {"condition": Types.condition, "action": Types.nodeAction});
-    registerSpecType("ActionCase", (map) => ActionCase.fromMap(map),
-        {"value": Types.string, "action": Types.nodeAction});
-    registerSpecType(
-        Types.conditionalProperties.type,
-        (map) => PropertyCondition.fromMap(map),
-        {"condition": Types.condition, "properties": Types.nodeProperties});
   }
 
   MaterialType? getMaterialType(String? type) {
