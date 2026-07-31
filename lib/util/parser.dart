@@ -98,7 +98,7 @@ Color? tryParseColor(String? value) {
 }
 
 Color? _parseColor(String? value, Color? defaultColor) {
-  if (value == null || value == "null") return defaultColor;
+  if (value == null || value.isEmpty || value == "null") return defaultColor;
 
   if (value.contains(",")) {
     final parts = value.split(",");

@@ -349,9 +349,7 @@ class ActionFactory {
             map["statusText"] ??
             reasonPhrase;
       } catch (e) {
-        if (responseBody.isNotEmpty) {
-          reasonPhrase ??= responseBody;
-        }
+        reasonPhrase = responseBody;
       }
     }
 
